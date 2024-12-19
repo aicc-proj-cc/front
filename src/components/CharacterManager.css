@@ -1,0 +1,76 @@
+.character-manager {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #2d2f42;
+  color: white;
+  border-radius: 8px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.character-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.character-form label {
+  font-weight: bold;
+}
+
+.character-form input,
+.character-form textarea {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4a4f68;
+  color: white;
+}
+
+.character-form button {
+  align-self: flex-end;
+  padding: 10px 20px;
+  background-color: #7a75f0;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.character-form button:hover {
+  background-color: #5f58d8;
+}
+
+.character-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.character-table th,
+.character-table td {
+  padding: 10px;
+  border: 1px solid #4a4f68;
+  text-align: center;
+}
+
+.character-table th {
+  background-color: #3a3f58;
+}
+
+.character-table td button {
+  background-color: #ff4b5c;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.character-table td button:hover {
+  background-color: #d43f4b;
+}
