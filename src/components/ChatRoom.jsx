@@ -40,7 +40,8 @@ const ChatRoom = ({ roomId, roomName }) => {
     // 입력 값이 비어있거나 캐릭터 정보가 없으면 함수 종료
     if (!input.trim() || !character) return;
     try {
-      const response = await axios.post(`http://localhost:8000/api/chat/${roomId}/${character.character_name}`, {
+      // TODO : roomId 까지만 필요함. API 호출에서 캐릭터 명은 버리기
+      const response = await axios.post(`http://localhost:8000/api/chat/${roomId}`, {
         sender: "user", // 유저가 전송 명시
         content: input, // 메시지 내용
       });

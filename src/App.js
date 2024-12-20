@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import ChatList from "./components/ChatList"; // 채팅방 목록 컴포넌트
 import ChatRoom from "./components/ChatRoom"; // 채팅창 UI 컴포넌트
 import CharacterManager from "./components/CharacterManager"; // 캐릭터 생성 컴포넌트
+import AITestPage from "./components/AITestPage"; // AI 요청 테스트 페이지
 import "./App.css";
 
 function App() {
   const [selectedRoom, setSelectedRoom] = useState(null); // 현재 선택된 채팅방 ID
   const [selectedRoomName, setSelectedRoomName] = useState(""); // 현재 선택된 채팅방 이름 (캐릭터 이름)
-  const [currentView, setCurrentView] = useState("chat"); // 현재 화면 상태: 'chat' 또는 'character'
+  const [currentView, setCurrentView] = useState("chat"); // 현재 화면 상태: 'chat', 'character', 'ai-test'
 
   // 화면 렌더링 함수
   const renderView = () => {
@@ -18,7 +19,6 @@ function App() {
           <div className="chat-list-container">
             <ChatList
               onSelectRoom={(roomId, roomName) => {
-                // 채팅방이 선택되었을 때 호출
                 setSelectedRoom(roomId); // 선택된 채팅방 ID 저장
                 setSelectedRoomName(roomName); // 선택된 채팅방 이름 저장
               }}
@@ -28,19 +28,17 @@ function App() {
           {/* 채팅방 UI */}
           <div className="chat-room-container">
             {selectedRoom ? (
-              // 채팅방이 선택된 경우
               <ChatRoom roomId={selectedRoom} roomName={selectedRoomName} />
             ) : (
-              // 채팅방이 선택되지 않은 경우(처음 접속)
               <div className="chat-placeholder">채팅방을 선택하세요</div>
             )}
           </div>
         </div>
       );
-    } 
-    // 캐릭터 생성 화면 렌더링
-    else if (currentView === "character") {
+    } else if (currentView === "character") {
       return <CharacterManager />; // 캐릭터 생성 화면
+    } else if (currentView === "ai-test") {
+      return <AITestPage />; // AI 요청 테스트 페이지
     }
   };
 
@@ -48,7 +46,6 @@ function App() {
     <div className="app-container">
       {/* 상단 네비게이션 바 */}
       <div className="app-header">
-        {/* 채팅방 네비게이션 버튼 */}
         <h2
           className={`nav-item ${currentView === "chat" ? "active" : ""}`}
           onClick={() => setCurrentView("chat")}
@@ -60,6 +57,12 @@ function App() {
           onClick={() => setCurrentView("character")}
         >
           캐릭터 생성
+        </h2>
+        <h2
+          className={`nav-item ${currentView === "ai-test" ? "active" : ""}`}
+          onClick={() => setCurrentView("ai-test")}
+        >
+          AI 요청 테스트
         </h2>
       </div>
 
