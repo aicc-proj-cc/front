@@ -10,12 +10,13 @@ const CharacterManager = () => {
   const [characterImage, setCharacterImage] = useState(""); // 프로필 사진
   const [characterField, setCharacterField] = useState(""); // 캐릭터 필드
   const [characterStatusMessages, setCharacterStatusMessages] = useState(["", "", ""]); // 상태 메시지 리스트
+  const [characterLikes, setCharacterLikes] = useState(""); // 캐릭터 기본 호감도
   const [characterPrompt, setCharacterPrompt] = useState(""); // 캐릭터 프롬프트
   const [characterDescription, setCharacterDescription] = useState(""); // 캐릭터 소개
 
   // DB 에서 캐릭터 목록 불러오기
   // 반환 정보 : [캐릭터1, 캐릭터2, ...]
-  // 각 캐릭터 내부 정보 : {생성일, 설명, 필드, ID, 좋아요 수, 이름, 프롬프트, 상태메시지, 숨김여부}
+  // 각 캐릭터 내부 정보 : {생성일, 설명, 필드, ID, 좋아요 수, 이름, 기본 호감도, 프롬프트, 상태메시지, 숨김여부}
   const fetchCharacters = async () => {
     try {
       const response = await axios.get("http://localhost:8000/api/characters/");
@@ -28,7 +29,7 @@ const CharacterManager = () => {
   // 새로운 캐릭터를 DB에 저장하는 함수
   const saveCharacter = async () => {
     // 빈 입력칸 확인
-    if (!characterName.trim() || !characterImage.trim() || !characterField.trim() || !characterPrompt.trim() || !characterDescription.trim()){
+    if (!characterName.trim() || !characterImage.trim() || !characterField.trim() || !characterLikes.trim() || !characterPrompt.trim() || !characterDescription.trim()){
       console.error("필수 입력값을 모두 입력해주세요.");
       return;
     }
@@ -41,11 +42,19 @@ const CharacterManager = () => {
       return;
     }
 
+    // 호감도 숫자 검증
+    const likes = parseInt(characterLikes, 10); // 문자열을 정수로 변환
+    if (isNaN(likes)) {
+      console.error("호감도는 숫자 형식으로 입력해주세요.");
+      return;
+    }
+
     try {
       await axios.post("http://localhost:8000/api/characters/", {
         character_name: characterName,
         character_image: characterImage,
         character_field: characterField,
+        character_likes: likes,
         character_status_message: filteredMessages, // 상태 메시지 리스트
         character_prompt: characterPrompt,
         character_description: characterDescription,
@@ -54,6 +63,7 @@ const CharacterManager = () => {
       setCharacterName("");
       setCharacterImage("");
       setCharacterField("");
+      setCharacterLikes("");
       setCharacterStatusMessages(["", "", ""]); // 상태 메시지 초기화
       setCharacterPrompt("");
       setCharacterDescription("");
@@ -126,6 +136,14 @@ const CharacterManager = () => {
             placeholder={`상태 메시지 ${index + 1}`}
           />
         ))}
+
+        <label>캐릭터 호감도</label>
+        <input
+          type="number" // HTML5 숫자 입력 필드
+          value={characterLikes}
+          onChange={(e) => setCharacterLikes(e.target.value)}
+          placeholder="캐릭터 기본 호감도 입력"
+        ></input>
 
         <label>캐릭터 프롬프트</label>
         <textarea
