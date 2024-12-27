@@ -1,18 +1,24 @@
-import React, { useState } from "react";
-import ChatList from "./components/ChatList"; // 채팅방 목록 컴포넌트
-import ChatRoom from "./components/ChatRoom"; // 채팅창 UI 컴포넌트
-import CharacterManager from "./components/CharacterManager"; // 캐릭터 생성 컴포넌트
-import AITestPage from "./components/AITestPage"; // AI 요청 테스트 페이지
-import "./App.css";
+import React, { useState } from 'react';
+import ChatList from './components/ChatList'; // 채팅방 목록 컴포넌트
+import ChatRoom from './components/ChatRoom'; // 채팅창 UI 컴포넌트
+import CharacterManager from './components/CharacterManager'; // 캐릭터 생성 컴포넌트
+import AITestPage from './components/AITestPage'; // AI 요청 테스트 페이지
+import logo from './assets/logo.png'; // 로고 이미지 import
+import './App.css';
 
 function App() {
   const [selectedRoom, setSelectedRoom] = useState(null); // 현재 선택된 채팅방 ID
-  const [selectedRoomName, setSelectedRoomName] = useState(""); // 현재 선택된 채팅방 이름 (캐릭터 이름)
-  const [currentView, setCurrentView] = useState("chat"); // 현재 화면 상태: 'chat', 'character', 'ai-test'
+  const [selectedRoomName, setSelectedRoomName] = useState(''); // 현재 선택된 채팅방 이름 (캐릭터 이름)
+  const [currentView, setCurrentView] = useState('chat'); // 현재 화면 상태: 'chat', 'character', 'ai-test'
+
+  const handleLeaveRoom = () => {
+    setSelectedRoom(null);
+    setSelectedRoomName('');
+  };
 
   // 화면 렌더링 함수
   const renderView = () => {
-    if (currentView === "chat") {
+    if (currentView === 'chat') {
       return (
         <div className="app-body">
           {/* 채팅방 목록 */}
@@ -28,17 +34,23 @@ function App() {
           {/* 채팅방 UI */}
           <div className="chat-room-container">
             {selectedRoom ? (
-              <ChatRoom roomId={selectedRoom} roomName={selectedRoomName} />
+              <ChatRoom
+                roomId={selectedRoom}
+                roomName={selectedRoomName}
+                onLeaveRoom={handleLeaveRoom}
+              />
             ) : (
-              <div className="chat-placeholder">채팅방을 선택하세요</div>
+              <div className="logo-container">
+                <img src={logo} alt="Logo" className="main-logo" />
+              </div>
             )}
           </div>
         </div>
       );
-    } else if (currentView === "character") {
-      return <CharacterManager />; // 캐릭터 생성 화면
-    } else if (currentView === "ai-test") {
-      return <AITestPage />; // AI 요청 테스트 페이지
+    } else if (currentView === 'character') {
+      return <CharacterManager />;
+    } else if (currentView === 'ai-test') {
+      return <AITestPage />;
     }
   };
 
@@ -47,20 +59,20 @@ function App() {
       {/* 상단 네비게이션 바 */}
       <div className="app-header">
         <h2
-          className={`nav-item ${currentView === "chat" ? "active" : ""}`}
-          onClick={() => setCurrentView("chat")}
+          className={`nav-item ${currentView === 'chat' ? 'active' : ''}`}
+          onClick={() => setCurrentView('chat')}
         >
           채팅방
         </h2>
         <h2
-          className={`nav-item ${currentView === "character" ? "active" : ""}`}
-          onClick={() => setCurrentView("character")}
+          className={`nav-item ${currentView === 'character' ? 'active' : ''}`}
+          onClick={() => setCurrentView('character')}
         >
           캐릭터 생성
         </h2>
         <h2
-          className={`nav-item ${currentView === "ai-test" ? "active" : ""}`}
-          onClick={() => setCurrentView("ai-test")}
+          className={`nav-item ${currentView === 'ai-test' ? 'active' : ''}`}
+          onClick={() => setCurrentView('ai-test')}
         >
           AI 요청 테스트
         </h2>

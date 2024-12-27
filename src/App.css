@@ -49,3 +49,24 @@
   font-size: 20px;
   color: #7a75f0;
 }
+
+.logo-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2d2f42;
+}
+
+.main-logo {
+  max-width: 300px;
+  height: auto;
+  opacity: 0.8;
+}
+
+.chat-room-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #2d2f42;
+}

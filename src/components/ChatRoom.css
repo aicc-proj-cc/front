@@ -8,7 +8,7 @@
   flex-shrink: 0;
   background-color: #3a3f58;
   color: white;
-  padding: 15px;
+  padding: 0px 15px 15px 15px;
   text-align: center;
   font-size: 18px;
   font-weight: bold;
@@ -84,4 +84,31 @@
 
 .chat-input button:hover {
   background-color: #5f58d8;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  padding: 0px 15px 15px 15px;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0 15px 0 0;
+  margin-left: 10px;
+  margin-bottom: 128px;
+  border-right: 1px solid #4a4f68;
+}
+
+.back-button:hover {
+  color: #7a75f0;
+}
+
+.header-content {
+  flex: 1;
+  text-align: center;
 }
