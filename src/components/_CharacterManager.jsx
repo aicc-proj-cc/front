@@ -310,10 +310,8 @@ const CharacterManager = () => {
               ))}
               <button onClick={addExampleDialogue}>예시 대화 추가</button>
 
-              <div className="buttons-row">
-                <button onClick={handleBack}>이전</button>
-                <button onClick={saveCharacter}>생성 완료</button>
-              </div>
+              <button onClick={handleBack}>이전</button>
+              <button onClick={saveCharacter}>생성 완료</button>
 
               <h2>만든 캐릭터 목록</h2>
               <table className="character-table">

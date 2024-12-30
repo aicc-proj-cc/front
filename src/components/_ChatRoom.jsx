@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import './ChatRoom.css';
 import userProfile from '../assets/user.png';
-import { FiVolume2 } from 'react-icons/fi'; // 사운드 아이콘
+import { FiVolume2 } from 'react-icons/fi'; // 사운드 아이콘 라이브러리
 
 const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
   const [messages, setMessages] = useState([]);
@@ -19,11 +19,7 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
       const response = await axios.get(
         `http://localhost:8000/api/chat/${roomId}`
       );
-      // 타임스탬프로 정렬
-      const sortedMessages = response.data.sort(
-        (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
-      );
-      setMessages(sortedMessages);
+      setMessages(response.data);
     } catch (error) {
       console.error(
         '메시지 가져오기 오류:',
@@ -37,6 +33,8 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
       const response = await axios.get(
         `http://localhost:8000/api/chat-room-info/${roomId}`
       );
+      console.log("response.data :", response.data);
+
       setRoomInfo(response.data);
     } catch (error) {
       console.error(
@@ -57,11 +55,7 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
         timestamp: new Date().toISOString(),
       };
 
-      setMessages((prev) =>
-        [...prev, userMessage].sort(
-          (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
-        )
-      );
+      setMessages((prev) => [...prev, userMessage]);
       setInput('');
 
       const response = await axios.post(
@@ -79,11 +73,7 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
           timestamp: new Date().toISOString(),
         };
 
-        setMessages((prev) =>
-          [...prev, botMessage].sort(
-            (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
-          )
-        );
+        setMessages((prev) => [...prev, botMessage]);
         await fetchRoomInfo();
       }
     } catch (error) {
@@ -99,28 +89,28 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
     if (!roomInfo) return;
 
     try {
-      // TTS API 호출
+      // TTS 서버 호출
       const response = await axios.post(
         'http://localhost:8000/generate-tts/',
         {
           text: text,
           speaker: roomInfo.voice_speaker,
-          language: 'KO', // 언어 고정
-          speed: 1.0, // 속도 설정 (roomInfo에서 가져오거나 고정값)
+          language: 'KO', // 언어 고정 (예: 한국어)
+          speed: 1.0, // 원하는 속도, roomInfo에서 가져와도 됨
         },
         {
           responseType: 'arraybuffer',
         }
       );
 
-      // 반환된 데이터로 오디오 재생
+      // Blob 생성 및 재생
       const audioBlob = new Blob([response.data], { type: 'audio/wav' });
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
       audio.play();
     } catch (error) {
-      console.error('TTS 호출 오류:', error.response?.data || error.message);
-      alert('TTS 요청 중 오류가 발생했습니다.');
+      console.error('TTS 생성 오류:', error.response?.data || error.message);
+      alert('TTS 생성 중 오류가 발생했습니다.');
     }
   };
 
@@ -144,10 +134,11 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
         <div className="header-content">
           <p>'{roomName}' 와의 채팅방</p>
           {roomInfo ? (
-            <div className="character-status">
+            <>
+              <p>캐릭터 이름: {roomInfo.character_name}</p>
               <p>기분: {roomInfo.character_emotion || '알 수 없음'}</p>
               <p>호감도: {roomInfo.character_likes}</p>
-            </div>
+            </>
           ) : (
             <p>채팅방 정보를 불러오는 중...</p>
           )}
@@ -155,13 +146,11 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
       </div>
 
       <div className="chat-messages">
-        {messages.map((msg, idx) => {
+      {messages.map((msg, idx) => {
           const isUser = msg.sender === 'user';
           return (
             <div key={idx} className={`message ${isUser ? 'user' : 'bot'}`}>
-              {!isUser && (
-                <img src={userProfile} alt="bot" className="avatar" />
-              )}
+              {!isUser && <img src={userProfile} alt="bot" className="avatar" />}
               <div className="bubble-container">
                 <div className="bubble">{msg.content}</div>
                 <div className="timestamp-container">
@@ -175,14 +164,12 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
                     <FiVolume2
                       className="sound-icon"
                       onClick={() => playTTS(msg.content)}
-                      title="TTS 재생"
+                      title="메시지 읽기"
                     />
                   )}
                 </div>
               </div>
-              {isUser && (
-                <img src={userProfile} alt="user" className="avatar" />
-              )}
+              {isUser && <img src={userProfile} alt="user" className="avatar" />}
             </div>
           );
         })}
