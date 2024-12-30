@@ -18,7 +18,11 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
       const response = await axios.get(
         `http://localhost:8000/api/chat/${roomId}`
       );
-      setMessages(response.data);
+      // 타임스탬프로 정렬
+      const sortedMessages = response.data.sort(
+        (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+      );
+      setMessages(sortedMessages);
     } catch (error) {
       console.error(
         '메시지 가져오기 오류:',
@@ -52,7 +56,11 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
         timestamp: new Date().toISOString(),
       };
 
-      setMessages((prev) => [...prev, userMessage]);
+      setMessages((prev) =>
+        [...prev, userMessage].sort(
+          (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+        )
+      );
       setInput('');
 
       const response = await axios.post(
@@ -70,7 +78,11 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
           timestamp: new Date().toISOString(),
         };
 
-        setMessages((prev) => [...prev, botMessage]);
+        setMessages((prev) =>
+          [...prev, botMessage].sort(
+            (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+          )
+        );
         await fetchRoomInfo();
       }
     } catch (error) {
@@ -103,9 +115,10 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
           <p>'{roomName}' 와의 채팅방</p>
           {roomInfo ? (
             <>
-              <p>캐릭터 이름: {roomInfo.character_name}</p>
-              <p>기분: {roomInfo.character_emotion || '알 수 없음'}</p>
-              <p>호감도: {roomInfo.character_likes}</p>
+              <div className="character-status">
+                <p>기분: {roomInfo.character_emotion || '알 수 없음'}</p>
+                <p>호감도: {roomInfo.character_likes}</p>
+              </div>
             </>
           ) : (
             <p>채팅방 정보를 불러오는 중...</p>

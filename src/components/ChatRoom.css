@@ -2,9 +2,13 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  height: 100vh; /* 전체 높이 설정 */
+  position: fixed; /* 고정 위치 */
 }
 
 .chat-header {
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
   background-color: #3a3f58;
   color: white;
@@ -19,35 +23,68 @@
   flex: 1;
   padding: 20px;
   overflow-y: auto;
+  height: calc(100vh - 200px);
+  overflow-x: hidden;
+  margin-bottom: 120px;
 }
 
 .message {
   display: flex;
-  align-items: flex-end;
-  margin-bottom: 10px;
+  align-items: flex-start;
+  margin: 10px 0;
+  width: 100%;
 }
 
 .message.user {
+  flex-direction: row;
   justify-content: flex-end;
 }
 
 .message.bot {
+  flex-direction: row;
   justify-content: flex-start;
+  max-width: 60%;
+}
+
+.bubble-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 60%;
+  align-items: flex-end;
+}
+
+.message.bot .bubble-container {
+  align-items: flex-start;
+  max-width: 100%;
 }
 
 .bubble {
   padding: 10px;
   border-radius: 10px;
-  max-width: 60%;
   word-wrap: break-word;
   font-size: 14px;
   background-color: #5b5f78;
   color: white;
+  width: fit-content; /* 내용에 맞게 너비 조정 */
+  max-width: 100%; /* bubble-container의 너비를 넘지 않도록 */
 }
 
 .message.user .bubble {
   background-color: #7a75f0;
 }
+
+.timestamp {
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
+  width: 100%;
+  text-align: right; /* 시간 오른쪽 정렬 */
+}
+
+.message.bot .timestamp {
+  text-align: left; /* 봇 메시지의 시간은 왼쪽 정렬 */
+}
+
 
 .avatar {
   width: 40px;
@@ -61,6 +98,12 @@
   display: flex;
   padding: 10px;
   background-color: #3a3f58;
+  position: fixed; /* 입력창 고정 */
+  bottom: 0; /* 하단에 고정 */
+  width: 100%; /* 전체 너비 */
+  height: 60px; /* 입력창 높이 명시 */
+  box-sizing: border-box; /* padding을 높이에 포함 */
+  z-index: 1000;
 }
 
 .chat-input input {
@@ -86,12 +129,6 @@
   background-color: #5f58d8;
 }
 
-.chat-header {
-  display: flex;
-  align-items: center;
-  padding: 0px 15px 15px 15px;
-}
-
 .back-button {
   background: none;
   border: none;
@@ -100,7 +137,7 @@
   cursor: pointer;
   padding: 0 15px 0 0;
   margin-left: 10px;
-  margin-bottom: 128px;
+  margin-bottom: 23px;
   border-right: 1px solid #4a4f68;
 }
 
@@ -111,4 +148,14 @@
 .header-content {
   flex: 1;
   text-align: center;
+}
+
+.character-status {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* 기분과 호감도 사이의 간격 */
+}
+
+.character-status p {
+  margin: 0; /* 기본 마진 제거 */
 }
