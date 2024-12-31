@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import ChatList from './components/ChatList'; // 채팅방 목록 컴포넌트
-import ChatRoom from './components/ChatRoom'; // 채팅창 UI 컴포넌트
-import CharacterManager from './components/CharacterManager'; // 캐릭터 생성 컴포넌트
+import ChatRoom from './components/_ChatRoom'; // 채팅창 UI 컴포넌트
+import CharacterManager from './components/_CharacterManager'; // 캐릭터 생성 컴포넌트
 import AITestPage from './components/AITestPage'; // AI 요청 테스트 페이지
-import TTSPage from './components/TTSPage'; // AI 요청 테스트 페이지
+import TTSPage from "./components/TTSPage"; // TTS 테스트 페이지
 import logo from './assets/logo.png'; // 로고 이미지 import
 import './App.css';
 
@@ -49,11 +49,11 @@ function App() {
         </div>
       );
     } else if (currentView === 'character') {
-      return <CharacterManager setCurrentView={setCurrentView} />;
+      return <CharacterManager />;
     } else if (currentView === 'ai-test') {
       return <AITestPage />;
-    } else if (currentView === 'tts-test') {
-      return <TTSPage />;
+    } else if (currentView === "tts-test") {
+      return <TTSPage /> // TTS 요청 테스트 페이지
     }
   };
 
@@ -80,10 +80,10 @@ function App() {
           AI 요청 테스트
         </h2>
         <h2
-          className={`nav-item ${currentView === 'tts-test' ? 'active' : ''}`}
-          onClick={() => setCurrentView('tts-test')}
+          className={`nav-item ${currentView === "tts-test" ? "active" : ""}`}
+          onClick={() => setCurrentView("tts-test")}
         >
-          AI 요청 테스트
+          TTS 요청 테스트
         </h2>
       </div>
 
