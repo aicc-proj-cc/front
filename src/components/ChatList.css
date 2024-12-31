@@ -1,61 +1,85 @@
-.create-room input {
-  width: 100%;
-  margin-bottom: 5px;
-  padding: 8px;
-  border-radius: 4px;
-  border: none;
-  background-color: #4a4f68;
-  color: white;
+/* 공통 스타일 */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #1a2035; /* 배경색 */
+  color: #ffffff; /* 기본 글자색 */
 }
 
-.create-room button {
-  padding: 10px;
-  background-color: #7a75f0;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.app-container {
+  display: flex;
+  height: 100vh;
+}
+
+.chat-list-container {
+  width: 25%;
+  background-color: #48319D; /* 좌측 패널 배경색 */
+  overflow-y: auto;
+}
+
+.chat-room-container {
+  width: 75%;
+  background-color: #2E335A; /* 우측 패널 배경색 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 채팅방 리스트 */
+.chat-list-header {
+  padding: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  background-color: #48319D; /* 헤더 배경색 */
+  border-bottom: 2px solid #5a47a2;
 }
 
 .chat-item {
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 10px 15px;
   cursor: pointer;
-  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.chat-item:hover {
+  background-color: #7126E2; /* 마우스 호버 시 연한 보라색 */
+}
+
+.chat-item.selected {
+  background-color: #8322FF; /* 선택된 페이지의 진한 보라색 */
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 15px;
 }
 
 .chat-item-content {
   display: flex;
-  flex-direction: column; /* 내부 요소를 세로 정렬 */
+  flex-direction: column;
 }
 
 .character-name {
   font-size: 16px;
   font-weight: bold;
-  color: white;
 }
 
 .character-status-message {
-  font-size: 12px;
-  color: #bbb;
-  margin-top: 2px;
+  font-size: 14px;
+  color: #dcdcdc; /* 상태 메시지 글자색 */
 }
 
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
+/* 로고 */
+.logo-container {
+  text-align: center;
 }
 
-.create-room textarea {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 8px;
-  border-radius: 4px;
-  border: none;
-  background-color: #4a4f68;
-  color: white;
-  resize: none;
+.main-logo {
+  max-width: 200px;
+  height: auto;
 }
