@@ -19,21 +19,39 @@ label {
   font-weight: bold;
 }
 
-input, select, button {
+select {
   width: 100%;
   padding: 8px;
   margin-top: 5px;
   font-size: 16px;
 }
 
-button {
+.tts-input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.tts-input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.generate-tts-button {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  font-size: 16px;
   background-color: #007bff;
   color: white;
   border: none;
   cursor: pointer;
 }
 
-button:hover {
+.generate-tts-button:hover {
   background-color: #0056b3;
 }
 
