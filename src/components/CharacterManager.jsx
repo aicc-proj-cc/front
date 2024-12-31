@@ -106,6 +106,10 @@ const CharacterManager = ({ setCurrentView }) => {
 
   // 예시 대화 추가 및 삭제 핸들러
   const addExampleDialogue = () => {
+    if (exampleDialogues.length >= 3) {
+      alert('예시 대화는 최대 3개까지만 작성할 수 있습니다.');
+      return;
+    }
     setExampleDialogues([
       ...exampleDialogues,
       { userMessage: '', characterResponse: '' },
@@ -463,7 +467,30 @@ const CharacterManager = ({ setCurrentView }) => {
             </div>
           </div>
           <hr />
-          <div className="empty-section"></div>
+          <div className="chat-preview-section">
+            <div className="chat-messages">
+              {exampleDialogues.map((dialogue, index) => (
+                <React.Fragment key={index}>
+                  <div className="user-message">
+                    <div className="message-content">
+                      {dialogue.userMessage || '사용자 메시지를 입력해주세요'}
+                    </div>
+                  </div>
+                  <div className="character-message">
+                    <img
+                      src={previewImage || '/default-avatar.png'}
+                      alt="Character"
+                      className="chat-avatar"
+                    />
+                    <div className="message-content">
+                      {dialogue.characterResponse ||
+                        '캐릭터 응답을 입력해주세요'}
+                    </div>
+                  </div>
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
