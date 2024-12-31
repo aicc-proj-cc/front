@@ -1,15 +1,13 @@
 import React from 'react';
-import SideBar from './Sidebar';
-import Upperbar from './UpperBar';
+import SideBar from '../common/Sidebar';
+import Upperbar from '../common/UpperBar';
 import FiledSlider from './FiledSlider';
 import Section from './Section';
-import Footer from './Footer';
+import Footer from '../common/Footer';
 
-function Main() {
+function HomePage() {
   return (
     <div>
-      <SideBar />
-      <Upperbar />
       <FiledSlider />
       <Section />
       <Footer />
@@ -17,4 +15,4 @@ function Main() {
   );
 }
 
-export default Main;
+export default HomePage;
