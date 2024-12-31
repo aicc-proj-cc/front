@@ -38,7 +38,7 @@ function TestPage() {
         }
       );
 
-      console.log("response :", response);
+      console.log('response :', response);
       // Blob 생성 및 URL 생성
       const audioBlob = new Blob([response.data], { type: 'audio/wav' });
       const audioUrl = URL.createObjectURL(audioBlob);
@@ -58,6 +58,7 @@ function TestPage() {
         <div className="form-group">
           <label htmlFor="text">Text:</label>
           <input
+            className="tts-input"
             type="text"
             id="text"
             value={text}
@@ -93,6 +94,7 @@ function TestPage() {
         <div className="form-group">
           <label htmlFor="speed">Speed:</label>
           <input
+            className="tts-input"
             type="number"
             id="speed"
             value={speed}
@@ -102,7 +104,11 @@ function TestPage() {
             onChange={(e) => setSpeed(e.target.value)}
           />
         </div>
-        <button type="submit" disabled={loading}>
+        <button
+          className="generate-tts-button"
+          type="submit"
+          disabled={loading}
+        >
           {loading ? 'Generating...' : 'Generate TTS'}
         </button>
       </form>

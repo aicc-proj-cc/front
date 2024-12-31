@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './CharacterManager.css';
 
-const CharacterManager = () => {
+const CharacterManager = ({ setCurrentView }) => {
   // 탭 상태 관리
   const [activeTab, setActiveTab] = useState('profile');
 
@@ -10,6 +10,8 @@ const CharacterManager = () => {
   const [characterName, setCharacterName] = useState('');
   const [characterField, setCharacterField] = useState('');
   const [characterDescription, setCharacterDescription] = useState('');
+  const [characterImage, setCharacterImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
   // 상세 설정 탭 상태
   const [characterAppearance, setCharacterAppearance] = useState('');
@@ -28,6 +30,22 @@ const CharacterManager = () => {
 
   // 캐릭터 목록 관리
   const [characters, setCharacters] = useState([]);
+
+  // 이미지 업로드 핸들러
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setCharacterImage(file);
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewImage(imageUrl);
+    }
+  };
+
+  // 이미지 삭제 핸들러
+  const handleRemoveImage = () => {
+    setCharacterImage(null);
+    setPreviewImage(null);
+  };
 
   // 하드코딩된 작성 예시 데이터
   const examplePrompts = {
@@ -88,6 +106,10 @@ const CharacterManager = () => {
 
   // 예시 대화 추가 및 삭제 핸들러
   const addExampleDialogue = () => {
+    if (exampleDialogues.length >= 3) {
+      alert('예시 대화는 최대 3개까지만 작성할 수 있습니다.');
+      return;
+    }
     setExampleDialogues([
       ...exampleDialogues,
       { userMessage: '', characterResponse: '' },
@@ -118,6 +140,10 @@ const CharacterManager = () => {
 
   // 탭 전환 핸들러
   const handleNext = () => {
+    if (!characterImage) {
+      alert('캐릭터 이미지를 업로드해주세요.');
+      return;
+    }
     if (activeTab === 'profile') setActiveTab('details');
   };
 
@@ -127,6 +153,13 @@ const CharacterManager = () => {
 
   // 캐릭터 저장 API 호출
   const saveCharacter = async () => {
+    // 이미지 필수 체크
+    if (!characterImage) {
+      alert('캐릭터 이미지를 업로드해주세요.');
+      return;
+    }
+
+    const formData = new FormData();
     const characterData = {
       user_idx: 'example_user',
       field_idx: characterField,
@@ -144,8 +177,15 @@ const CharacterManager = () => {
       example_dialogues: exampleDialogues,
     };
 
+    formData.append('character_image', characterImage);
+    formData.append('character_data', JSON.stringify(characterData));
+
     try {
-      await axios.post('http://localhost:8000/api/characters/', characterData);
+      await axios.post('http://localhost:8000/api/characters/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       fetchCharacters();
       alert('캐릭터 생성 완료!');
     } catch (error) {
@@ -191,12 +231,70 @@ const CharacterManager = () => {
           {/* 프로필 탭 */}
           {activeTab === 'profile' && (
             <div className="character-form">
-              <label>
-                이름
+              <label className="image-field-label">
+                이미지{' '}
                 <button onClick={handleFillExample} className="example-button">
                   작성 예시
                 </button>
               </label>
+              <div className="image-upload-container">
+                <div className="image-management">
+                  <div className="image-preview-section">
+                    <div className="image-preview">
+                      {previewImage ? (
+                        <>
+                          <img src={previewImage} alt="Character preview" />
+                          <button
+                            className="remove-image-btn"
+                            onClick={handleRemoveImage}
+                          >
+                            삭제
+                          </button>
+                        </>
+                      ) : (
+                        <div className="upload-placeholder">
+                          <label
+                            htmlFor="character-image"
+                            className="upload-label"
+                          >
+                            <span>이미지</span>
+                          </label>
+                          <input
+                            id="character-image"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            style={{ display: 'none' }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="image-content">
+                    <p className="image-description">
+                      이미지를 필수로 등록해 주세요.
+                    </p>
+                    <div className="image-buttons">
+                      <button
+                        className="image-add-btn"
+                        onClick={() =>
+                          document.getElementById('character-image').click()
+                        }
+                      >
+                        이미지 추가
+                      </button>
+                      <button
+                        className="image-generate-btn"
+                        onClick={() => setCurrentView('ai-test')}
+                      >
+                        이미지 생성
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <label>이름</label>
               <input
                 type="text"
                 value={characterName}
@@ -350,11 +448,49 @@ const CharacterManager = () => {
         <div className="character-right">
           <h2>채팅 미리보기</h2>
           <div className="preview-section">
-            <h3>{characterName || '캐릭터 이름'}</h3>
-            <p>{characterDescription || '캐릭터 한 줄 소개'}</p>
+            <div className="preview-content">
+              {previewImage ? (
+                <img
+                  src={previewImage}
+                  alt="Character preview"
+                  className="preview-image"
+                />
+              ) : (
+                <div className="preview-image-placeholder">
+                  <span>No Image</span>
+                </div>
+              )}
+              <div className="preview-text">
+                <h3>{characterName || '캐릭터 이름'}</h3>
+                <p>{characterDescription || '캐릭터 한 줄 소개'}</p>
+              </div>
+            </div>
           </div>
           <hr />
-          <div className="empty-section"></div>
+          <div className="chat-preview-section">
+            <div className="chat-messages">
+              {exampleDialogues.map((dialogue, index) => (
+                <React.Fragment key={index}>
+                  <div className="user-message">
+                    <div className="message-content">
+                      {dialogue.userMessage || '사용자 메시지를 입력해주세요'}
+                    </div>
+                  </div>
+                  <div className="character-message">
+                    <img
+                      src={previewImage || '/default-avatar.png'}
+                      alt="Character"
+                      className="chat-avatar"
+                    />
+                    <div className="message-content">
+                      {dialogue.characterResponse ||
+                        '캐릭터 응답을 입력해주세요'}
+                    </div>
+                  </div>
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
