@@ -1,0 +1,118 @@
+.side-container {
+  position: fixed;                      /* 위치 고정 */
+  width: 200px;
+  background-color: var(--side);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--font-size-large);
+  font-weight: var(--font-weight-bold);
+}
+
+.side-wrapper {
+  height: 100%;
+  padding: 20px;
+  /* 내부 여백 */
+  display: flex;
+  flex-direction: column;
+  /* 세로 방향으로 정렬 */
+  justify-content: space-between;
+}
+
+.side-logo {
+  margin-top: 20px;
+  font-size: 24px;
+  color: #ffffff;
+
+  text-align: center;
+}
+.side-logo img{width: 150px;}
+
+.button-create-char {
+  margin-top: 35px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  background: var(--gradient);
+    /* 그라데이션 배경 */
+  border-radius: 36px;
+}
+
+.button-create-char .retangle{
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    font-size: var(--font-size-body-main);
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 36px;
+    background-color: var(--side);
+}
+
+
+
+
+
+.side-tap {
+  display: flex;
+  flex-direction: column;
+  /* 세로 방향으로 정렬 */
+}
+
+.side-find,
+.side-chat,
+.side-Gganbu {
+  color: var(--white-60);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  /* 내부 여백 */
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+.side-find .explore,
+.side-chat .chat,
+.side-Gganbu .friends {
+  fill: var(--white-60);
+}
+
+
+.side-myInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding: 10px;
+}
+
+
+
+.side-logout {
+  color: var(--white-60);
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid var(--white-30);
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.side-logout .logout{
+  fill: var(--white-60);
+}
+
+/* 아이콘 크기 */
+.button-create-char img{width: 35px;}
+
+.side-tap img{width: 30px;}
+
+.side-myInfo img{width: 35px;}
+
+.side-logout .logout{width: 35px ;}
