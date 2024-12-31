@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { FiVolume2 } from 'react-icons/fi';
 import './CharacterManager.css';
 
 const CharacterManager = ({ setCurrentView }) => {
@@ -27,6 +28,15 @@ const CharacterManager = ({ setCurrentView }) => {
   const [exampleDialogues, setExampleDialogues] = useState([
     { userMessage: '', characterResponse: '' },
   ]);
+
+  const [selectedVoice, setSelectedVoice] = useState('paimon');
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [currentAudio, setCurrentAudio] = useState(null);
+
+  const voiceOptions = [
+    { name: 'Paimon', value: 'paimon' },
+    { name: 'Ganyu', value: 'ganyu' },
+  ];
 
   // 캐릭터 목록 관리
   const [characters, setCharacters] = useState([]);
@@ -200,6 +210,45 @@ const CharacterManager = ({ setCurrentView }) => {
       fetchCharacters();
     } catch (error) {
       console.error('캐릭터 삭제 오류:', error);
+    }
+  };
+
+  const generateTTS = async (text) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:8000/generate-tts/',
+        {
+          text,
+          speaker: selectedVoice,
+          language: 'KO',
+          speed: 1.0,
+        },
+        {
+          responseType: 'arraybuffer',
+        }
+      );
+
+      const audioBlob = new Blob([response.data], { type: 'audio/wav' });
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      // 이전 오디오 정리
+      if (currentAudio) {
+        currentAudio.pause();
+        URL.revokeObjectURL(currentAudio.src);
+      }
+
+      // 새 오디오 생성 및 재생
+      const audio = new Audio(audioUrl);
+      setCurrentAudio(audio);
+      audio.play();
+      setIsPlayingAudio(true);
+
+      audio.onended = () => {
+        setIsPlayingAudio(false);
+        URL.revokeObjectURL(audioUrl);
+      };
+    } catch (error) {
+      console.error('TTS 생성 오류:', error);
     }
   };
 
@@ -461,7 +510,20 @@ const CharacterManager = ({ setCurrentView }) => {
                 </div>
               )}
               <div className="preview-text">
-                <h3>{characterName || '캐릭터 이름'}</h3>
+                <div className="preview-text-header">
+                  <h3>{characterName || '캐릭터 이름'}</h3>
+                  <select
+                    value={selectedVoice}
+                    onChange={(e) => setSelectedVoice(e.target.value)}
+                    className="tts-voice-select"
+                  >
+                    {voiceOptions.map((voice) => (
+                      <option key={voice.value} value={voice.value}>
+                        {voice.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <p>{characterDescription || '캐릭터 한 줄 소개'}</p>
               </div>
             </div>
@@ -482,9 +544,20 @@ const CharacterManager = ({ setCurrentView }) => {
                       alt="Character"
                       className="chat-avatar"
                     />
-                    <div className="message-content">
-                      {dialogue.characterResponse ||
-                        '캐릭터 응답을 입력해주세요'}
+                    <div className="message-wrapper">
+                      <div className="message-content">
+                        {dialogue.characterResponse ||
+                          '캐릭터 응답을 입력해주세요'}
+                      </div>
+                      <button
+                        className={`tts-button ${
+                          isPlayingAudio ? 'playing' : ''
+                        }`}
+                        onClick={() => generateTTS(dialogue.characterResponse)}
+                        disabled={!dialogue.characterResponse}
+                      >
+                        <FiVolume2 size={20} />
+                      </button>
                     </div>
                   </div>
                 </React.Fragment>
