@@ -48,6 +48,7 @@
   --purple-light-2: #8322FF;
   --blue: #22D7FF;
   --gradient: linear-gradient(90deg, #A73EE7, #00EBFF);
+  --gradient-hover: linear-gradient(90deg, #00EBFF,#A73EE7 );
   --blue-40: rgba(34, 215, 255, 0.4);
 
 
