@@ -48,7 +48,7 @@ function App() {
         </div>
       );
     } else if (currentView === 'character') {
-      return <CharacterManager />;
+      return <CharacterManager setCurrentView={setCurrentView} />;
     } else if (currentView === 'ai-test') {
       return <AITestPage />;
     }
