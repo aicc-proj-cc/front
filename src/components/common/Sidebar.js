@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // 페이지 이동을 위한 useNavigate 훅
 import './Sidebar.css';
 
 // svg 아이콘
@@ -15,15 +16,18 @@ import logo from '../../assets/logo.png';
 import account from '../../assets/icons/account.png';
 
 const Sidebar = () => {
+  const navigate = useNavigate(); // 페이지 이동을 위한 훅 사용
+
   return (
     <div className="side-container">
       <div className="side-wrapper">
         <div>
-          <div className="side-logo">
+          <div className="side-logo" onClick={() => navigate('/')}>
             <img src={logo} alt="logo" />
           </div>
           <div className="button-create-char">
-            <div className="retangle">
+            {/* 캐릭터 생성 */}
+            <div className="retangle" onClick={() => navigate('/CharacterManager')}>
               <Create className="logout" />
               <div>Create</div>
             </div>
@@ -31,13 +35,13 @@ const Sidebar = () => {
 
           <div className="side-tap">
             {/* 캐릭터 조회 */}
-            <div className="side-find">
+            <div className="side-find" onClick={() => navigate('/CharacterSearch')}>
               <Explore className="explore" />
               <div>Find</div>
             </div>
 
             {/* 채팅 화면 */}
-            <div className="side-chat">
+            <div className="side-chat" onClick={() => navigate('/ChatPage')}>
               <Chat className="chat" />
               <div>Chat</div>
             </div>

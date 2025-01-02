@@ -1,44 +1,28 @@
 .chat-container {
   display: flex;
   flex-direction: column;
-  width: 100%;
   height: 100vh;
   background-color: #2d2f42;
   color: white;
 }
 
-.chat-header {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background-color: #3a3f58;
-  padding: 15px 0;
-  /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5); */
-}
-
 .chat-body {
   display: flex;
   flex: 1;
+  height: 100%;
 }
 
 .chat-list-container {
-  width: 25%;
-  background-color: #383c52;
+  flex: 0 0 320px; /* 좌측 패널 고정 너비 */
+  background-color: #48319D; /* 좌측 패널 배경색 */
+  overflow-y: auto;
 }
 
 .chat-room-container {
   flex: 1;
-  width: 75%;
   background-color: #2d2f42;
-}
-
-.chat-placeholder {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  font-size: 20px;
-  color: #7a75f0;
+  flex-direction: column;
 }
 
 .logo-container {
@@ -53,11 +37,4 @@
   max-width: 300px;
   height: auto;
   opacity: 0.8;
-}
-
-.chat-room-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background-color: #2d2f42;
 }

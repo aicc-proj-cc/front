@@ -41,15 +41,6 @@
   background-color: #2d2f42;
 }
 
-.chat-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  font-size: 20px;
-  color: #7a75f0;
-}
-
 .logo-container {
   flex: 1;
   display: flex;
@@ -69,4 +60,32 @@
   display: flex;
   flex-direction: column;
   background-color: #2d2f42;
+}
+
+
+.app-main-frame {
+  display: flex;
+  height: 100vh; /* 전체 화면 높이 */
+}
+
+.app-main-sidebar {
+  position: fixed; /* 고정된 사이드바 */
+  top: 0;
+  left: 0;
+  width: 200px; /* Sidebar 너비 */
+  height: 100vh;
+  background-color: var(--side);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000; /* 다른 요소 위로 표시 */
+}
+
+.app-main-content {
+  margin-left: 200px; /* Sidebar 너비만큼 밀어냄 */
+  flex: 1;
+  display: flex;
+  height: 100vh; /* 전체 화면 높이 */
+  flex-direction: column;
+  background-color: #2d2f42;
+  overflow-y: auto; /* 콘텐츠 스크롤 가능 */
 }
