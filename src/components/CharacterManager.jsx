@@ -222,37 +222,63 @@ const CharacterManager = ({ setCurrentView }) => {
       const response = await axios.post(
         'http://localhost:8000/generate-tts/',
         {
-          text,
+          text: text,
           speaker: selectedVoice,
           language: 'KO',
           speed: 1.0,
         },
         {
-          responseType: 'arraybuffer',
+          responseType: 'arraybuffer', // 중요: 바이너리 데이터를 받기 위해 필요
+          headers: {
+            'Content-Type': 'application/json',
+          },
         }
       );
 
-      const audioBlob = new Blob([response.data], { type: 'audio/wav' });
-      const audioUrl = URL.createObjectURL(audioBlob);
+      // 응답이 성공적으로 왔는지 확인
+      if (response.status === 200) {
+        const audioBlob = new Blob([response.data], { type: 'audio/wav' });
+        const audioUrl = URL.createObjectURL(audioBlob);
 
-      // 이전 오디오 정리
-      if (currentAudio) {
-        currentAudio.pause();
-        URL.revokeObjectURL(currentAudio.src);
+        // 이전 오디오 정리
+        if (currentAudio) {
+          currentAudio.pause();
+          URL.revokeObjectURL(currentAudio.src);
+        }
+
+        // 새 오디오 생성 및 재생
+        const audio = new Audio(audioUrl);
+        setCurrentAudio(audio);
+        audio.play();
+        setIsPlayingAudio(true);
+
+        audio.onended = () => {
+          setIsPlayingAudio(false);
+          URL.revokeObjectURL(audioUrl);
+        };
       }
-
-      // 새 오디오 생성 및 재생
-      const audio = new Audio(audioUrl);
-      setCurrentAudio(audio);
-      audio.play();
-      setIsPlayingAudio(true);
-
-      audio.onended = () => {
-        setIsPlayingAudio(false);
-        URL.revokeObjectURL(audioUrl);
-      };
     } catch (error) {
       console.error('TTS 생성 오류:', error);
+
+      // 에러 응답 처리
+      if (error.response) {
+        // 서버가 2xx 범위를 벗어난 상태 코드로 응답한 경우
+        if (error.response.status === 500) {
+          alert('TTS 서버 오류가 발생했습니다. 서버 상태를 확인해주세요.');
+        } else {
+          alert('TTS 생성 중 오류가 발생했습니다.');
+        }
+      } else if (error.request) {
+        // 요청은 보냈지만 응답을 받지 못한 경우
+        alert(
+          'TTS 서버에 연결할 수 없습니다. 서버가 실행 중인지 확인해주세요.'
+        );
+      } else {
+        // 요청 설정 중 오류가 발생한 경우
+        alert('TTS 요청 중 오류가 발생했습니다.');
+      }
+
+      setIsPlayingAudio(false);
     }
   };
 
