@@ -99,7 +99,6 @@
   display: flex;
   padding: 10px;
   background-color: #3a3f58;
-  position: fixed; /* 입력창 고정 */
   bottom: 0; /* 하단에 고정 */
   width: 100%; /* 전체 너비 */
   height: 60px; /* 입력창 높이 명시 */
