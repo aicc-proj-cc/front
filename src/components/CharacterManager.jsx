@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FiVolume2 } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import './CharacterManager.css';
 
 const CharacterManager = ({ setCurrentView }) => {
@@ -56,6 +58,8 @@ const CharacterManager = ({ setCurrentView }) => {
     setCharacterImage(null);
     setPreviewImage(null);
   };
+
+  const navigate = useNavigate();
 
   // 하드코딩된 작성 예시 데이터
   const examplePrompts = {
@@ -258,6 +262,12 @@ const CharacterManager = ({ setCurrentView }) => {
 
   return (
     <div className="character-manager">
+      <div className="top-bar">
+        <button onClick={() => navigate(-1)} className="create-back-button">
+          <ArrowLeft size={24} />
+        </button>
+        <span className="page-title">캐릭터 만들기</span>
+      </div>
       <div className="character-container">
         {/* 좌측 섹션 */}
         <div className="character-left">
@@ -515,7 +525,7 @@ const CharacterManager = ({ setCurrentView }) => {
                   <select
                     value={selectedVoice}
                     onChange={(e) => setSelectedVoice(e.target.value)}
-                    className="tts-voice-select"
+                    className="tts-voice-choice"
                   >
                     {voiceOptions.map((voice) => (
                       <option key={voice.value} value={voice.value}>
@@ -524,7 +534,7 @@ const CharacterManager = ({ setCurrentView }) => {
                     ))}
                   </select>
                 </div>
-                <p>{characterDescription || '캐릭터 한 줄 소개'}</p>
+                <p>{characterDescription || '한 줄 소개'}</p>
               </div>
             </div>
           </div>

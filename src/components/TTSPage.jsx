@@ -69,6 +69,7 @@ function TestPage() {
         <div className="form-group">
           <label htmlFor="speaker">Select Character:</label>
           <select
+            className="tts-select"
             id="speaker"
             value={speaker}
             onChange={(e) => setSpeaker(e.target.value)}
