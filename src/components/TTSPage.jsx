@@ -45,7 +45,12 @@ function TestPage() {
       setAudioUrl(audioUrl);
     } catch (error) {
       console.error('Error generating TTS:', error);
-      alert('TTS 생성 중 오류가 발생했습니다. 입력 데이터를 확인하세요.');
+      if (error.code === "ERR_BAD_RESPONSE") {
+        alert('TTS 서버 오류 : TTS 서버를 확인하세요.');
+      } else {
+        alert('TTS 생성 중 오류가 발생했습니다. 입력 데이터를 확인하세요.');
+      }
+
     } finally {
       setLoading(false); // 로딩 상태 비활성화
     }
