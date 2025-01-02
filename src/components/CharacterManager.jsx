@@ -31,7 +31,8 @@ const CharacterManager = ({ setCurrentView }) => {
     { userMessage: '', characterResponse: '' },
   ]);
 
-  const [selectedVoice, setSelectedVoice] = useState('paimon');
+  const [voices, setVoices] = useState([]);
+  const [selectedVoice, setSelectedVoice] = useState('');
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [currentAudio, setCurrentAudio] = useState(null);
 
@@ -177,7 +178,7 @@ const CharacterManager = ({ setCurrentView }) => {
     const characterData = {
       user_idx: 'example_user',
       field_idx: characterField,
-      voice_idx: 'default_voice',
+      voice_idx: selectedVoice,
       char_name: characterName,
       char_description: characterDescription,
       character_status_message: characterStatusMessages.filter(
@@ -199,6 +200,7 @@ const CharacterManager = ({ setCurrentView }) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        withCredentials: true,
       });
       fetchCharacters();
       alert('캐릭터 생성 완료!');
@@ -281,6 +283,26 @@ const CharacterManager = ({ setCurrentView }) => {
       setIsPlayingAudio(false);
     }
   };
+
+  useEffect(() => {
+    // 기존 fetchCharacters 함수 유지
+    fetchCharacters();
+
+    // voice 목록 가져오기 추가
+    const fetchVoices = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/api/voices/');
+        setVoices(response.data);
+        if (response.data.length > 0) {
+          setSelectedVoice(response.data[0].voice_idx);
+        }
+      } catch (error) {
+        console.error('voice 목록 불러오기 오류:', error);
+      }
+    };
+
+    fetchVoices();
+  }, []);
 
   useEffect(() => {
     fetchCharacters();
@@ -553,9 +575,9 @@ const CharacterManager = ({ setCurrentView }) => {
                     onChange={(e) => setSelectedVoice(e.target.value)}
                     className="tts-voice-choice"
                   >
-                    {voiceOptions.map((voice) => (
-                      <option key={voice.value} value={voice.value}>
-                        {voice.name}
+                    {voices.map((voice) => (
+                      <option key={voice.voice_idx} value={voice.voice_idx}>
+                        {voice.voice_speaker}
                       </option>
                     ))}
                   </select>
