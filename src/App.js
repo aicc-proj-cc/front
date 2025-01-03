@@ -29,7 +29,7 @@ function App() {
             {/* 캐릭터 조회 */}
             <Route path="/ChatPage" element={<ChatPage />} />{' '}
             {/* 채팅 페이지 */}
-            <Route path="/AITestPage" element={<AITestPage />} />{' '}
+            <Route path="/image-create" element={<AITestPage />} />{' '}
             {/* 이미지 생성 */}
             <Route path="/TTSPage" element={<TTSPage />} /> {/* TTS 테스트 */}
             <Route path="/ChatSummary" element={<ChatSummary />} />{' '}
