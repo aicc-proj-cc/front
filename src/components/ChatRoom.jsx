@@ -46,6 +46,52 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
     }
   };
 
+  // WebSocket 연결 초기화
+  useEffect(() => {
+    if (!roomId) return;
+
+    // WebSocket 연결 초기화
+    const ws = new WebSocket(`ws://localhost:8001/ws/generate/?room_id=${roomId}`);
+
+    // WebSocket 연결 성공 이벤트
+    ws.onopen = () => {
+        console.log('WebSocket 연결 성공');
+    };
+
+    // WebSocket 메시지 수신 이벤트
+    ws.onmessage = (event) => {
+        try {
+            const data = JSON.parse(event.data);
+
+            // 서버에서 받은 메시지를 로컬 상태에 추가
+            const botMessage = {
+                sender: roomInfo?.character_name || 'bot',
+                content: data.text,
+                timestamp: new Date().toISOString(),
+            };
+
+            setMessages((prev) => [
+                ...prev,
+                botMessage
+            ]);
+        } catch (error) {
+            console.error('WebSocket 메시지 수신 오류:', error.message);
+        }
+    };
+
+    // WebSocket 연결 종료 이벤트
+    ws.onclose = () => {
+        console.log('WebSocket 연결 종료');
+    };
+
+    // WebSocket 오류 이벤트
+    ws.onerror = (error) => {
+        console.error('WebSocket 오류:', error);
+    };
+
+    return () => ws.close(); // 컴포넌트 언마운트 시 WebSocket 연결 종료
+}, [roomId]);
+
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!input.trim() || !roomInfo) return;

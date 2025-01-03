@@ -5,7 +5,7 @@ import CharacterManager from './components/_CharacterManager'; // 캐릭터 생�
 import AITestPage from './components/AITestPage'; // AI 요청 테스트 페이지
 import TTSPage from "./components/TTSPage"; // TTS 테스트 페이지
 import logo from './assets/logo.png'; // 로고 이미지 import
-import './App.css';
+import './_App copy.css';
 
 function App() {
   const [selectedRoom, setSelectedRoom] = useState(null); // 현재 선택된 채팅방 ID
