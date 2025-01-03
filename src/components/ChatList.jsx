@@ -32,7 +32,9 @@ const ChatList = ({ onSelectRoom }) => {
       {chatRooms.map((room) => (
         <div
           key={room.room_id}
-          className={`chat-item ${selectedRoomId === room.room_id ? 'selected' : ''}`}
+          className={`chat-item ${
+            selectedRoomId === room.room_id ? 'selected' : ''
+          }`}
           onClick={() => {
             // 선택된 채팅방 ID 상태 업데이트
             setSelectedRoomId(room.room_id);

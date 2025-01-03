@@ -1,20 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './TTSPage.css';
 
 function TestPage() {
   const [text, setText] = useState('');
-  const [speaker, setSpeaker] = useState('paimon'); // 기본값 설정
+  const [speaker, setSpeaker] = useState(''); // 기본값 설정
   const [language, setLanguage] = useState('KO');
   const [speed, setSpeed] = useState(1.0);
   const [audioUrl, setAudioUrl] = useState(null);
   const [loading, setLoading] = useState(false); // 로딩 상태 추가
+  const [characterOptions, setCharacterOptions] = useState([]); // DB에서 불러온 캐릭터 목록
 
-  // 미리 지정된 캐릭터 목록
-  const characterOptions = [
-    { name: 'paimon', value: 'paimon' },
-    { name: 'ganyu', value: 'ganyu' },
-  ];
+  useEffect(() => {
+    // API에서 캐릭터 목록 가져오기
+    const fetchCharacterOptions = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/api/voices/');
+        const options = response.data.map((voice) => ({
+          name: voice.voice_speaker, // 캐릭터 이름
+          value: voice.voice_speaker, // 모델 스피커 이름
+        }));
+        setCharacterOptions(options);
+  
+        // 기본값 설정 (첫 번째 캐릭터)
+        if (options.length > 0) {
+          setSpeaker(options[0].value); // `value`로 기본값 설정
+        }
+      } catch (error) {
+        console.error('Error fetching character options:', error);
+        alert('캐릭터 목록을 가져오는 중 오류가 발생했습니다.');
+      }
+    };
+  
+    fetchCharacterOptions();
+  }, []);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -8,6 +8,7 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [roomInfo, setRoomInfo] = useState(null);
+  const [isTyping, setIsTyping] = useState(false); // 챗봇이 타이핑 중인지 확인하는 상태
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -62,7 +63,10 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
           (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
         )
       );
-      setInput('');
+      setInput(''); // 입력 필드 초기화
+
+      // 챗봇이 타이핑 중임을 나타냄
+      setIsTyping(true);
 
       const response = await axios.post(
         `http://localhost:8000/api/chat/${roomId}`,
@@ -92,6 +96,9 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
         error.response?.data?.detail || error.message
       );
       alert('메시지 전송 중 오류가 발생했습니다. 다시 시도해주세요.');
+    } finally {
+      // 챗봇이 응답을 완료하면 타이핑 상태를 false로 변경
+      setIsTyping(false);
     }
   };
 
@@ -153,7 +160,6 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
           )}
         </div>
       </div>
-
       <div className="chat-messages">
         {messages.map((msg, idx) => {
           const isUser = msg.sender === 'user';
@@ -186,9 +192,27 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
             </div>
           );
         })}
+
+        {/* 챗봇이 타이핑 중일 때 표시 */}
+        {isTyping && (
+          <div className="message bot">
+            <div className="bubble-container">
+              <div className="bubble">
+                {roomInfo && roomInfo.character_name && (
+                  <div className="typing-dots">
+                    <span>.</span>
+                    <span>.</span>
+                    <span>.</span>
+                  </div>
+                )}
+              </div>{' '}
+              {/* 타이핑 중 표시 */}
+            </div>
+          </div>
+        )}
+
         <div ref={messagesEndRef} />
       </div>
-
       <form className="chat-input" onSubmit={sendMessage}>
         <input
           value={input}
