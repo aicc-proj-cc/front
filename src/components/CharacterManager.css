@@ -497,3 +497,64 @@ hr {
 .tts-button.playing {
   color: #7a75f0;
 }
+
+.nicknames-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.nickname-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nickname-level {
+  min-width: 100px;
+}
+
+.nickname-input input {
+  padding: 10px;
+  border: 2px solid #4a4f68;
+  border-radius: 8px;
+  background-color: #2d2f42;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* 필드 드롭다운 스타일 */
+.field-dropdown {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #4a4f68;
+  border-radius: 8px;
+  background-color: #2d2f42;
+  color: white;
+  font-size: 14px;
+}
+
+.field-dropdown option {
+  background-color: #2d2f42;
+  color: white;
+}
+
+/* 필드 드롭다운 호버 시 */
+.field-dropdown:hover {
+  border-color: white;
+}
+
+.field-dropdown:focus {
+  outline: none;
+  border-color: white;
+}
+
+/* 필드 선택된 값 표시 */
+.field-dropdown:invalid {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* 필드 드롭다운 메뉴 placeholder 스타일 */
+.field-dropdown-placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
