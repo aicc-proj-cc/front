@@ -10,13 +10,13 @@ const ImageCreate = () => {
     'lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry'
   ); // 네거티브 프롬프트
 
-  const [guidanceScale, setGuidanceScale] = useState(7.5); // 가이던스 스케일
-  const [numInferenceSteps, setNumInferenceSteps] = useState(50); // 추론 단계
+  const [guidanceScale, setGuidanceScale] = useState(7.5); // 프롬프트 충실도 단계 상태 초기화
+  const [numInferenceSteps, setNumInferenceSteps] = useState(50); // 노이즈 단계 상태 초기화
   const [generatedImage, setGeneratedImage] = useState(null); // 생성된 이미지
   const [loading, setLoading] = useState(false); // 로딩 상태
 
   // width와 height를 설정할 state
-  const [dimensions, setDimensions] = useState({ width: 512, height: 512 }); // 기본값: 정사각형
+  const [dimensions, setDimensions] = useState({ width: 512, height: 512 }); // 상태 초기화
 
   const handleGenerateImage = async () => {
     if (!userPrompt.trim()) {
@@ -59,9 +59,10 @@ const ImageCreate = () => {
     setDimensions(options[value]);
   };
 
-  // Num Inference Steps(노이즈 제거 단계) 버튼 클릭 핸들러 추가
+  // Num Inference Steps(노이즈 제거 단계)
   const handleInferenceStepChange = (value) => {
     const options = {
+      // 단계가 낮으면 선 처리가 조금 더 투박한 느낌
       low: 30, // Low 단계
       normal: 50, // Normal 단계
       high: 60, // High 단계
@@ -70,6 +71,20 @@ const ImageCreate = () => {
 
     console.log(
       `선택된 노이즈 제거 단계: ${value}, 설정된 값: ${options[value]}`
+    );
+  };
+
+  const handleGuidanceScale = (value) => {
+    // 단계가 낮을수록 조금 오묘한 이미지가 생성 됨(모호 필터한 것 처럼)
+    // 단계가 높으면 조금 더 샤프한 이미지가 생성 됨
+    const options = {
+      low: 6.5,
+      normal: 7.5,
+      high: 8.5,
+    };
+    setGuidanceScale(options[value]);
+    console.log(
+      `선택된 프롬프트 충실도 단계: ${value}, 설정된 값: ${options[value]}`
     );
   };
 
@@ -107,14 +122,12 @@ const ImageCreate = () => {
       </label>
       <br />
       <label>
-        Guidance Scale(근사치, 수치가 큰수록 프롬프트에 충실):
-        <input
-          type="number"
-          step="0.1"
-          value={guidanceScale}
-          onChange={(e) => setGuidanceScale(e.target.value)}
-          style={{ marginLeft: '10px', padding: '5px', width: '80px' }}
-        />
+        Guidance Scale(프롬프트에 충실 단계):
+        <button onClick={() => handleGuidanceScale('low')}>Low(6.5)</button>
+        <button onClick={() => handleGuidanceScale('normal')}>
+          Normal(7.5)
+        </button>
+        <button onClick={() => handleGuidanceScale('high')}>High(8.5)</button>
       </label>
       <br />
       <label>
