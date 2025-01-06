@@ -110,6 +110,7 @@ function TestPage() {
         <div className="form-group">
           <label htmlFor="language">Language:</label>
           <select
+            className='tts-lang' 
             id="language"
             value={language}
             onChange={(e) => setLanguage(e.target.value)}

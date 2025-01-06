@@ -4,7 +4,7 @@ import Sidebar from './components/common/Sidebar';
 import CharacterManager from './components/CharacterManager'; // 캐릭터 등록 페이지
 import CharacterSearch from './components/CharacterSearch'; // 캐릭터 조회 페이지
 import ChatPage from './components/ChatPage'; // 채팅 페이지
-import ImageCreate from './components/ImageCreate'; // 이미지 생성 페이지
+import ImageCreate from './components/image_create/ImageCreate'; // 이미지 생성 페이지
 import TTSPage from './components/TTSPage'; // TTS 테스트 페이지
 
 import './App.css';
@@ -28,7 +28,7 @@ function App() {
             {/* 캐릭터 조회 */}
             <Route path="/ChatPage" element={<ChatPage />} />{' '}
             {/* 채팅 페이지 */}
-            <Route path="/image-create" element={<ImageCreate />} />{' '}
+            <Route path="/generate-image" element={<ImageCreate />} />{' '}
             {/* 이미지 생성 */}
             <Route path="/TTSPage" element={<TTSPage />} /> {/* TTS 테스트 */}
           </Routes>

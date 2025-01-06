@@ -1,4 +1,5 @@
 .test-page {
+  width: 80%;
   padding: 20px;
   max-width: 600px;
   margin: 0 auto;
@@ -24,6 +25,7 @@ label {
   padding: 8px;
   margin-top: 5px;
   font-size: 16px;
+  background-color: var(--bg); 
 }
 
 .tts-input {
@@ -33,6 +35,11 @@ label {
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  background-color: var(--bg);
+}
+
+.tts-lang {
+  background-color: var(--bg);
 }
 
 .tts-input:focus {
