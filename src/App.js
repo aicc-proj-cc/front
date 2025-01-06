@@ -28,7 +28,7 @@ function App() {
             {/* 캐릭터 조회 */}
             <Route path="/ChatPage" element={<ChatPage />} />{' '}
             {/* 채팅 페이지 */}
-            <Route path="/image-create" element={<ImageCreate />} />{' '}
+            <Route path="/generate-image" element={<ImageCreate />} />{' '}
             {/* 이미지 생성 */}
             <Route path="/TTSPage" element={<TTSPage />} /> {/* TTS 테스트 */}
           </Routes>
