@@ -230,9 +230,10 @@ const CharacterManager = ({ setCurrentView }) => {
 
     const formData = new FormData();
     const characterData = {
-      user_idx: '1',
+      character_owner: 1, // 임시데이터
       field_idx: parseInt(characterField, 10),
-      voice_idx: selectedVoice.voice_idx,
+      // voice_idx: selectedVoice.voice_idx,
+      voice_idx: '38f942a9-b2c4-4c0f-aa86-ce0c13df787d', // 임시 데이터
       char_name: characterName,
       char_description: characterDescription,
       character_appearance: characterAppearance,
