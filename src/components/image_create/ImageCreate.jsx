@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './ImageCreate.css';
 
 const ImageCreate = () => {
   const [userPrompt, setUserPrompt] = useState(
@@ -58,6 +59,20 @@ const ImageCreate = () => {
     setDimensions(options[value]);
   };
 
+  // Num Inference Steps(노이즈 제거 단계) 버튼 클릭 핸들러 추가
+  const handleInferenceStepChange = (value) => {
+    const options = {
+      low: 30, // Low 단계
+      normal: 50, // Normal 단계
+      high: 60, // High 단계
+    };
+    setNumInferenceSteps(options[value]); // 선택한 값으로 numInferenceSteps 업데이트
+
+    console.log(
+      `선택된 노이즈 제거 단계: ${value}, 설정된 값: ${options[value]}`
+    );
+  };
+
   return (
     <div style={{ padding: '20px' }}>
       <h1>AI 이미지 생성</h1>
@@ -103,14 +118,20 @@ const ImageCreate = () => {
       </label>
       <br />
       <label>
-        Num Inference Steps(정밀도):
-        <input
-          type="number"
-          value={numInferenceSteps}
-          onChange={(e) => setNumInferenceSteps(e.target.value)}
-          style={{ marginLeft: '10px', padding: '5px', width: '80px' }}
-        />
+        Num Inference Steps(노이즈 제거 단계):
+        <div>
+          <button onClick={() => handleInferenceStepChange('low')}>
+            Low (30)
+          </button>
+          <button onClick={() => handleInferenceStepChange('normal')}>
+            Normal (50)
+          </button>
+          <button onClick={() => handleInferenceStepChange('high')}>
+            High (60)
+          </button>
+        </div>
       </label>
+
       <br />
       <button
         onClick={handleGenerateImage}
