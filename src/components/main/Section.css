@@ -1,0 +1,51 @@
+.section {
+  width: 80%;
+  margin: 0 auto; /* 페이지 가운데 정렬 */
+  margin-bottom: 40px;
+}
+
+.section-title {
+  font-size: var(--font-size-body-intro);
+  font-weight: var(--font-weight-bold);
+  color: white;
+  margin-bottom: 20px;
+  text-align: left; /* 왼쪽 정렬 */
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap; /* 버튼들이 공간 부족 시 다음 줄로 넘어가도록 설정 */
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.category-btn {
+  background-color: var(--purple-1);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.category-btn:hover {
+  background-color: var(--purple-light-2);
+}
+
+.category-btn.selected {
+  background-color: var(--purple-light-2);
+  color: white;
+  border-color: var(--blue-40);
+}
+
+.character-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.character-card:hover {
+  transform: scale(1.05);
+}
+
