@@ -8,12 +8,14 @@ const ImageCreate = () => {
   const [negativePrompt, setNegativePrompt] = useState(
     'lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry'
   ); // 네거티브 프롬프트
-  const [width, setWidth] = useState(512); // 이미지 가로 크기
-  const [height, setHeight] = useState(512); // 이미지 세로 크기
+
   const [guidanceScale, setGuidanceScale] = useState(7.5); // 가이던스 스케일
   const [numInferenceSteps, setNumInferenceSteps] = useState(50); // 추론 단계
   const [generatedImage, setGeneratedImage] = useState(null); // 생성된 이미지
   const [loading, setLoading] = useState(false); // 로딩 상태
+
+  // width와 height를 설정할 state
+  const [dimensions, setDimensions] = useState({ width: 512, height: 512 }); // 기본값: 정사각형
 
   const handleGenerateImage = async () => {
     if (!userPrompt.trim()) {
@@ -30,8 +32,8 @@ const ImageCreate = () => {
         {
           prompt: userPrompt,
           negative_prompt: negativePrompt,
-          width: parseInt(width, 10),
-          height: parseInt(height, 10),
+          width: dimensions.width, // dimensions 사용
+          height: dimensions.height, // dimensions 사용
           guidance_scale: parseFloat(guidanceScale),
           num_inference_steps: parseInt(numInferenceSteps, 10),
         }
@@ -44,6 +46,16 @@ const ImageCreate = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // 드롭다운 선택 시 width와 height를 설정하는 함수
+  const handleDimensionChange = (value) => {
+    const options = {
+      square: { width: 512, height: 512 }, // 정사각형
+      portrait: { width: 512, height: 880 }, // 세로형
+      landscape: { width: 880, height: 512 }, // 가로형
+    };
+    setDimensions(options[value]);
   };
 
   return (
@@ -68,27 +80,19 @@ const ImageCreate = () => {
       />
       <br />
       <label>
-        Width:
-        <input
-          type="number"
-          value={width}
-          onChange={(e) => setWidth(e.target.value)}
-          style={{ marginLeft: '10px', padding: '5px', width: '80px' }}
-        />
+        Dimensions:
+        <select
+          onChange={(e) => handleDimensionChange(e.target.value)} // 드롭다운에서 선택하면 handleDimensionChange 호출
+          style={{ marginLeft: '10px', padding: '5px' }}
+        >
+          <option value="square">정사각형 (512x512)</option>
+          <option value="portrait">세로형 (512x880)</option>
+          <option value="landscape">가로형 (880x512)</option>
+        </select>
       </label>
       <br />
       <label>
-        Height:
-        <input
-          type="number"
-          value={height}
-          onChange={(e) => setHeight(e.target.value)}
-          style={{ marginLeft: '10px', padding: '5px', width: '80px' }}
-        />
-      </label>
-      <br />
-      <label>
-        Guidance Scale:
+        Guidance Scale(근사치, 수치가 큰수록 프롬프트에 충실):
         <input
           type="number"
           step="0.1"
@@ -99,7 +103,7 @@ const ImageCreate = () => {
       </label>
       <br />
       <label>
-        Num Inference Steps:
+        Num Inference Steps(정밀도):
         <input
           type="number"
           value={numInferenceSteps}
