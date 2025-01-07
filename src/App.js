@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import HomePage from './components/main/HomePage';
 import Sidebar from './components/common/Sidebar';
@@ -8,15 +9,24 @@ import ImageCreate from './components/image_create/ImageCreate'; // 이미지 �
 import TTSPage from './components/TTSPage'; // TTS 테스트 페이지
 import Upperbar from './components/common/Upperbar';
 import Signup from './components/main/Signup';
-import Signin from './components/main/Signin';
+import User from './components/main/User';
 import Search from './components/main/Search';
 import Rank from './components/main/Rank';
-import Mypage from './components/main/Mypage';
 import Wordcloud from './components/main/Wordcloud';
-
 import './App.css';
 
 function App() {
+  const [nickname, setNickname] = useState(''); // nickname 상태 추가
+
+  const handleLoginSuccess = (receivedNickname) => {
+    setNickname(receivedNickname);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    setNickname('');
+  };
+
   return (
     <BrowserRouter>
       <div className="app-main-frame">
@@ -24,19 +34,26 @@ function App() {
           <Sidebar /> {/* 고정된 사이드바 */}
         </div>
         <div className="app-main-content">
-          <Upperbar /> {/* 상단 바 */}
+          <Upperbar nickname={nickname} />
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route
+              path="/User"
+              element={
+                <User
+                  onLoginSuccess={handleLoginSuccess}
+                  onLogout={handleLogout}
+                />
+              }
+            />
             <Route path="/CharacterManager" element={<CharacterManager />} />
             <Route path="/CharacterSearch" element={<CharacterSearch />} />
             <Route path="/ChatPage" element={<ChatPage />} />
             <Route path="/generate-image" element={<ImageCreate />} />
             <Route path="/TTSPage" element={<TTSPage />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/signin" element={<Signin />} />
             <Route path="/search" element={<Search />} />
             <Route path="/rank" element={<Rank />} />
-            <Route path="/mypage" element={<Mypage />} />
             <Route path="/wordcloud" element={<Wordcloud />} />
           </Routes>
         </div>

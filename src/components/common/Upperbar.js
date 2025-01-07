@@ -3,30 +3,34 @@ import { Link } from 'react-router-dom'; // Link 가져오기
 
 const Upperbar = () => {
   return (
-    <div className="w-full">
-      {/* Upperbar Navigation */}
-      <div className="w-full bg-gray-800 text-white shadow-md flex items-center justify-end px-4 py-2">
-        <nav className="flex space-x-4">
-          <Link to="/signup" className="hover:text-indigo-400">
+    <div className="w-full py-6 px-4 text-white bg-primary flex flex-col justify-center items-end border-b-2 border-gray-600">
+      <nav className="flex space-x-6 text-lg">
+        <Link to="/signup">
+          <button className=" rounded-md p-2 bg-button hover:bg-hover">
             Signup
-          </Link>
-          <Link to="/signin" className="hover:text-indigo-400">
-            Signin
-          </Link>
-          <Link to="/search" className="hover:text-indigo-400">
+          </button>
+        </Link>
+        <Link to="/User">
+          <button className=" rounded-md p-2 bg-button hover:bg-hover">
+            User
+          </button>
+        </Link>
+        <Link to="/Search">
+          <button className=" rounded-md p-2 bg-button hover:bg-hover">
             Search
-          </Link>
-          <Link to="/rank" className="hover:text-indigo-400">
+          </button>
+        </Link>
+        <Link to="/Rank">
+          <button className=" rounded-md p-2 bg-button hover:bg-hover">
             Rank
-          </Link>
-          <Link to="/mypage" className="hover:text-indigo-400">
-            Mypage
-          </Link>
-          <Link to="/wordcloud" className="hover:text-indigo-400">
+          </button>
+        </Link>
+        <Link to="/Wordcloud">
+          <button className=" rounded-md p-2 bg-button hover:bg-hover">
             Wordcloud
-          </Link>
-        </nav>
-      </div>
+          </button>
+        </Link>
+      </nav>
     </div>
   );
 };
