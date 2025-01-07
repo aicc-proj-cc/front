@@ -27,6 +27,9 @@ const CharacterManager = ({ setCurrentView }) => {
     { userMessage: '', characterResponse: '' },
   ]);
 
+  const [tagName, setTagName] = useState(''); // 태그명
+  const [tagDescription, setTagDescription] = useState(''); // 태그 설명
+
   // 호감도별 호칭 상태 관리
   const [nicknames, setNicknames] = useState({
     30: 'ex) 당신',
@@ -80,6 +83,14 @@ const CharacterManager = ({ setCurrentView }) => {
   const handleRemoveImage = () => {
     setCharacterImage(null);
     setPreviewImage(null);
+  };
+
+  const handleTagNameChange = (e) => {
+    setTagName(e.target.value); // 태그명 업데이트
+  };
+
+  const handleTagDescriptionChange = (e) => {
+    setTagDescription(e.target.value); // 태그 설명 업데이트
   };
 
   // 작성 예시 데이터
@@ -237,8 +248,7 @@ const CharacterManager = ({ setCurrentView }) => {
     const characterData = {
       character_owner: 1, // 임시데이터
       field_idx: parseInt(characterField, 10),
-      // voice_idx: selectedVoice.voice_idx,
-      voice_idx: '38f942a9-b2c4-4c0f-aa86-ce0c13df787d', // 임시 데이터
+      voice_idx: '38f942a9-b2c4-4c0f-aa86-ce0c13df787d',
       char_name: characterName,
       char_description: characterDescription,
       character_appearance: characterAppearance,
@@ -247,6 +257,10 @@ const CharacterManager = ({ setCurrentView }) => {
       character_speech_style: characterSpeechStyle,
       example_dialogues: exampleDialogues,
       nicknames: nicknames,
+      tags:
+        tagName && tagDescription
+          ? [{ tag_name: tagName, tag_description: tagDescription }]
+          : [],
     };
 
     formData.append('character_image', characterImage);
@@ -261,6 +275,8 @@ const CharacterManager = ({ setCurrentView }) => {
       });
       fetchCharacters();
       alert('캐릭터 생성 완료!');
+      setTagName(''); // 태그명 초기화
+      setTagDescription(''); // 태그 설명 초기화
     } catch (error) {
       console.error('캐릭터 생성 오류:', error);
       alert('캐릭터 생성 실패!');
@@ -406,27 +422,6 @@ const CharacterManager = ({ setCurrentView }) => {
                 placeholder="캐릭터 소개 입력"
               />
 
-              <label>캐릭터 필드</label>
-              <select
-                className="field-dropdown"
-                value={characterField || ''}
-                onChange={handleFieldChange}
-                required
-              >
-                <option
-                  value=""
-                  disabled
-                  className="field-dropdown-placeholder"
-                >
-                  필드를 선택해주세요
-                </option>
-                {fields.map((field) => (
-                  <option key={field.field_idx} value={field.field_idx}>
-                    {field.field_category}
-                  </option>
-                ))}
-              </select>
-
               <button onClick={handleNext}>다음</button>
             </div>
           )}
@@ -513,6 +508,42 @@ const CharacterManager = ({ setCurrentView }) => {
                   </div>
                 ))}
               </div>
+
+              <label>캐릭터 필드</label>
+              <select
+                className="field-dropdown"
+                value={characterField || ''}
+                onChange={handleFieldChange}
+                required
+              >
+                <option
+                  value=""
+                  disabled
+                  className="field-dropdown-placeholder"
+                >
+                  필드를 선택해주세요
+                </option>
+                {fields.map((field) => (
+                  <option key={field.field_idx} value={field.field_idx}>
+                    {field.field_category}
+                  </option>
+                ))}
+              </select>
+
+              <label>태그명</label>
+              <input
+                type="text"
+                placeholder="태그명 입력 (예: #두근두근 연애)"
+                value={tagName}
+                onChange={(e) => setTagName(e.target.value)}
+              />
+
+              <label>태그 설명</label>
+              <textarea
+                placeholder="태그 설명 입력 (예: oo와 설레는 썸 이야기를 그려나갈 수 있다.)"
+                value={tagDescription}
+                onChange={(e) => setTagDescription(e.target.value)}
+              />
 
               <div className="buttons-row">
                 <button onClick={handleBack}>이전</button>
