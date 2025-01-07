@@ -1,12 +1,18 @@
-import React, { useEffect, useState } from "react";
-import dummyProfile from "../../assets/default-bot.png";
-import axios from "axios";
-import "./Section.css";
-import CharacterCard from "./CharacterCard";
+import React, { useEffect, useState } from 'react';
+import dummyProfile from '../../assets/default-bot.png';
+import axios from 'axios';
+import './Section.css';
+import CharacterCard from './CharacterCard';
 
 // SectionField 컴포넌트
 // 각 큰 카테고리 별로 하나의 세션 영역으로 관리하기 위한 컴포넌트 (예: 필드 기반 추천, 태그 기반 추천, 등록 날짜 기반 추천)
-function SectionField({ title, categories, cards, onCategoryClick, selectedCategories }) {
+function SectionField({
+  title,
+  categories,
+  cards,
+  onCategoryClick,
+  selectedCategories,
+}) {
   return (
     <div className="section">
       {/* 섹션 제목 */}
@@ -17,7 +23,7 @@ function SectionField({ title, categories, cards, onCategoryClick, selectedCateg
           <button
             key={index}
             className={`category-btn ${
-              selectedCategories.includes(category.field_idx) ? "selected" : ""
+              selectedCategories.includes(category.field_idx) ? 'selected' : ''
             }`}
             onClick={() => onCategoryClick(category)}
           >
@@ -56,17 +62,17 @@ const Section = () => {
 
   // API URL 관리
   const sectionApis = {
-    field: "http://localhost:8000/api/characters/field", // 필드 기반 추천 API
-    tag: "http://localhost:8000/api/characters/tag", // 태그 기반 추천 API
-    new: "http://localhost:8000/api/characters/new", // 등록 날짜 기반 추천 API
+    field: 'http://localhost:8000/api/characters/field', // 필드 기반 추천 API
+    tag: 'http://localhost:8000/api/characters/tag', // 태그 기반 추천 API
+    new: 'http://localhost:8000/api/characters/new', // 등록 날짜 기반 추천 API
   };
 
   // API로부터 캐릭터 데이터를 가져오는 함수
   const fetchCharacters = async (apiUrl, params, setCards) => {
     try {
       // fields와 tags 파라미터를 쉼표로 구분된 문자열로 변환
-      if (params.fields) params.fields = params.fields.join(",");
-      if (params.tags) params.tags = params.tags.join(",");
+      if (params.fields) params.fields = params.fields.join(',');
+      if (params.tags) params.tags = params.tags.join(',');
       const response = await axios.get(apiUrl, { params }); // API 요청
       const cards = response.data.map((data) => ({
         image: dummyProfile, // 캐릭터 이미지
@@ -164,45 +170,45 @@ const Section = () => {
   // 섹션 데이터 정의
   const sectionData = [
     {
-      title: "필드 기반 추천",
+      title: '필드 기반 추천',
       categories: [
-        { name: "학교/아카데미", field_idx: 1 },
-        { name: "연예계", field_idx: 2 },
-        { name: "이세계", field_idx: 3 },
-        { name: "무협 세계", field_idx: 4 },
-        { name: "오피스", field_idx: 5 },
-        { name: "우주", field_idx: 6 },
-        { name: "동양", field_idx: 7 },
-        { name: "서양", field_idx: 8 },
-        { name: "현대", field_idx: 9 },
-        { name: "반려동물", field_idx: 10 },
-        { name: "더보기", field_idx: 0 },
-        { name: "초기화", field_idx: -1 },
+        { name: '학교/아카데미', field_idx: 1 },
+        { name: '연예계', field_idx: 2 },
+        { name: '이세계', field_idx: 3 },
+        { name: '무협 세계', field_idx: 4 },
+        { name: '오피스', field_idx: 5 },
+        { name: '우주', field_idx: 6 },
+        { name: '동양', field_idx: 7 },
+        { name: '서양', field_idx: 8 },
+        { name: '현대', field_idx: 9 },
+        { name: '반려동물', field_idx: 10 },
+        { name: '더보기', field_idx: 0 },
+        { name: '초기화', field_idx: -1 },
       ],
       cards: fieldBasedCards,
       onCategoryClick: handleFieldClick,
       selectedCategories: fieldFilters,
     },
     {
-      title: "태그 기반 추천",
+      title: '태그 기반 추천',
       categories: [
-        { name: "태그01", field_idx: 1 },
-        { name: "태그02", field_idx: 2 },
-        { name: "태그03", field_idx: 3 },
-        { name: "태그04", field_idx: 4 },
-        { name: "태그05", field_idx: 5 },
-        { name: "더보기", field_idx: 0 },
-        { name: "초기화", field_idx: -1 },
+        { name: '태그01', field_idx: 1 },
+        { name: '태그02', field_idx: 2 },
+        { name: '태그03', field_idx: 3 },
+        { name: '태그04', field_idx: 4 },
+        { name: '태그05', field_idx: 5 },
+        { name: '더보기', field_idx: 0 },
+        { name: '초기화', field_idx: -1 },
       ],
       cards: tagBasedCards,
       onCategoryClick: handleTagClick,
       selectedCategories: tagFilters,
     },
     {
-      title: "새로 나온 캐릭터",
+      title: '새로 나온 캐릭터',
       categories: [
-        { name: "더보기", field_idx: 0 },
-        { name: "초기화", field_idx: -1 },
+        { name: '더보기', field_idx: 0 },
+        { name: '초기화', field_idx: -1 },
       ],
       cards: createdBasedCards,
       onCategoryClick: handleCreatedClick,
