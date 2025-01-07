@@ -72,9 +72,9 @@ const MyPage = ({ onLogout }) => {
         </h1>
         <div className="space-y-4 ">
           <div className="flex items-center">
-            {userInfo?.profile_picture ? (
+            {userInfo?.profile_img ? (
               <img
-                src={userInfo.profile_picture}
+                src={userInfo.profile_img}
                 alt="프로필 사진"
                 className="w-24 h-24 rounded-full object-cover"
               />

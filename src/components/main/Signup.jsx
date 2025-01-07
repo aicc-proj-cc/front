@@ -5,7 +5,7 @@ const Signup = () => {
   const [nickname, setNickname] = useState('');
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
-  const [profilePicture, setProfilePicture] = useState(null);
+  const [profileimg, setProfileimg] = useState(null);
   const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
@@ -27,11 +27,11 @@ const Signup = () => {
       );
 
       // 프로필 사진 업로드 요청
-      if (profilePicture) {
+      if (profileimg) {
         const formData = new FormData();
-        formData.append('file', profilePicture);
+        formData.append('file', profileimg);
         await axios.post(
-          `http://127.0.0.1:8000/upload-profile-picture/${userId}/`,
+          `http://127.0.0.1:8000/upload-profile-img/${userId}/`,
           formData,
           {
             headers: {
@@ -95,7 +95,7 @@ const Signup = () => {
             <input
               type="file"
               accept="image/*"
-              onChange={(e) => setProfilePicture(e.target.files[0])}
+              onChange={(e) => setProfileimg(e.target.files[0])}
               className="w-full p-3 rounded-lg bg-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring focus:gradient"
             />
           </div>
