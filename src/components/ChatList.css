@@ -55,11 +55,6 @@ body {
   font-weight: bold;
 }
 
-.character-status-message {
-  font-size: 14px;
-  color: #dcdcdc; /* 상태 메시지 글자색 */
-}
-
 /* 로고 */
 .logo-container {
   text-align: center;
