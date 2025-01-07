@@ -65,32 +65,33 @@ const MyPage = ({ onLogout }) => {
   }
 
   return (
-    <div className="min-h-screen bg-[#1e2a47] flex items-center justify-center">
-      <div className="w-full max-w-lg bg-[#2e3a5c] rounded-lg shadow-md p-6">
+    <div className="min-h-screen bg-primary flex items-center justify-center">
+      <div className="w-full max-w-lg bg-sub rounded-lg shadow-md p-6">
         <h1 className="text-2xl font-bold text-white mb-4 text-center">
           마이페이지
         </h1>
-        <div className="space-y-4">
-          <div className="flex items-center space-x-4">
+        <div className="space-y-4 ">
+          <div className="flex items-center">
             {userInfo?.profile_picture ? (
               <img
                 src={userInfo.profile_picture}
                 alt="프로필 사진"
-                className="w-16 h-16 rounded-full object-cover"
+                className="w-24 h-24 rounded-full object-cover"
               />
             ) : (
-              <div className="w-16 h-16 rounded-full bg-gray-500 flex items-center justify-center text-white">
+              <div className="w-24 h-24 rounded-full bg-gray-500 flex items-center justify-center text-white">
                 사진 없음
               </div>
             )}
-            <p className="text-white text-lg">
-              <span className="font-semibold">이름:</span> {userInfo.nickname}
+            <p className="text-white text-lg w-full flex justify-center ">
+              <span className="font-semibold ">이름:</span>
+              {userInfo.nickname}
             </p>
           </div>
         </div>
         <button
           onClick={handleLogout}
-          className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg mt-6 font-bold"
+          className="w-full bg-button hover:bg-hover text-white py-3 rounded-lg mt-6 font-bold"
         >
           로그아웃
         </button>
