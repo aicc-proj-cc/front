@@ -1,22 +1,24 @@
-import React from 'react'
+import React from 'react';
 
-const CharacterCard = ({card, index}) => {
+const CharacterCard = ({ card, index, onClick }) => {
   // console.log("card : ", card);
   return (
-    <div key={index} className="character-card">
+    <div key={index} className="character-card" onClick={onClick}>
       <img
-        src={card.image} // 캐릭터 이미지
-        alt={card.name} 
+        src={card.character_image}
+        alt={card.char_name}
         className="character-image"
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = '/default-avatar.png';
+        }}
       />
       <div className="character-info">
-        {/* 캐릭터 이름 */}
-        <h2 className="character-name">{card.name}</h2>
-        {/* 캐릭터 설명 */}
-        <p className="character-description">{card.description}</p> 
+        <h2 className="character-name">{card.char_name}</h2>
+        <p className="character-description">{card.char_description}</p>
       </div>
-  </div>
-  )
-}
+    </div>
+  );
+};
 
-export default CharacterCard
+export default CharacterCard;
