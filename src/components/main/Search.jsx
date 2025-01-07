@@ -88,11 +88,11 @@ const Search = ({ onCharacterFollowed }) => {
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
       {results.length > 0 && (
-        <div className="w-full max-w-md space-y-4">
+        <div className="flex space-y-4">
           {results.map((character) => (
             <div
               key={character.id}
-              className="p-4 bg-gray-800 rounded-md shadow-md"
+              className="w-1/4 p-4 mx-4 bg-gray-800 rounded-md shadow-md"
             >
               <h2 className="text-xl font-bold">{character.name}</h2>
               <p className="text-gray-400">{character.description}</p>

@@ -50,20 +50,20 @@ const Wordcloud = () => {
 
   return (
     <div className="flex flex-col gap-8 bg-primary p-6 text-white">
-      <section>
+      <section className="bg-sub p-6">
         <h2 className="text-2xl font-bold mb-4">깐부 캐릭터 워드클라우드</h2>
         {characterWordcloud.loading && !characterWordcloud.error ? (
-          <div className="bg-[#2e3a5c] p-4 text-center">Loading...</div>
+          <div className="bg-sub p-4 text-center">Loading...</div>
         ) : characterWordcloud.error ? (
           <div className="bg-[#d9534f] p-4 text-center text-white">
             Error: {characterWordcloud.error}
           </div>
         ) : (
-          <div className="bg-[#2e3a5c] p-4">
+          <div className="bg-sub p-4">
             <img
               src={characterWordcloud.imageUrl}
               alt="Characters Wordcloud"
-              className="mx-auto bg-[#2e3a5c] rounded-lg shadow-lg"
+              className="mx-auto bg-sub rounded-lg shadow-lg"
             />
           </div>
         )}
