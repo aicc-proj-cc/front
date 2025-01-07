@@ -8,10 +8,12 @@ const ChatList = ({ onSelectRoom }) => {
   const [chatRooms, setChatRooms] = useState([]); // 채팅방 목록
   const [selectedRoomId, setSelectedRoomId] = useState(''); // 선택된 채팅방 ID
 
+  const user_id = 1 // -----------------------------------------임시 사용 유저-----------------------------------------
+
   // DB에서 채팅방 목록 불러오기
   const fetchRooms = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/chat-room/');
+      const response = await axios.get(`http://localhost:8000/api/chat-room/user/${user_id}`);
       setChatRooms(response.data);
     } catch (error) {
       console.error('채팅방 목록 불러오기 오류:', error);
@@ -47,10 +49,6 @@ const ChatList = ({ onSelectRoom }) => {
           <div className="chat-item-content">
             <div className="character-name">{room.character_name}</div>{' '}
             {/* 캐릭터 이름 */}
-            <div className="character-status-message">
-              {room.character_status_message[0]}
-            </div>{' '}
-            {/* 캐릭터 상태 메시지 */}
           </div>
         </div>
       ))}
