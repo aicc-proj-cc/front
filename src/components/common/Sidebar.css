@@ -27,6 +27,9 @@
 
   text-align: center;
 }
+.side-logo:hover {
+  cursor: pointer; /* 손가락 모양으로 변경 */
+}
 .side-logo img{width: 150px;}
 
 
