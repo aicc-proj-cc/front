@@ -5,46 +5,54 @@ import axios from 'axios';
 const BASE_URL = 'http://127.0.0.1:8000';
 
 const User = ({ onLoginSuccess }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    !!localStorage.getItem('authToken') // 초기 상태를 localStorage와 동기화
+  );
   const [userInfo, setUserInfo] = useState(null);
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
+  const fetchUser = async () => {
     const token = localStorage.getItem('authToken');
+
     if (!token) {
       setMessage('로그인이 필요합니다.');
+      setIsLoggedIn(false);
+      return;
+    }
+    try {
+      setIsLoading(true);
+      const { data: tokenData } = await axios.get(`${BASE_URL}/verify-token`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const { data: userInfo } = await axios.get(
+        `${BASE_URL}/users/${tokenData.user_idx}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setUserInfo(userInfo);
+      setIsLoggedIn(true);
+    } catch (error) {
+      console.error('토큰 검증 또는 사용자 정보 가져오기 실패:', error);
+      setMessage('유효하지 않은 토큰입니다. 다시 로그인해주세요.');
+      localStorage.removeItem('authToken'); // 유효하지 않은 토큰 제거
+      setIsLoggedIn(false);
+    } finally {
       setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      setMessage('로그인이 필요합니다.');
+      setIsLoggedIn(false);
       return;
     }
 
-    const fetchUser = async () => {
-      try {
-        setIsLoading(true);
-        const { data: tokenData } = await axios.get(
-          `${BASE_URL}/verify-token`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        const { data: userInfo } = await axios.get(
-          `${BASE_URL}/users/${tokenData.user_id}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setUserInfo(userInfo);
-        setIsLoggedIn(true);
-      } catch (error) {
-        console.error('토큰 검증 또는 사용자 정보 가져오기 실패:', error);
-        localStorage.removeItem('authToken');
-        setMessage('유효하지 않은 토큰입니다. 다시 로그인해주세요.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchUser();
-  }, []);
+  }, []); // 초기 마운트 시 한 번만 실행
 
   const handleLogin = async (userId, password) => {
     try {
@@ -53,6 +61,7 @@ const User = ({ onLoginSuccess }) => {
         user_id: userId,
         password,
       });
+
       const { token } = response.data;
       localStorage.setItem('authToken', token);
       setMessage('로그인 성공!');
@@ -61,12 +70,16 @@ const User = ({ onLoginSuccess }) => {
       const { data: tokenData } = await axios.get(`${BASE_URL}/verify-token`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
+      console.log(tokenData);
+
       const { data: userInfo } = await axios.get(
-        `${BASE_URL}/users/${tokenData.user_id}`,
+        `${BASE_URL}/users/${tokenData.user_idx}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
       setUserInfo(userInfo);
-      onLoginSuccess(userInfo.nickname); // nickname 전달
+      onLoginSuccess(userInfo.nickname);
     } catch (error) {
       console.error('로그인 실패:', error);
       setMessage(
@@ -76,7 +89,7 @@ const User = ({ onLoginSuccess }) => {
       setIsLoading(false);
     }
   };
-
+  console.log(userInfo);
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     setUserInfo(null);
