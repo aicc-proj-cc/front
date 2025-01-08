@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import HomePage from './components/main/HomePage';
 import Sidebar from './components/common/Sidebar';
 import CharacterManager from './components/CharacterManager'; // 캐릭터 등록 페이지
-import CharacterSearch from './components/CharacterSearch'; // 캐릭터 조회 페이지
 import ChatPage from './components/ChatPage'; // 채팅 페이지
 import ImageCreate from './components/image_create/ImageCreate'; // 이미지 생성 페이지
 import TTSPage from './components/TTSPage'; // TTS 테스트 페이지
@@ -47,7 +46,6 @@ function App() {
               }
             />
             <Route path="/CharacterManager" element={<CharacterManager />} />
-            <Route path="/CharacterSearch" element={<CharacterSearch />} />
             <Route path="/ChatPage" element={<ChatPage />} />
             <Route path="/generate-image" element={<ImageCreate />} />
             <Route path="/TTSPage" element={<TTSPage />} />
