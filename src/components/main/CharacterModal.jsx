@@ -7,6 +7,8 @@ const CharacterModal = ({ character, onClose }) => {
   const navigate = useNavigate();
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [userName, setUserName] = useState('');
+  const [userIntroduction, setUserIntroduction] = useState('');
   const user_id = 1; // 임시 사용자 ID
 
   console.log('캐릭터 데이터:', character);
@@ -55,6 +57,8 @@ const CharacterModal = ({ character, onClose }) => {
         {
           user_idx: user_id,
           character_id: character.char_idx,
+          user_unique_name: userName,
+          user_introduction: userIntroduction,
         }
       );
       navigate('/ChatPage');
@@ -115,6 +119,25 @@ const CharacterModal = ({ character, onClose }) => {
             <p className="character-modal__description">
               {character.char_description}
             </p>
+          </div>
+
+          <div className="character-modal__user-input">
+            <label htmlFor="userName">호칭:</label>
+            <input
+              id="userName"
+              type="text"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              placeholder="캐릭터가 부를 사용자 호칭을 입력하세요"
+            />
+
+            <label htmlFor="userIntroduction">자기소개:</label>
+            <textarea
+              id="userIntroduction"
+              value={userIntroduction}
+              onChange={(e) => setUserIntroduction(e.target.value)}
+              placeholder="간단한 자기소개를 입력하세요"
+            />
           </div>
 
           <div className="character-modal__footer">
