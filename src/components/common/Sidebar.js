@@ -1,5 +1,5 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; // 페이지 이동을 위한 useNavigate 훅
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom'; // 페이지 이동을 위한 useNavigate 훅
 import './Sidebar.css';
 
 // svg 아이콘
@@ -17,6 +17,14 @@ import account from '../../assets/icons/account.png';
 
 const Sidebar = () => {
   const navigate = useNavigate(); // 페이지 이동을 위한 훅 사용
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // localStorage에서 authToken 확인
+    const token = localStorage.getItem('authToken');
+    setIsLoggedIn(!!token); // 토큰이 존재하면 true, 없으면 false
+  }, []);
 
   return (
     <div className="side-container">
@@ -59,7 +67,14 @@ const Sidebar = () => {
         <div>
           <div className="side-myInfo">
             <img src={account} alt="account" />
-            <div>내 닉네임</div>
+
+            <button className="rounded-md p-2">
+              {isLoggedIn ? (
+                <Link to="/mypage">내 닉네임</Link>
+              ) : (
+                <Link to="/signin">내 닉네임</Link>
+              )}
+            </button>
           </div>
           <div className="side-logout">
             <Logout className="logout" />

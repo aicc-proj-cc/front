@@ -39,11 +39,6 @@ const Upperbar = () => {
               Signup
             </button>
           </Link>
-          <Link to="/User">
-            <button className=" rounded-md p-2 bg-button hover:bg-hover">
-              User
-            </button>
-          </Link>
           <Link to="/Rank">
             <button className=" rounded-md p-2 bg-button hover:bg-hover">
               Rank

@@ -19,19 +19,10 @@ import ImageCreate from './components/image_create/ImageCreate'; // 이미지 �
 import TTSPage from './components/TTSPage'; // TTS 테스트 페이지
 
 import './App.css';
+import Signin from './components/main/Signin';
+import Mypage from './components/main/Mypage';
 
 function App() {
-  const [nickname, setNickname] = useState(''); // nickname 상태 추가
-
-  const handleLoginSuccess = (receivedNickname) => {
-    setNickname(receivedNickname);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    setNickname('');
-  };
-
   return (
     <BrowserRouter>
       <div className="app-main-frame">
@@ -39,24 +30,27 @@ function App() {
           <Sidebar /> {/* 고정된 사이드바 */}
         </div>
         <div className="app-main-content">
-          <Upperbar nickname={nickname} />
+          <Upperbar />
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route
-              path="/User"
-              element={
-                <User
-                  onLoginSuccess={handleLoginSuccess}
-                  onLogout={handleLogout}
-                />
-              }
-            />
             <Route path="/CharacterManager" element={<CharacterManager />} />
             <Route path="/ChatPage" element={<ChatPage />} />
             <Route path="/ChatPage/:chatRoomId" element={<ChatPage />} />
             <Route path="/generate-image" element={<ImageCreate />} />
             <Route path="/TTSPage" element={<TTSPage />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/user" element={<User />} />
+            <Route path="/mypage" element={<Mypage />} />
+            <Route
+              path="/signin"
+              element={
+                <Signin
+                  onLoginSuccess={(nickname) =>
+                    console.log(`${nickname}님 로그인 성공`)
+                  }
+                />
+              }
+            />
             <Route path="/search" element={<Search />} />
             <Route path="/rank" element={<Rank />} />
             <Route path="/wordcloud" element={<Wordcloud />} />
