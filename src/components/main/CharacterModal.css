@@ -126,3 +126,43 @@
 .character-modal__chat-btn:active {
   transform: scale(0.98);
 }
+
+.character-modal__user-input {
+  margin-bottom: 24px;
+}
+
+.character-modal__user-input label {
+  display: block;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8); /* 라벨 텍스트 색상 */
+  margin-bottom: 8px;
+}
+
+.character-modal__user-input input,
+.character-modal__user-input textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  color: white; /* 입력 텍스트 색상 */
+  background-color: #3a3f58; /* 다크 배경 */
+  border: 1px solid #4a4f68; /* 테두리 */
+  border-radius: 4px;
+  outline: none;
+  resize: none; /* textarea 크기 고정 */
+}
+
+.character-modal__user-input input:focus,
+.character-modal__user-input textarea:focus {
+  border-color: #7a75f0; /* 포커스 상태에서 강조 색상 */
+  background-color: #4a4f68; /* 포커스 시 살짝 밝은 배경 */
+}
+
+.character-modal__user-input input::placeholder,
+.character-modal__user-input textarea::placeholder {
+  color: rgba(255, 255, 255, 0.6); /* 플레이스홀더 텍스트 색상 */
+}
+
+.character-modal__user-input textarea {
+  height: 100px; /* 텍스트 영역의 높이 */
+  line-height: 1.5;
+}
