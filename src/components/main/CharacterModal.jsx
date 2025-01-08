@@ -18,7 +18,7 @@ const CharacterModal = ({ character, onClose }) => {
           character_id: character.char_idx,
         }
       );
-      navigate(`/chat/${response.data.room_id}`);
+      navigate('/ChatPage');
     } catch (error) {
       console.error('채팅방 생성 오류:', error);
     }
