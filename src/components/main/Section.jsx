@@ -11,6 +11,7 @@ function SectionField({
   onCategoryClick,
   selectedCategories,
   onCardClick,
+  keyType,
 }) {
   const scrollContainerRef = useRef(null);
   const [isAtStart, setIsAtStart] = useState(true);
@@ -51,13 +52,9 @@ function SectionField({
       <div className="categories">
         {categories.map((category, index) => (
           <button
-            key={`${category.field_idx || category.tag_name}-${index}`}
+            key={`${category[keyType]}-${index}`} // keyType에 따라 key 지정
             className={`category-btn ${
-              selectedCategories.includes(
-                category.field_idx || category.tag_name
-              )
-                ? 'selected'
-                : ''
+              selectedCategories.includes(category[keyType]) ? 'selected' : ''
             }`}
             onClick={() => onCategoryClick(category)}
           >
@@ -171,8 +168,9 @@ const Section = () => {
   const tagBasedCards = useMemo(() => {
     let filtered = [...allCharacters];
     if (tagFilters.length > 0) {
-      filtered = filtered.filter((char) =>
-        char.tags?.some((tag) => tagFilters.includes(tag.tag_idx))
+      filtered = filtered.filter(
+        (char) =>
+          char.tags && char.tags.some((tag) => tagFilters.includes(tag.tag_idx))
       );
     }
     return filtered.slice(0, tagLimit);
@@ -205,14 +203,13 @@ const Section = () => {
   };
 
   const handleTagClick = (category) => {
-    if (category.tag_name === '초기화') {
+    if (category.tag_idx === -1) {
       setTagFilters([]);
-      setTagLimit(18); // 변경: 12에서 18로 증가
     } else {
       setTagFilters((prev) =>
-        prev.includes(category.tag_name)
-          ? prev.filter((tag) => tag !== category.tag_name)
-          : [...prev, category.tag_name]
+        prev.includes(category.tag_idx)
+          ? prev.filter((tag) => tag !== category.tag_idx)
+          : [...prev, category.tag_idx]
       );
     }
   };
@@ -226,35 +223,31 @@ const Section = () => {
   const sectionData = [
     {
       title: '필드 기반 추천',
-      categories: [
-        ...fieldCategories.map((field) => ({
-          name: field.field_category,
-          field_idx: field.field_idx,
-        })),
-        { name: '초기화', field_idx: -1 },
-      ],
+      categories: fieldCategories.map((field) => ({
+        name: field.field_category,
+        field_idx: field.field_idx,
+      })),
       cards: fieldBasedCards,
       onCategoryClick: handleFieldClick,
       selectedCategories: fieldFilters,
       onCardClick: setSelectedCharacter,
+      keyType: 'field_idx',
     },
     {
       title: '태그 기반 추천',
-      categories: [
-        ...tags.map((tag) => ({
-          name: tag.tag_name,
-          field_idx: tag.tag_idx,
-        })),
-        { name: '초기화', field_idx: -1 },
-      ],
+      categories: tags.map((tag) => ({
+        name: tag.tag_name,
+        tag_idx: tag.tag_idx,
+      })),
       cards: tagBasedCards,
       onCategoryClick: handleTagClick,
       selectedCategories: tagFilters,
       onCardClick: setSelectedCharacter,
+      keyType: 'tag_idx',
     },
     {
       title: '새로 나온 캐릭터',
-      categories: [{ name: '초기화', field_idx: -1 }],
+      categories: [],
       cards: createdBasedCards,
       onCategoryClick: handleCreatedClick,
       selectedCategories: [],
@@ -277,6 +270,7 @@ const Section = () => {
           onCategoryClick={section.onCategoryClick}
           selectedCategories={section.selectedCategories}
           onCardClick={section.onCardClick}
+          keyType={section.keyType}
         />
       ))}
 
