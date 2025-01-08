@@ -20,13 +20,37 @@
   /* border-bottom: 1px solid #4a4f68; */
 }
 
-.chat-messages {
+.chatroom-chat-messages {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
   height: calc(100vh - 200px);
   overflow-x: hidden;
-  margin-bottom: 60px;
+}
+
+/* 스크롤바 디자인 */
+.chatroom-chat-messages::-webkit-scrollbar {
+  width: 8px; /* 스크롤바 너비 */
+}
+
+.chatroom-chat-messages::-webkit-scrollbar-track {
+  background: #3a3f54; /* 스크롤바 트랙(배경) 색상 */
+  border-radius: 4px;
+}
+
+.chatroom-chat-messages::-webkit-scrollbar-thumb {
+  background: #7126E2; /* 스크롤바 손잡이 색상 */
+  border-radius: 4px; /* 스크롤바 모서리 둥글게 */
+}
+
+.chatroom-chat-messages::-webkit-scrollbar-thumb:hover {
+  background: #8322FF; /* 호버 시 색상 */
+}
+
+/* 스크롤바 기본 스타일 제거 (다른 브라우저) */
+.chatroom-chat-messages {
+  scrollbar-width: thin; /* Firefox에서 얇은 스크롤바 */
+  scrollbar-color: #7126E2 #3a3f54; /* Firefox 스크롤바 색상 */
 }
 
 .message {

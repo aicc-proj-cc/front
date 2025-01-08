@@ -243,7 +243,7 @@ const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
           )}
         </div>
       </div>
-      <div className="chat-messages">
+      <div className="chatroom-chat-messages">
         {messages.map((msg, idx) => {
           const isUser = msg.sender === 'user';
           const currentDate = new Date(msg.timestamp).toLocaleDateString();
