@@ -9,7 +9,9 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
   const [input, setInput] = useState('');
   const [roomInfo, setRoomInfo] = useState(null);
   const [isTyping, setIsTyping] = useState(false); // 챗봇이 타이핑 중인지 확인하는 상태
+  const [ws, setWs] = useState(null);
   const messagesEndRef = useRef(null);
+  const wsRef = useRef(null); // WebSocket 객체를 유지하는 ref
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -20,11 +22,7 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
       const response = await axios.get(
         `http://localhost:8000/api/chat/${roomId}`
       );
-      // 타임스탬프로 정렬
-      const sortedMessages = response.data.sort(
-        (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
-      );
-      setMessages(sortedMessages);
+      setMessages(response.data);
     } catch (error) {
       console.error(
         '메시지 가져오기 오류:',
@@ -51,47 +49,47 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
   useEffect(() => {
     if (!roomId) return;
 
-    // WebSocket 연결 초기화
-    const ws = new WebSocket(`ws://localhost:8001/ws/generate/?room_id=${roomId}`);
+    if (!wsRef.current) {
+      const websocket = new WebSocket(`ws://localhost:8001/ws/generate/?room_id=${roomId}`);
+      wsRef.current = websocket;
 
-    // WebSocket 연결 성공 이벤트
-    ws.onopen = () => {
+      websocket.onopen = () => {
         console.log('WebSocket 연결 성공');
-    };
+      };
 
-    // WebSocket 메시지 수신 이벤트
-    ws.onmessage = (event) => {
+      websocket.onmessage = (event) => {
         try {
-            const data = JSON.parse(event.data);
+          const data = JSON.parse(event.data);
 
-            // 서버에서 받은 메시지를 로컬 상태에 추가
-            const botMessage = {
-                sender: roomInfo?.character_name || 'bot',
-                content: data.text,
-                timestamp: new Date().toISOString(),
-            };
+          const botMessage = {
+            sender: roomInfo?.character_name || 'bot',
+            content: data.text,
+            timestamp: new Date().toISOString(),
+          };
 
-            setMessages((prev) => [
-                ...prev,
-                botMessage
-            ]);
+          setMessages((prev) => [...prev, botMessage]);
         } catch (error) {
-            console.error('WebSocket 메시지 수신 오류:', error.message);
+          console.error('WebSocket 메시지 수신 오류:', error.message);
         }
-    };
+      };
 
-    // WebSocket 연결 종료 이벤트
-    ws.onclose = () => {
+      websocket.onclose = () => {
         console.log('WebSocket 연결 종료');
-    };
+        wsRef.current = null;
+      };
 
-    // WebSocket 오류 이벤트
-    ws.onerror = (error) => {
+      setWs(websocket);
+
+      websocket.onerror = (error) => {
         console.error('WebSocket 오류:', error);
-    };
+      };
+    }
 
-    return () => ws.close(); // 컴포넌트 언마운트 시 WebSocket 연결 종료
-}, [roomId]);
+    return () => {
+      wsRef.current?.close(); // 컴포넌트 언마운트 시 WebSocket 종료
+      wsRef.current = null; // WebSocket 참조 해제
+    };
+  }, [roomId]); // roomId가 변경될 때만 새 WebSocket 초기화
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -199,7 +197,7 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
           {roomInfo ? (
             <div className="character-status">
               <p>기분: {roomInfo.character_emotion || '알 수 없음'}</p>
-              <p>호감도: {roomInfo.character_likes}</p>
+              <p>호감도: {roomInfo.favorability}</p>
             </div>
           ) : (
             <p>채팅방 정보를 불러오는 중...</p>
