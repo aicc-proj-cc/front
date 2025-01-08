@@ -27,7 +27,10 @@ const Sidebar = () => {
           </div>
           <div className="button-create-char">
             {/* 캐릭터 생성 */}
-            <div className="retangle" onClick={() => navigate('/CharacterManager')}>
+            <div
+              className="retangle"
+              onClick={() => navigate('/CharacterManager')}
+            >
               <Create className="logout" />
               <div>Create</div>
             </div>
@@ -35,7 +38,7 @@ const Sidebar = () => {
 
           <div className="side-tap">
             {/* 캐릭터 조회 */}
-            <div className="side-find" onClick={() => navigate('/CharacterSearch')}>
+            <div className="side-find" onClick={() => navigate('/')}>
               <Explore className="explore" />
               <div>Find</div>
             </div>

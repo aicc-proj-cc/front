@@ -1,117 +1,77 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
+import CharacterCard from './CharacterCard';
+import CharacterModal from './CharacterModal';
 
-const Search = ({ onCharacterFollowed }) => {
-  const [query, setQuery] = useState('');
+const Search = () => {
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('q');
   const [results, setResults] = useState([]);
   const [error, setError] = useState('');
+  const [selectedCharacter, setSelectedCharacter] = useState(null);
 
-  const API_SEARCH_URL = 'http://127.0.0.1:8000/api/characters/search';
-  const API_BASE_URL = 'http://127.0.0.1:8000/api';
+  useEffect(() => {
+    const fetchResults = async () => {
+      if (!query) return;
 
-  const handleSearch = async () => {
-    setError('');
-    setResults([]);
-    try {
-      const response = await axios.get(API_SEARCH_URL, {
-        params: { query },
-        headers: { 'Content-Type': 'application/json' },
-      });
-      if (response.data && Array.isArray(response.data)) {
-        setResults(response.data);
-      } else {
-        setError('검색 결과가 없습니다.');
-      }
-    } catch (err) {
-      setError('검색 중 오류가 발생했습니다.');
-    }
-  };
+      try {
+        const response = await axios.get(
+          'http://localhost:8000/api/characters/'
+        );
+        const filteredResults = response.data.filter(
+          (character) =>
+            character.char_name.toLowerCase().includes(query.toLowerCase()) ||
+            character.char_description
+              .toLowerCase()
+              .includes(query.toLowerCase())
+        );
 
-  const handleButtonClick = async (
-    characterId,
-    characterName,
-    characterDescription
-  ) => {
-    const token = localStorage.getItem('authToken');
-    const userId = localStorage.getItem('userId');
-
-    if (!token || !userId) {
-      alert('로그인이 필요한 서비스입니다.');
-      return;
-    }
-
-    try {
-      const payload = { user_idx: parseInt(userId, 10), char_idx: characterId };
-      await axios.post(
-        `http://127.0.0.1:8000/users/${userId}/follow`,
-        payload,
-        {
-          headers: { Authorization: `Bearer ${token}` },
+        setResults(filteredResults);
+        if (filteredResults.length === 0) {
+          setError('검색 결과가 없습니다.');
         }
-      );
-
-      // 즉시 업데이트
-      if (onCharacterFollowed) {
-        onCharacterFollowed({
-          name: characterName,
-          description: characterDescription,
-        });
+      } catch (err) {
+        setError('검색 중 오류가 발생했습니다.');
       }
+    };
 
-      alert(`${characterName}가 성공적으로 팔로우되었습니다!`);
-    } catch (err) {
-      console.error('팔로우 중 문제가 발생했습니다:', err);
-      alert('팔로우 중 문제가 발생했습니다.');
-    }
-  };
+    fetchResults();
+  }, [query]);
 
   return (
-    <div className="bg-primary min-h-screen flex flex-col items-center p-6 text-white">
-      <h1 className="text-3xl font-bold mb-6">캐릭터 검색</h1>
+    <div className="min-h-screen bg-primary p-6">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-2xl font-bold text-white mb-6 text-center">
+          "{query}" 검색 결과
+        </h1>
 
-      <div className="flex w-full max-w-md mb-6">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="캐릭터 이름을 입력하세요"
-          className="flex-1 p-3 rounded-l-md border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          onClick={handleSearch}
-          className="p-3 bg-button text-white rounded-r-md hover:bg-hover focus:outline-none focus:ring focus:gradient"
-        >
-          검색
-        </button>
+        {error ? (
+          <p className="text-red-500 text-center">{error}</p>
+        ) : (
+          <div
+            className={`search-results-grid ${
+              results.length === 1 ? 'single-result' : ''
+            }`}
+          >
+            {results.map((card, index) => (
+              <CharacterCard
+                key={`card-${card.char_idx}-${index}`}
+                card={card}
+                index={index}
+                onClick={() => setSelectedCharacter(card)}
+              />
+            ))}
+          </div>
+        )}
+
+        {selectedCharacter && (
+          <CharacterModal
+            character={selectedCharacter}
+            onClose={() => setSelectedCharacter(null)}
+          />
+        )}
       </div>
-
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-
-      {results.length > 0 && (
-        <div className="flex space-y-4">
-          {results.map((character) => (
-            <div
-              key={character.id}
-              className="w-1/4 p-4 mx-4 bg-gray-800 rounded-md shadow-md"
-            >
-              <h2 className="text-xl font-bold">{character.name}</h2>
-              <p className="text-gray-400">{character.description}</p>
-              <button
-                onClick={() =>
-                  handleButtonClick(
-                    character.id,
-                    character.name,
-                    character.description
-                  )
-                }
-                className="mt-2 p-2 bg-button text-white rounded hover:bg-hover"
-              >
-                팔로우
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 };
