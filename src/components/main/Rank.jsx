@@ -26,7 +26,7 @@ function Rank() {
   return (
     <div className="flex-1 bg-primary p-6 text-white">
       <h1 className="text-2xl font-bold mb-6">이달의 깐부 캐릭터</h1>
-      <div className="bg-[#2e3a5c] p-6 rounded flex flex-wrap justify-evenly">
+      <div className="bg-sub p-6 rounded flex flex-wrap justify-evenly">
         {characters.map((character) => (
           <div key={character.char_idx} className="mb-4">
             <div className="bg-gray-700 w-60 h-60 flex items-center justify-center rounded">
@@ -38,17 +38,16 @@ function Rank() {
             </div>
             <label className="block text-sm mb-1">{character.char_name}</label>
             <label className="block text-sm mb-1">
-              {character.char_description}
-            </label>
-            <label className="block text-sm mb-1">
               Follow: {character.follow}
             </label>
           </div>
         ))}
       </div>
 
-      <h1 className="text-2xl font-bold mb-6 text-center">이달의 깐부 랭크</h1>
-      <div className="bg-[#2e3a5c] p-6 rounded flex justify-center items-end">
+      <h1 className="text-2xl font-bold mb-6 text-center mt-6">
+        이달의 깐부 랭크
+      </h1>
+      <div className="bg-sub p-6 rounded flex justify-center items-end gap-x-2">
         {topThree.map((character, index) => (
           <div
             key={character.char_idx}
@@ -57,7 +56,7 @@ function Rank() {
             }`}
           >
             <div
-              className={`bg-gray-700 ${
+              className={`bg-gray-700  ${
                 index === 0
                   ? 'w-72 h-72'
                   : index === 1
@@ -89,9 +88,6 @@ function Rank() {
               />
             </div>
             <label className="block text-sm mb-1">{character.char_name}</label>
-            <label className="block text-sm mb-1">
-              {character.char_description}
-            </label>
             <label className="text-sm text-gray-300">
               Follow: {character.follow}
             </label>

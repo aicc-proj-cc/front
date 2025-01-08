@@ -1,73 +1,37 @@
 import React, { useEffect, useState } from 'react';
 
 const Wordcloud = () => {
-  const [characterWordcloud, setCharacterWordcloud] = useState({
-    imageUrl: '',
-    loading: true,
-    error: null,
-  });
+  const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
-    let imageObjectUrl; // Blob URL을 저장
-
+    // FastAPI 서버에서 워드클라우드 이미지를 가져오기
     const fetchWordcloud = async () => {
       try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_BASE_URL}/api/wordcloud`
-        );
+        const response = await fetch('http://localhost:8000/api/wordcloud');
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(
-            errorData.detail || 'Failed to load character wordcloud'
-          );
+          throw new Error('Failed to fetch wordcloud image');
         }
-
-        const imageBlob = await response.blob();
-        imageObjectUrl = URL.createObjectURL(imageBlob);
-        setCharacterWordcloud({
-          imageUrl: imageObjectUrl,
-          loading: false,
-          error: null,
-        });
+        const blob = await response.blob();
+        setImageUrl(URL.createObjectURL(blob));
       } catch (error) {
-        setCharacterWordcloud({
-          imageUrl: '',
-          loading: false,
-          error: error.message,
-        });
+        console.error('Error fetching wordcloud:', error);
       }
     };
 
     fetchWordcloud();
-
-    // Cleanup only when component is unmounted
-    return () => {
-      if (imageObjectUrl) {
-        URL.revokeObjectURL(imageObjectUrl);
-      }
-    };
   }, []);
 
   return (
-    <div className="flex flex-col gap-8 bg-primary p-6 text-white">
-      <section>
-        <h2 className="text-2xl font-bold mb-4">깐부 캐릭터 워드클라우드</h2>
-        {characterWordcloud.loading && !characterWordcloud.error ? (
-          <div className="bg-[#2e3a5c] p-4 text-center">Loading...</div>
-        ) : characterWordcloud.error ? (
-          <div className="bg-[#d9534f] p-4 text-center text-white">
-            Error: {characterWordcloud.error}
-          </div>
-        ) : (
-          <div className="bg-[#2e3a5c] p-4">
-            <img
-              src={characterWordcloud.imageUrl}
-              alt="Characters Wordcloud"
-              className="mx-auto bg-[#2e3a5c] rounded-lg shadow-lg"
-            />
-          </div>
-        )}
-      </section>
+    <div className="wordcloud-container h-full flex flex-col items-center justify-center">
+      {imageUrl ? (
+        <img
+          src={imageUrl}
+          alt="Wordcloud"
+          style={{ width: '50%', height: 'auto' }}
+        />
+      ) : (
+        <p>워드클라우드 이미지를 불러오는 중...</p>
+      )}
     </div>
   );
 };
