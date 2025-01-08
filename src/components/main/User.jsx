@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const BASE_URL = 'http://127.0.0.1:8000';
 
-const User = () => {
+const User = ({ onLoginSuccess }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [message, setMessage] = useState('');
@@ -66,6 +66,7 @@ const User = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setUserInfo(userInfo);
+      onLoginSuccess(userInfo.nickname); // nickname 전달
     } catch (error) {
       console.error('로그인 실패:', error);
       setMessage(
