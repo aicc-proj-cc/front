@@ -4,7 +4,7 @@ import './ChatRoom.css';
 import userProfile from '../assets/user.png';
 import { FiVolume2 } from 'react-icons/fi'; // 사운드 아이콘
 
-const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
+const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [roomInfo, setRoomInfo] = useState(null);
@@ -22,7 +22,45 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
       const response = await axios.get(
         `http://localhost:8000/api/chat/${roomId}`
       );
-      setMessages(response.data);
+      const logs = response.data.map((log) => ({content: log.log}));
+
+      const parsedMessages = logs.flatMap((log) => {
+        // log.content가 없는 경우 빈 배열 반환
+        if (!log.content) {
+          console.warn("log.content가 비어 있습니다:", log);
+          return [];
+        }
+  
+        const lines = log.content.split("\n").filter((line) => line.trim() !== "");
+  
+        // 첫 줄과 마지막 줄 제외
+        const mainLines = lines.slice(1, -1);
+  
+        // 메시지 데이터로 변환
+        return mainLines.map((line) => {
+          try {
+            const timestampMatch = line.match(/^\[(.*?)\]/); // 타임스탬프 추출
+            const senderMatch = line.match(/user:|chatbot:/); // 발신자 추출
+  
+            if (!timestampMatch || !senderMatch) return null; // 유효하지 않은 경우 건너뜀
+  
+            const timestamp = timestampMatch[1]; // 예: "2025-01-07 20:03:36"
+            const sender = line.includes("user:") ? "user" : "chatbot";
+            const content = line.split(": ").slice(1).join(": ").trim(); // 메시지 내용 추출
+  
+            return {
+              sender,
+              content,
+              timestamp,
+            };
+          } catch (parseError) {
+            console.error("메시지 파싱 중 오류:", line, parseError);
+            return null;
+          }
+        }).filter(Boolean); // null 값 제거
+      });
+  
+      setMessages(parsedMessages); // 상태 업데이트
     } catch (error) {
       console.error(
         '메시지 가져오기 오류:',
@@ -73,8 +111,9 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
         }
       };
 
-      websocket.onclose = () => {
-        console.log('WebSocket 연결 종료');
+      websocket.onclose = (event) => {
+        console.log('WebSocket 연결 종료:', event.code, event.reason);
+        console.log(event.reason)
         wsRef.current = null;
       };
 
@@ -93,7 +132,7 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-    if (!input.trim() || !roomInfo) return;
+    if (!input.trim() || !roomInfo || !ws) return;
 
     try {
       const userMessage = {
@@ -207,37 +246,52 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
       <div className="chat-messages">
         {messages.map((msg, idx) => {
           const isUser = msg.sender === 'user';
+          const currentDate = new Date(msg.timestamp).toLocaleDateString();
+          const previousDate =
+            idx > 0
+              ? new Date(messages[idx - 1].timestamp).toLocaleDateString()
+              : null;
+
+          const shouldShowDate = currentDate !== previousDate;
+
           return (
-            <div key={idx} className={`message ${isUser ? 'user' : 'bot'}`}>
-              {!isUser && (
-                <img src={userProfile} alt="bot" className="avatar" />
-              )}
-              <div className="bubble-container">
-                <div className="bubble">{msg.content}</div>
-                <div className="timestamp-container">
-                  <div className="timestamp">
-                    {new Date(msg.timestamp).toLocaleTimeString([], {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </div>
-                  {!isUser && (
-                    <FiVolume2
-                      className="sound-icon"
-                      onClick={() => playTTS(msg.content)}
-                      title="TTS 재생"
-                    />
-                  )}
+            <React.Fragment key={idx}>
+              {shouldShowDate && (
+                <div className="date-separator">
+                  <div className="line"></div>
+                  <span className="date">{currentDate}</span>
+                  <div className="line"></div>
                 </div>
-              </div>
-              {isUser && (
-                <img src={userProfile} alt="user" className="avatar" />
               )}
-            </div>
+              <div className={`message ${isUser ? 'user' : 'bot'}`}>
+                {!isUser && (
+                  <img src={roomImg} alt="bot" className="avatar" />
+                )}
+                <div className="bubble-container">
+                  <div className="bubble">{msg.content}</div>
+                  <div className="timestamp-container">
+                    <div className="timestamp">
+                      {new Date(msg.timestamp).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </div>
+                    {!isUser && (
+                      <FiVolume2
+                        className="sound-icon"
+                        onClick={() => playTTS(msg.content)}
+                        title="TTS 재생"
+                      />
+                    )}
+                  </div>
+                </div>
+                {isUser && (
+                  <img src={userProfile} alt="user" className="avatar" />
+                )}
+              </div>
+            </React.Fragment>
           );
         })}
-
-        {/* 챗봇이 타이핑 중일 때 표시 */}
         {isTyping && (
           <div className="message bot">
             <div className="bubble-container">
@@ -249,14 +303,13 @@ const ChatRoom = ({ roomId, roomName, onLeaveRoom }) => {
                     <span>.</span>
                   </div>
                 )}
-              </div>{' '}
-              {/* 타이핑 중 표시 */}
+              </div>
             </div>
           </div>
         )}
-
         <div ref={messagesEndRef} />
       </div>
+
       <form className="chat-input" onSubmit={sendMessage}>
         <input
           value={input}

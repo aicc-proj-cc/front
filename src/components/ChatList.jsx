@@ -43,7 +43,7 @@ const ChatList = ({ onSelectRoom }) => {
             // 선택된 채팅방 ID 상태 업데이트
             setSelectedRoomId(room.room_id);
             // 채팅방 선택 시 부모 컴포넌트로 선택된 방 정보 전달
-            onSelectRoom(room.room_id, room.character_name);
+            onSelectRoom(room.room_id, room.character_name, room.character_image);
           }}
         >
           <img src={room.character_image} alt="Character" className="avatar" />{' '}
