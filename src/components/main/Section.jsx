@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import dummyProfile from '../../assets/default-bot.png';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import axios from 'axios';
 import './Section.css';
 import CharacterCard from './CharacterCard';
@@ -13,13 +12,46 @@ function SectionField({
   selectedCategories,
   onCardClick,
 }) {
+  const scrollContainerRef = useRef(null);
+  const [isAtStart, setIsAtStart] = useState(true);
+  const [isAtEnd, setIsAtEnd] = useState(false);
+
+  const handleScroll = (direction) => {
+    const container = scrollContainerRef.current;
+    const scrollAmount = container.offsetWidth - 100;
+    container.scrollTo({
+      left:
+        container.scrollLeft +
+        (direction === 'right' ? scrollAmount : -scrollAmount),
+      behavior: 'smooth',
+    });
+  };
+
+  const checkScrollPosition = () => {
+    const container = scrollContainerRef.current;
+    const scrollLeft = container.scrollLeft;
+    const maxScrollLeft = container.scrollWidth - container.clientWidth;
+
+    setIsAtStart(scrollLeft <= 0);
+    setIsAtEnd(scrollLeft >= maxScrollLeft);
+  };
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    container.addEventListener('scroll', checkScrollPosition);
+
+    return () => {
+      container.removeEventListener('scroll', checkScrollPosition);
+    };
+  }, []);
+
   return (
     <div className="section">
       <h1 className="section-title">{title}</h1>
       <div className="categories">
         {categories.map((category, index) => (
           <button
-            key={`${category.field_idx || category.tag_name}-${index}`} // 고유한 key 값 생성
+            key={`${category.field_idx || category.tag_name}-${index}`}
             className={`category-btn ${
               selectedCategories.includes(
                 category.field_idx || category.tag_name
@@ -33,19 +65,44 @@ function SectionField({
           </button>
         ))}
       </div>
-      <div className="character-cards">
-        {cards.length > 0 ? (
-          cards.map((card, index) => (
-            <CharacterCard
-              card={card}
-              index={index}
-              key={`card-${card.char_idx}-${index}`}
-              onClick={() => onCardClick(card)}
-            />
-          ))
-        ) : (
-          <p className="no-results">검색된 내용이 없습니다.</p>
-        )}
+
+      <div
+        className={`cards-container ${isAtStart ? 'is-at-start' : ''} ${
+          isAtEnd ? 'is-at-end' : ''
+        }`}
+      >
+        <div className="scroll-controls">
+          {!isAtStart && (
+            <button
+              className="scroll-button left"
+              onClick={() => handleScroll('left')}
+            >
+              ←
+            </button>
+          )}
+          <div className="character-cards" ref={scrollContainerRef}>
+            {cards.length > 0 ? (
+              cards.map((card, index) => (
+                <CharacterCard
+                  card={card}
+                  index={index}
+                  key={`card-${card.char_idx}-${index}`}
+                  onClick={() => onCardClick(card)}
+                />
+              ))
+            ) : (
+              <p className="no-results">검색된 내용이 없습니다.</p>
+            )}
+          </div>
+          {!isAtEnd && (
+            <button
+              className="scroll-button right"
+              onClick={() => handleScroll('right')}
+            >
+              →
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -59,9 +116,9 @@ const Section = () => {
 
   const [fieldFilters, setFieldFilters] = useState([]);
   const [tagFilters, setTagFilters] = useState([]);
-  const [fieldLimit, setFieldLimit] = useState(12);
-  const [tagLimit, setTagLimit] = useState(12);
-  const [createdLimit, setCreatedLimit] = useState(12);
+  const [fieldLimit, setFieldLimit] = useState(18);
+  const [tagLimit, setTagLimit] = useState(18);
+  const [createdLimit, setCreatedLimit] = useState(18);
 
   const [selectedCharacter, setSelectedCharacter] = useState(null);
 
@@ -129,22 +186,19 @@ const Section = () => {
 
   // 이벤트 핸들러
   const handleFieldClick = (category) => {
-    console.log('Clicked Category:', category); // 클릭한 카테고리 로그
+    console.log('Clicked Category:', category);
 
     if (category.field_idx === -1) {
-      setFieldFilters([]); // 초기화 버튼
-      setFieldLimit(12);
+      setFieldFilters([]);
+      setFieldLimit(18); // 변경: 12에서 18로 증가
       console.log('Field Filter Reset!');
-    } else if (category.field_idx === 0) {
-      setFieldLimit((prev) => prev + 12); // 더보기 버튼
-      console.log('Field Limit Increased:', fieldLimit + 12);
     } else {
       // 필터 토글
       setFieldFilters((prev) => {
         const updatedFilters = prev.includes(category.field_idx)
-          ? prev.filter((id) => id !== category.field_idx) // 필터 제거
-          : [...prev, category.field_idx]; // 필터 추가
-        console.log('Updated Field Filters:', updatedFilters); // 업데이트된 상태 출력
+          ? prev.filter((id) => id !== category.field_idx)
+          : [...prev, category.field_idx];
+        console.log('Updated Field Filters:', updatedFilters);
         return updatedFilters;
       });
     }
@@ -153,25 +207,19 @@ const Section = () => {
   const handleTagClick = (category) => {
     if (category.tag_name === '초기화') {
       setTagFilters([]);
-      setTagLimit(12);
-    } else if (category.tag_name === '더보기') {
-      setTagLimit((prev) => prev + 12);
+      setTagLimit(18); // 변경: 12에서 18로 증가
     } else {
-      // 선택/해제 토글
-      setTagFilters(
-        (prev) =>
-          prev.includes(category.tag_name)
-            ? prev.filter((tag) => tag !== category.tag_name) // 필터 제거
-            : [...prev, category.tag_name] // 필터 추가
+      setTagFilters((prev) =>
+        prev.includes(category.tag_name)
+          ? prev.filter((tag) => tag !== category.tag_name)
+          : [...prev, category.tag_name]
       );
     }
   };
 
   const handleCreatedClick = (category) => {
     if (category.field_idx === -1) {
-      setCreatedLimit(12);
-    } else if (category.field_idx === 0) {
-      setCreatedLimit((prev) => prev + 12);
+      setCreatedLimit(18); // 변경: 12에서 18로 증가
     }
   };
 
@@ -180,10 +228,9 @@ const Section = () => {
       title: '필드 기반 추천',
       categories: [
         ...fieldCategories.map((field) => ({
-          name: field.field_category, // 필드 카테고리 이름
-          field_idx: field.field_idx, // 필드 인덱스
+          name: field.field_category,
+          field_idx: field.field_idx,
         })),
-        { name: '더보기', field_idx: 0 },
         { name: '초기화', field_idx: -1 },
       ],
       cards: fieldBasedCards,
@@ -198,7 +245,6 @@ const Section = () => {
           name: tag.tag_name,
           field_idx: tag.tag_idx,
         })),
-        { name: '더보기', field_idx: 0 },
         { name: '초기화', field_idx: -1 },
       ],
       cards: tagBasedCards,
@@ -208,10 +254,7 @@ const Section = () => {
     },
     {
       title: '새로 나온 캐릭터',
-      categories: [
-        { name: '더보기', field_idx: 0 },
-        { name: '초기화', field_idx: -1 },
-      ],
+      categories: [{ name: '초기화', field_idx: -1 }],
       cards: createdBasedCards,
       onCategoryClick: handleCreatedClick,
       selectedCategories: [],

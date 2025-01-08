@@ -1,7 +1,8 @@
 .section {
   width: 80%;
-  margin: 0 auto; /* 페이지 가운데 정렬 */
+  margin: 0 auto;
   margin-bottom: 40px;
+  position: relative;
 }
 
 .section-title {
@@ -40,9 +41,20 @@
 }
 
 .character-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  display: flex;
   gap: 20px;
+  overflow-x: hidden; /* 가로 스크롤만 숨김 */
+  overflow-y: visible; /* 세로 스크롤은 허용 */
+  scroll-behavior: smooth;
+  position: relative;
+  padding: 10px 0;
+  flex-wrap: nowrap; /* 줄바꿈 방지 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.character-cards::-webkit-scrollbar {
+  display: none;
 }
 
 .character-card:hover {
@@ -74,15 +86,14 @@
 }
 
 .character-card {
+  flex: 0 0 calc(100% / 6); /* 정확히 6등분 */
+  min-width: 200px;
+  /* 나머지 스타일은 유지 */
   background: rgba(255, 255, 255, 0.2);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  text-align: left;
-  transition: transform 0.3s, box-shadow 0.3s;
   border-radius: 10px;
   padding: 20px;
-  text-align: center;
   transition: transform 0.3s ease;
-  width: 100%;
 }
 
 .character-card:hover {
@@ -123,4 +134,83 @@
   font-weight: bold;
   margin-bottom: 10px;
   color: #ffcc00;
+}
+
+.scroll-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  background-color: var(--purple-1);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: background-color 0.3s;
+}
+
+.scroll-button:hover {
+  background-color: var(--purple-light-2);
+}
+
+.scroll-button.left {
+  left: 0;
+}
+
+.scroll-button.right {
+  right: 0;
+}
+
+.cards-container {
+  position: relative;
+  width: 100%;
+  margin: 0 -50px; /* 스크롤 버튼 공간 확보 */
+  padding: 0 50px; /* 컨텐츠 영역 복원 */
+}
+
+.cards-container::before,
+.cards-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.cards-container::before {
+  left: 50px;
+  background: linear-gradient(
+    90deg,
+    rgba(37, 40, 73, 0.6) 0%,  /* 더 연하게 변경 */
+    rgba(37, 40, 73, 0) 100%   /* 완전 투명 */
+  );
+  opacity: 1; /* 기본값 */
+  transition: opacity 0.3s ease;
+}
+
+.cards-container::after {
+  right: 50px;
+  background: linear-gradient(
+    270deg,
+    rgba(37, 40, 73, 0.6) 0%,  /* 더 연하게 변경 */
+    rgba(37, 40, 73, 0) 100%   /* 완전 투명 */
+  );
+  opacity: 1; /* 기본값 */
+  transition: opacity 0.3s ease;
+}
+
+.cards-container.is-at-start::before {
+  opacity: 0; /* 왼쪽 끝에서는 숨김 */
+}
+
+.cards-container.is-at-end::after {
+  opacity: 0; /* 오른쪽 끝에서는 숨김 */
 }

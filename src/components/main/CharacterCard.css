@@ -1,13 +1,12 @@
 .character-card {
+  flex: 0 0 calc(100% / 6); /* 정확히 6등분 */
+  min-width: 200px;
+  /* 나머지 스타일은 유지 */
   background: rgba(255, 255, 255, 0.2);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  text-align: left;
-  transition: transform 0.3s, box-shadow 0.3s;
   border-radius: 10px;
   padding: 20px;
-  text-align: center;
   transition: transform 0.3s ease;
-  width: 100%;
 }
 
 .character-card:hover {
@@ -53,4 +52,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.character-cards {
+  display: flex;
+  gap: 20px;
+  overflow-x: hidden; /* 가로 스크롤만 숨김 */
+  overflow-y: visible; /* 세로 스크롤은 허용 */
+  scroll-behavior: smooth;
+  position: relative;
+  padding: 10px 0;
+  flex-wrap: nowrap; /* 줄바꿈 방지 */
 }
