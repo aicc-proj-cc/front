@@ -7,6 +7,7 @@ import './ChatPage.css';
 function ChatPage() {
   const [selectedRoom, setSelectedRoom] = useState(null); // 현재 선택된 채팅방 ID
   const [selectedRoomName, setSelectedRoomName] = useState(''); // 현재 선택된 채팅방 이름 (캐릭터 이름)
+  const [selectedRoomImg, setSelectedRoomImg] = useState(''); // 현재 선택된 채팅방 이름 (캐릭터 이름)
 
   const handleLeaveRoom = () => {
     setSelectedRoom(null);
@@ -20,9 +21,10 @@ function ChatPage() {
           {/* 채팅방 목록 */}
           <div className="chat-list-container">
             <ChatList
-              onSelectRoom={(roomId, roomName) => {
+              onSelectRoom={(roomId, roomName, roomImg) => {
                 setSelectedRoom(roomId); // 선택된 채팅방 ID 저장
                 setSelectedRoomName(roomName); // 선택된 채팅방 이름 저장
+                setSelectedRoomImg(roomImg); // 선택된 채팅방 이미지 저장
               }}
             />
           </div>
@@ -33,6 +35,7 @@ function ChatPage() {
               <ChatRoom
                 roomId={selectedRoom}
                 roomName={selectedRoomName}
+                roomImg={selectedRoomImg}
                 onLeaveRoom={handleLeaveRoom}
               />
             ) : (

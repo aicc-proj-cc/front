@@ -166,7 +166,7 @@ const ImageCreate = () => {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div className="imageCreate-container" style={{ padding: '20px' }}>
       <h1>AI 이미지 생성</h1>
       <textarea
         placeholder="기본 프롬프트를 입력하세요..."
