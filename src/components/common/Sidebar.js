@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // 페이지 이동을 위한 useNavigate 훅
+import { useNavigate } from 'react-router-dom';
 import './Sidebar.css';
+import axios from 'axios';
 
 // svg 아이콘
 import { ReactComponent as Logout } from '../../assets/icons/logout.svg';
@@ -11,20 +12,69 @@ import { ReactComponent as Friends } from '../../assets/icons/friends.svg';
 
 // 로고
 import logo from '../../assets/logo.png';
-
-// 임시 아이콘, 나중에 실제 사용자 프로필 사진으로 교체해야 함
 import account from '../../assets/icons/account.png';
 
 const Sidebar = () => {
-  const navigate = useNavigate(); // 페이지 이동을 위한 훅 사용
-
+  const navigate = useNavigate();
+  const [nickname, setNickname] = useState('로그인 필요');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    // localStorage에서 authToken 확인
+  const checkLoginStatus = () => {
     const token = localStorage.getItem('authToken');
-    setIsLoggedIn(!!token); // 토큰이 존재하면 true, 없으면 false
+    const savedNickname = localStorage.getItem('userNickname');
+    if (token && savedNickname) {
+      setIsLoggedIn(true);
+      setNickname(savedNickname);
+    } else {
+      setIsLoggedIn(false);
+      setNickname('로그인 필요');
+    }
+  };
+
+  useEffect(() => {
+    // 컴포넌트 마운트 시 초기 상태 확인
+    checkLoginStatus();
+
+    // localStorage 변경 감지
+    const handleStorageChange = () => {
+      checkLoginStatus();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('loginStateChange', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('loginStateChange', handleStorageChange);
+    };
   }, []);
+
+  const handleAccountClick = () => {
+    if (isLoggedIn) {
+      navigate('/mypage');
+    } else {
+      navigate('/signin');
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      // localStorage 비우기
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userNickname');
+
+      // 상태 즉시 업데이트
+      setIsLoggedIn(false);
+      setNickname('로그인 필요');
+
+      // 커스텀 이벤트 발생
+      window.dispatchEvent(new Event('loginStateChange'));
+
+      navigate('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   return (
     <div className="side-container">
@@ -34,7 +84,6 @@ const Sidebar = () => {
             <img src={logo} alt="logo" />
           </div>
           <div className="button-create-char">
-            {/* 캐릭터 생성 */}
             <div
               className="retangle"
               onClick={() => navigate('/CharacterManager')}
@@ -45,19 +94,16 @@ const Sidebar = () => {
           </div>
 
           <div className="side-tap">
-            {/* 캐릭터 조회 */}
             <div className="side-find" onClick={() => navigate('/')}>
               <Explore className="explore" />
               <div>Find</div>
             </div>
 
-            {/* 채팅 화면 */}
             <div className="side-chat" onClick={() => navigate('/ChatPage')}>
               <Chat className="chat" />
               <div>Chat</div>
             </div>
 
-            {/* 친구 리스트 */}
             <div className="side-Gganbu">
               <Friends className="friends" />
               <div>Gganbu</div>
@@ -66,17 +112,17 @@ const Sidebar = () => {
         </div>
         <div>
           <div className="side-myInfo">
-            <img src={account} alt="account" />
-
-            <button className="rounded-md p-2">
-              {isLoggedIn ? (
-                <Link to="/mypage">내 닉네임</Link>
-              ) : (
-                <Link to="/signin">내 닉네임</Link>
-              )}
-            </button>
+            <img
+              src={account}
+              alt="account"
+              className="account-icon"
+              onClick={handleAccountClick}
+            />
+            <div className="nickname-text">
+              {isLoggedIn ? `${nickname} 님` : nickname}
+            </div>
           </div>
-          <div className="side-logout">
+          <div className="side-logout" onClick={handleLogout}>
             <Logout className="logout" />
             <div>Logout</div>
           </div>
