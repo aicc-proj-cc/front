@@ -48,15 +48,10 @@ const CharacterManager = ({ setCurrentView }) => {
   // 캐릭터 목록 관리
   const [characters, setCharacters] = useState([]);
 
-<<<<<<< HEAD
-=======
   const [isEditMode, setIsEditMode] = useState(false);
   const [editCharacterId, setEditCharacterId] = useState(null);
   const location = useLocation(); // React Router의 useLocation 추가
 
-  const BASE_URL = 'http://localhost:8000';
-
->>>>>>> 486d6de8fca9260ea6fc8fdaf7a1a30ef7fda904
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -386,17 +381,9 @@ const CharacterManager = ({ setCurrentView }) => {
     formData.append('character_data', JSON.stringify(characterData));
 
     try {
-<<<<<<< HEAD
-      await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: true,
-      });
-=======
       if (isEditMode) {
         await axios.put(
-          `http://localhost:8000/api/characters/${editCharacterId}`,
+          `${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/${editCharacterId}`,
           formData,
           {
             headers: {
@@ -407,7 +394,7 @@ const CharacterManager = ({ setCurrentView }) => {
         );
         toast.success('캐릭터 수정 완료!');
       } else {
-        await axios.post('http://localhost:8000/api/characters/', formData, {
+        await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -415,7 +402,6 @@ const CharacterManager = ({ setCurrentView }) => {
         });
         toast.success('캐릭터 생성 완료!');
       }
->>>>>>> 486d6de8fca9260ea6fc8fdaf7a1a30ef7fda904
       fetchCharacters();
       setTagName(''); // 태그명 초기화
       setTagDescription(''); // 태그 설정 초기화
@@ -444,17 +430,9 @@ const CharacterManager = ({ setCurrentView }) => {
     fetchCharacters();
     const fetchVoices = async () => {
       try {
-<<<<<<< HEAD
-        const response = await axios.get('${process.env.REACT_APP_SERVER_DOMAIN}/api/voices/');
-        setVoices(response.data);
-        if (response.data.length > 0) {
-          setSelectedVoice(response.data[0].voice_idx);
-        }
-=======
-        const response = await axios.get('http://localhost:8000/api/voices/');
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/api/voices/`);
         setVoices(response.data); // 음성 목록 설정
         setSelectedVoice(''); // 기본값을 빈 문자열로 설정하여 "음성 선택" 옵션이 표시되도록 함
->>>>>>> 486d6de8fca9260ea6fc8fdaf7a1a30ef7fda904
       } catch (error) {
         console.error('voice 목록 불러오기 오류:', error);
       }

@@ -19,7 +19,7 @@ const Wordcloud = () => {
 
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/user-wordcloud/${userIdx}`,
+        `${process.env.REACT_APP_SERVER_DOMAIN}/api/user-wordcloud/${userIdx}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -28,36 +28,6 @@ const Wordcloud = () => {
         }
       );
 
-<<<<<<< HEAD
-        // 토큰 디코딩
-        const decodedToken = jwtDecode(token);
-        const userIdx = decodedToken.user_idx; // 토큰에서 user_idx 추출
-        if (!userIdx) {
-          throw new Error('user_idx not found in token');
-        }
-
-        // FastAPI 서버에서 워드클라우드 이미지 가져오기
-        const response = await fetch(
-          `${process.env.REACT_APP_SERVER_DOMAIN}/api/user-wordcloud/${userIdx}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // 인증 헤더에 토큰 추가
-            },
-          }
-        );
-        if (!response.ok) {
-          throw new Error('Failed to fetch wordcloud image');
-        }
-        const blob = await response.blob();
-        setImageUrl(URL.createObjectURL(blob));
-      } catch (error) {
-        console.error('Error fetching wordcloud:', error);
-      }
-    };
-
-    fetchWordcloud();
-  }, []);
-=======
       const imageURL = URL.createObjectURL(response.data);
       setImageSrc(imageURL);
     } catch (err) {
@@ -67,7 +37,6 @@ const Wordcloud = () => {
       setLoading(false);
     }
   };
->>>>>>> 486d6de8fca9260ea6fc8fdaf7a1a30ef7fda904
 
   return (
     <div className="wordcloud-container">

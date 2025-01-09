@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { UserIcon } from '@heroicons/react/outline'; // Heroicons 사용자 아이콘 import
 
-const BASE_URL = 'http://127.0.0.1:8000';
-
 const Rank = () => {
   const [message, setMessage] = useState('');
   const [characters, setCharacters] = useState([]);
@@ -19,11 +17,7 @@ const Rank = () => {
       }
 
       try {
-<<<<<<< HEAD
-        const response = await axios.get(
-          `${process.env.REACT_APP_SERVER_DOMAIN}/api/characters`
-=======
-        const verifyResponse = await axios.get(`${BASE_URL}/verify-token`, {
+        const verifyResponse = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/verify-token`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -35,9 +29,8 @@ const Rank = () => {
 
         setIsLoggedIn(true);
         const charactersResponse = await axios.get(
-          `${BASE_URL}/api/characters/user/${user_idx}`,
+          `${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/user/${user_idx}`,
           { headers: { Authorization: `Bearer ${token}` } }
->>>>>>> 486d6de8fca9260ea6fc8fdaf7a1a30ef7fda904
         );
 
         setCharacters(charactersResponse.data);
