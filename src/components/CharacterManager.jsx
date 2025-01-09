@@ -298,6 +298,11 @@ const CharacterManager = ({ setCurrentView }) => {
 
   // TTS 생성
   const generateTTS = async (text) => {
+    if (!selectedVoice) {
+      toast.error('캐릭터 음성을 선택해 주세요.');
+      return;
+    }
+
     try {
       const response = await axios.post(
         'http://localhost:8000/generate-tts/',
@@ -428,10 +433,8 @@ const CharacterManager = ({ setCurrentView }) => {
     const fetchVoices = async () => {
       try {
         const response = await axios.get('http://localhost:8000/api/voices/');
-        setVoices(response.data);
-        if (response.data.length > 0) {
-          setSelectedVoice(response.data[0].voice_idx);
-        }
+        setVoices(response.data); // 음성 목록 설정
+        setSelectedVoice(''); // 기본값을 빈 문자열로 설정하여 "음성 선택" 옵션이 표시되도록 함
       } catch (error) {
         console.error('voice 목록 불러오기 오류:', error);
       }
@@ -527,9 +530,15 @@ const CharacterManager = ({ setCurrentView }) => {
                       >
                         이미지 추가
                       </button>
-                      <button
+                      {/* <button
                         className="image-generate-btn"
                         onClick={() => setCurrentView('ai-test')}
+                      >
+                        이미지 생성
+                      </button> */}
+                      <button
+                        className="image-generate-btn"
+                        onClick={() => navigate('/generate-image')}
                       >
                         이미지 생성
                       </button>
@@ -706,12 +715,20 @@ const CharacterManager = ({ setCurrentView }) => {
                 <div className="preview-text-header">
                   <h3>{characterName || '캐릭터 이름'}</h3>
                   <select
-                    value={JSON.stringify(selectedVoice)}
-                    onChange={(e) =>
-                      setSelectedVoice(JSON.parse(e.target.value))
-                    }
+                    value={selectedVoice ? JSON.stringify(selectedVoice) : ''}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value) {
+                        setSelectedVoice(JSON.parse(value));
+                      } else {
+                        setSelectedVoice(''); // 음성 선택 해제
+                      }
+                    }}
                     className="tts-voice-choice"
                   >
+                    <option value="" disabled>
+                      음성 선택
+                    </option>
                     {voices.map((voice) => (
                       <option
                         key={voice.voice_idx}
@@ -752,11 +769,9 @@ const CharacterManager = ({ setCurrentView }) => {
                           '캐릭터 응답을 입력해주세요'}
                       </div>
                       <button
-                        className={`tts-button ${
-                          isPlayingAudio ? 'playing' : ''
-                        }`}
+                        className="tts-button"
                         onClick={() => generateTTS(dialogue.characterResponse)}
-                        disabled={!dialogue.characterResponse}
+                        disabled={!dialogue.characterResponse || !selectedVoice}
                       >
                         <FiVolume2 size={20} />
                       </button>

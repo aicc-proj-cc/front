@@ -21,7 +21,7 @@ function TestPage() {
           value: voice.voice_speaker, // 모델 스피커 이름
         }));
         setCharacterOptions(options);
-  
+
         // 기본값 설정 (첫 번째 캐릭터)
         if (options.length > 0) {
           setSpeaker(options[0].value); // `value`로 기본값 설정
@@ -31,10 +31,9 @@ function TestPage() {
         alert('캐릭터 목록을 가져오는 중 오류가 발생했습니다.');
       }
     };
-  
+
     fetchCharacterOptions();
   }, []);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,12 +64,11 @@ function TestPage() {
       setAudioUrl(audioUrl);
     } catch (error) {
       console.error('Error generating TTS:', error);
-      if (error.code === "ERR_BAD_RESPONSE") {
+      if (error.code === 'ERR_BAD_RESPONSE') {
         alert('TTS 서버 오류 : TTS 서버를 확인하세요.');
       } else {
         alert('TTS 생성 중 오류가 발생했습니다. 입력 데이터를 확인하세요.');
       }
-
     } finally {
       setLoading(false); // 로딩 상태 비활성화
     }
@@ -110,7 +108,7 @@ function TestPage() {
         <div className="form-group">
           <label htmlFor="language">Language:</label>
           <select
-            className='tts-lang' 
+            className="tts-lang"
             id="language"
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
