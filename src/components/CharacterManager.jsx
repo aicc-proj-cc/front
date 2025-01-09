@@ -319,6 +319,7 @@ const CharacterManager = ({ setCurrentView }) => {
       alert('캐릭터 생성 완료!');
       setTagName(''); // 태그명 초기화
       setTagDescription(''); // 태그 설명 초기화
+      navigate('/')
     } catch (error) {
       console.error('캐릭터 생성 오류:', error);
       alert('캐릭터 생성 실패!');
