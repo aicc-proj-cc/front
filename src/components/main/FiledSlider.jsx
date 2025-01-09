@@ -7,7 +7,7 @@ import "./filedSlider.css";
 
 import backgroundImage1 from "../../assets/School/banner01_1.png";
 import backgroundImage2 from "../../assets/Wuxia/banner01_1.png";
-import backgroundImage3 from "../../assets/Modern/banner01_1.png";
+import backgroundImage3 from "../../assets/Western/banner01_1.png";
 
 import school001 from "../../assets/School/school001.png";
 
