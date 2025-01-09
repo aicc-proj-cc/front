@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { ToastContainer } from "react-toastify";
+import { ToastContainer } from 'react-toastify';
 
 // MAIN
 import HomePage from './components/main/HomePage';
@@ -22,6 +22,7 @@ import TTSPage from './components/TTSPage'; // TTS 테스트 페이지
 import './App.css';
 import Signin from './components/main/Signin';
 import Mypage from './components/main/Mypage';
+import GganbuPage from './components/GganbuPage';
 
 function App() {
   return (
@@ -67,6 +68,7 @@ function App() {
                     <Route path="/search" element={<Search />} />
                     <Route path="/rank" element={<Rank />} />
                     <Route path="/wordcloud" element={<Wordcloud />} />
+                    <Route path="/Gganbu" element={<GganbuPage />} />
                   </Routes>
                 </>
               }

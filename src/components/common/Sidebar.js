@@ -104,7 +104,7 @@ const Sidebar = () => {
               <div>Chat</div>
             </div>
 
-            <div className="side-Gganbu">
+            <div className="side-Gganbu" onClick={() => navigate('/Gganbu')}>
               <Friends className="friends" />
               <div>Gganbu</div>
             </div>
