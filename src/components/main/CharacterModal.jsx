@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
+import { getUserIdxFromToken } from './utils/authUtils';
 import './CharacterModal.css';
 
 const CharacterModal = ({ character, onClose }) => {
@@ -10,7 +11,7 @@ const CharacterModal = ({ character, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userName, setUserName] = useState('');
   const [userIntroduction, setUserIntroduction] = useState('');
-  const user_idx = 1; // 임시 사용자 ID
+  const user_idx = getUserIdxFromToken(); // 로그인한 사용자값으로 설정
 
   console.log('캐릭터 데이터:', character);
 
@@ -62,12 +63,12 @@ const CharacterModal = ({ character, onClose }) => {
           user_introduction: userIntroduction,
         }
       );
-      const chat_exists = response.data.chat_exists
-      const roomId = response.data.room_id
+      const chat_exists = response.data.chat_exists;
+      const roomId = response.data.room_id;
       if (chat_exists) {
-        alert("이미 생성된 채팅방 입니다.")
+        alert('이미 생성된 채팅방 입니다.');
       } else {
-        toast.success("새로운 채티방이 생성되었습니다.")
+        toast.success('새로운 채티방이 생성되었습니다.');
       }
       navigate(`/ChatPage/${roomId}`);
     } catch (error) {
