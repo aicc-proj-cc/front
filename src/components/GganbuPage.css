@@ -28,13 +28,13 @@
   gap: 20px;
 }
 
-/* 캐릭터 만들기 박스 */
 .create-character-card-horizontal {
   display: flex;
   align-items: center;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   padding: 20px;
+  height: 120px;
   gap: 15px;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -45,10 +45,9 @@
   transform: translateY(-5px);
 }
 
-/* 플러스 버튼 박스 */
 .plus-box {
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   display: flex;
@@ -80,13 +79,13 @@
 .character-card-horizontal {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   padding: 20px;
+  height: 120px;
   gap: 15px;
   transition: all 0.3s ease;
-  cursor: pointer;
+  position: relative;
 }
 
 .character-card-horizontal:hover {
@@ -95,25 +94,70 @@
 }
 
 .character-image-horizontal {
-  width: 120px;
-  height: 120px;
+  width: 90px;
+  height: 90px;
   border-radius: 10px;
   object-fit: cover;
 }
 
 .character-info-horizontal {
-  flex-grow: 1;
+  flex-grow: 1; /* 남은 공간을 차지 */
 }
 
 .character-info-horizontal h3 {
-  margin: 0 0 10px 0;
+  margin: 0;
   font-size: 20px;
+  color: white;
 }
 
-.character-stats-horizontal {
-  display: flex;
-  gap: 15px;
+.character-info-horizontal p {
+  margin: 5px 0 0;
   font-size: 14px;
-  color: #888;
-  justify-content: flex-start;
+  color: #ccc;
+}
+
+.menu-container {
+  display: flex; /* 가로 정렬 */
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  align-items: center;
+  width: 100%;
+  position: absolute;
+  right: 20px;
+}
+
+.menu-button {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 7px;
+}
+
+.dropdown-menu {
+  display: flex; /* 가로로 버튼 배치 */
+  flex-direction: row;
+  background-color: #333;
+  border-radius: 8px;
+  padding: 5px;
+  gap: 10px;
+  position: absolute;
+  right: 0;
+  top: 40px;
+  z-index: 10;
+}
+
+.dropdown-menu button {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dropdown-menu button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
