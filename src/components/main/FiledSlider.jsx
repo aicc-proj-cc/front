@@ -4,14 +4,17 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./filedSlider.css";
 
-import backgroundImage1 from "../../assets/DemonSlayer/banner01_1.png";
-import backgroundImage2 from "../../assets/Naruto/banner01_1.png";
+import backgroundImage1 from "../../assets/School/banner01_1.png";
+import backgroundImage2 from "../../assets/Wuxia/banner01_1.png";
+import backgroundImage3 from "../../assets/Modern/banner01_1.png";
 
-import character1 from "../../assets/DemonSlayer/tanjiro.png";
-import character2 from "../../assets/DemonSlayer/giyu.png";
-import character3 from "../../assets/DemonSlayer/shinobu.png";
-import character4 from "../../assets/DemonSlayer/muichiro.png";
-import character5 from "../../assets/DemonSlayer/zenitsu.png";
+import school001 from "../../assets/School/school001.png";
+
+import wuxia001 from "../../assets/Wuxia/wuxia001.png";
+
+import modern001 from "../../assets/Modern/modern001.png";
+import modern002 from "../../assets/Modern/modern002.png";
+
 
 const FiledSlider = () => {
   const sliderSettings = {
@@ -24,27 +27,31 @@ const FiledSlider = () => {
 
   const banners = [
     {
-      title: "젠레스 존 제로 / Bangboo",
-      description: "젠레스 존 제로의 인기 마스코트. \n인격을 지닌 인공지능 생명체 Bangboo를 만나보세요!",
+      title: "학교 / 아카데미",
+      description: "파릇파릇한 청춘 이야기. \n학교/아카데미의 청춘 캐릭터들을 만나보세요!",
       backgroundImage: backgroundImage1,
       gradientColor: "rgba(196, 33, 33, 0.5)", // 배너의 그라데이션 색상 지정
       characters: [
-        { name: "공명부", image: character1 },
-        { name: "버클러", image: character2 },
-        { name: "샤크부", image: character3 },
-        { name: "세이프티", image: character4 },
-        { name: "최소한대원", image: character5 },
+        { name: "공명부", image: school001 },
       ],
     },
     {
-      title: "나루토 / Naruto",
-      description: "전설적인 닌자들의 이야기. \n나루토와 친구들을 만나보세요!",
+      title: "무협 세계",
+      description: "묻노니, 협이란 무엇인가? \n협에대한 이야기를 캐릭터 친구들과 나눠보세요!",
       backgroundImage: backgroundImage2,
+      gradientColor: "rgba(196, 33, 33, 0.5)", // 다른 배너의 그라데이션 색상
+      characters: [
+        { name: "탄지로", image: wuxia001 },
+      ],
+    },
+    {
+      title: "현대 판타지",
+      description: "현대 판타타지의 깐부 친구들을 만나보세요!",
+      backgroundImage: backgroundImage3,
       gradientColor: "rgba(33, 150, 243, 0.5)", // 다른 배너의 그라데이션 색상
       characters: [
-        { name: "나루토", image: character1 },
-        { name: "사스케", image: character2 },
-        { name: "사쿠라", image: character3 },
+        { name: "이예린", image: modern001 },
+        { name: "한채린", image: modern002 },
       ],
     },
   ];

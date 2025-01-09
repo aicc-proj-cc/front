@@ -16,6 +16,18 @@ const Upperbar = () => {
   return (
     <div className="w-full py-6 px-4 text-white bg-primary flex flex-col justify-center items-end border-b-2 border-gray-600">
       <div className="w-full flex justify-between items-center">
+        <nav className="flex space-x-6 text-lg">
+          <Link to="/Rank">
+            <button className=" rounded-md p-2 bg-button hover:bg-hover">
+              Rank
+            </button>
+          </Link>
+          <Link to="/Wordcloud">
+            <button className=" rounded-md p-2 bg-button hover:bg-hover">
+              Wordcloud
+            </button>
+          </Link>
+        </nav>
         <form onSubmit={handleSearch} className="flex-1 max-w-md">
           <div className="flex">
             <input
@@ -33,23 +45,6 @@ const Upperbar = () => {
             </button>
           </div>
         </form>
-        <nav className="flex space-x-6 text-lg">
-          <Link to="/signup">
-            <button className=" rounded-md p-2 bg-button hover:bg-hover">
-              Signup
-            </button>
-          </Link>
-          <Link to="/Rank">
-            <button className=" rounded-md p-2 bg-button hover:bg-hover">
-              Rank
-            </button>
-          </Link>
-          <Link to="/Wordcloud">
-            <button className=" rounded-md p-2 bg-button hover:bg-hover">
-              Wordcloud
-            </button>
-          </Link>
-        </nav>
       </div>
     </div>
   );

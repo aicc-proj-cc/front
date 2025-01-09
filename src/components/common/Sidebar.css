@@ -166,6 +166,34 @@
   /* 아이콘 색상 변경 */
 }
 
+.side-login {
+  color: var(--white-30);
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid var(--white-20);
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.side-login .login {
+  fill: var(--white-30);
+  transition: all 0.3s ease;
+}
+
+/* -----Hover 상태----- */
+.side-login:hover {
+  background-color: var(--white-20);
+  color: var(--white-60);
+}
+.side-login:hover .login {
+  fill: var(--white-60);
+  /* 아이콘 색상 변경 */
+}
+
 /* =====================아이콘 크기==================== */
 .side-myInfo img {
   width: 35px;

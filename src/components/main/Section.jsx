@@ -130,9 +130,9 @@ const Section = () => {
             axios.get('http://localhost:8000/api/fields'),
           ]);
 
-        console.log('Fetched Characters:', charactersResponse.data); // 캐릭터 데이터 로그
-        console.log('Fetched Tags:', tagsResponse.data); // 태그 데이터 로그
-        console.log('Fetched Fields:', fieldsResponse.data); // 필드 데이터 로그
+        // console.log('Fetched Characters:', charactersResponse.data); // 캐릭터 데이터 로그
+        // console.log('Fetched Tags:', tagsResponse.data); // 태그 데이터 로그
+        // console.log('Fetched Fields:', fieldsResponse.data); // 필드 데이터 로그
 
         setAllCharacters(charactersResponse.data); // 캐릭터 리스트 설정
         setTags(tagsResponse.data); // 태그 리스트 설정
@@ -148,7 +148,7 @@ const Section = () => {
   }, []);
 
   useEffect(() => {
-    console.log('Fetched Characters:', allCharacters);
+    // console.log('Fetched Characters:', allCharacters);
   }, [allCharacters]);
 
   // 필터링된 결과 계산
@@ -160,8 +160,8 @@ const Section = () => {
       );
     }
 
-    console.log('Field Filters:', fieldFilters); // [3] 필드 필터 값
-    console.log('Filtered Characters (Field):', filtered); // [4] 필터링된 캐릭터 리스트
+    // console.log('Field Filters:', fieldFilters); // [3] 필드 필터 값
+    // console.log('Filtered Characters (Field):', filtered); // [4] 필터링된 캐릭터 리스트
     return filtered.slice(0, fieldLimit);
   }, [allCharacters, fieldFilters, fieldLimit]);
 

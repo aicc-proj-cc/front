@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import './Sidebar.css';
 import axios from 'axios';
 
-// svg 아이콘
+import { ReactComponent as Login } from '../../assets/icons/login.svg';
 import { ReactComponent as Logout } from '../../assets/icons/logout.svg';
 import { ReactComponent as Create } from '../../assets/icons/create.svg';
 import { ReactComponent as Explore } from '../../assets/icons/explore.svg';
 import { ReactComponent as Chat } from '../../assets/icons/chat.svg';
 import { ReactComponent as Friends } from '../../assets/icons/friends.svg';
 
-// 로고
 import logo from '../../assets/logo.png';
 import account from '../../assets/icons/account.png';
 
@@ -48,14 +47,6 @@ const Sidebar = () => {
       window.removeEventListener('loginStateChange', handleStorageChange);
     };
   }, []);
-
-  const handleAccountClick = () => {
-    if (isLoggedIn) {
-      navigate('/mypage');
-    } else {
-      navigate('/signin');
-    }
-  };
 
   const handleLogout = async () => {
     try {
@@ -99,6 +90,7 @@ const Sidebar = () => {
               <div>Find</div>
             </div>
 
+            {/* 채팅 화면 */}
             <div className="side-chat" onClick={() => navigate('/ChatPage')}>
               <Chat className="chat" />
               <div>Chat</div>
@@ -110,22 +102,31 @@ const Sidebar = () => {
             </div>
           </div>
         </div>
+
         <div>
-          <div className="side-myInfo">
-            <img
-              src={account}
-              alt="account"
-              className="account-icon"
-              onClick={handleAccountClick}
-            />
-            <div className="nickname-text">
-              {isLoggedIn ? `${nickname} 님` : nickname}
+          {isLoggedIn ? (
+            <div>
+              <div className="side-myInfo">
+                <Link to="/mypage">
+                  <img src={account} alt="account" className="account-icon" />
+                </Link>
+                <div className="nickname-text">{`${nickname} 님`}</div>
+              </div>
+              <div className="side-logout" onClick={handleLogout}>
+                <Logout className="logout" />
+                <div>Logout</div>
+              </div>
             </div>
-          </div>
-          <div className="side-logout" onClick={handleLogout}>
-            <Logout className="logout" />
-            <div>Logout</div>
-          </div>
+          ) : (
+            <div className="side-login">
+              <Login className="login" />
+              <div>
+                <Link to="/signin" className="flex justify-center">
+                  Login
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
