@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import './CharacterManager.css';
 
 const CharacterManager = ({ setCurrentView }) => {
+  const [userIdx, setUserIdx] = useState(null);
   // 탭 상태 관리
   const [activeTab, setActiveTab] = useState('profile');
 
@@ -47,7 +48,36 @@ const CharacterManager = ({ setCurrentView }) => {
   // 캐릭터 목록 관리
   const [characters, setCharacters] = useState([]);
 
+  const BASE_URL = 'http://localhost:8000';
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const verifyToken = async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          console.error('No token found');
+          return;
+        }
+
+        const response = await axios.get(`${BASE_URL}/verify-token`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
+
+        if (response.data && response.data.user_idx) {
+          setUserIdx(response.data.user_idx);
+        }
+      } catch (error) {
+        console.error('Token verification failed:', error);
+      }
+    };
+
+    verifyToken();
+  }, []);
 
   const fetchFields = async () => {
     try {
@@ -128,7 +158,10 @@ const CharacterManager = ({ setCurrentView }) => {
   // DB에서 캐릭터 목록 불러오기
   const fetchCharacters = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/characters/');
+      const response = await axios.get(
+        'http://localhost:8000/api/characters/',
+        { withCredentials: true }
+      );
       setCharacters(response.data);
     } catch (error) {
       console.error('캐릭터 목록 불러오기 오류:', error);
@@ -245,9 +278,16 @@ const CharacterManager = ({ setCurrentView }) => {
       return;
     }
 
+    console.log('Current userIdx:', userIdx); // userIdx 확인
+
+    if (!userIdx) {
+      alert('로그인이 필요하거나 사용자 정보를 불러오지 못했습니다.');
+      return;
+    }
+
     const formData = new FormData();
     const characterData = {
-      character_owner: 1, // 임시데이터
+      character_owner: userIdx,
       field_idx: parseInt(characterField, 10),
       voice_idx: '38f942a9-b2c4-4c0f-aa86-ce0c13df787d',
       char_name: characterName,
@@ -263,6 +303,8 @@ const CharacterManager = ({ setCurrentView }) => {
           ? [{ tag_name: tagName, tag_description: tagDescription }]
           : [],
     };
+
+    console.log('Sending character data:', characterData);
 
     formData.append('character_image', characterImage);
     formData.append('character_data', JSON.stringify(characterData));
