@@ -54,7 +54,6 @@ const Wordcloud = () => {
       {imageSrc && (
         <div className="w-full flex justify-center">
           <div className="w-full flex justify-center">
-            {' '}
             <img
               src={imageSrc}
               alt="User Wordcloud"
