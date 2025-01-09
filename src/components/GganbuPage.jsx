@@ -7,6 +7,7 @@ const GganbuPage = () => {
   const navigate = useNavigate();
   const [characters, setCharacters] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [dropdownOpen, setDropdownOpen] = useState(null); // 드롭다운 상태 관리
 
   useEffect(() => {
     const fetchFollowedCharacters = async () => {
@@ -41,14 +42,34 @@ const GganbuPage = () => {
     fetchFollowedCharacters();
   }, []);
 
+  const handleDropdownToggle = (charIdx) => {
+    setDropdownOpen(dropdownOpen === charIdx ? null : charIdx);
+  };
+
+  const handleEditCharacter = (charIdx) => {
+    navigate(`/CharacterManager?edit=${charIdx}`);
+  };
+
+  const handleDeleteCharacter = async (charIdx) => {
+    if (window.confirm('정말로 이 캐릭터를 삭제하시겠습니까?')) {
+      try {
+        await axios.delete(`http://localhost:8000/api/characters/${charIdx}`);
+        setCharacters((prev) =>
+          prev.filter((char) => char.char_idx !== charIdx)
+        );
+      } catch (error) {
+        console.error('캐릭터 삭제 실패:', error);
+      }
+    }
+  };
+
   return (
     <div className="gganbu-container">
       <div className="gganbu-content">
         <div className="gganbu-main">
           <h1>내 캐릭터</h1>
-
           <div className="characters-row">
-            {/* 캐릭터 만들기 버튼 */}
+            {/* 캐릭터 만들기 박스 */}
             <div
               className="create-character-card-horizontal"
               onClick={() => navigate('/CharacterManager')}
@@ -62,7 +83,7 @@ const GganbuPage = () => {
               </div>
             </div>
 
-            {/* 캐릭터 카드들 */}
+            {/* 캐릭터 카드 */}
             {characters.map((character) => (
               <div
                 key={character.char_idx}
@@ -76,11 +97,30 @@ const GganbuPage = () => {
                 <div className="character-info-horizontal">
                   <h3>{character.char_name}</h3>
                   <p>{character.char_description}</p>
-                  <div className="character-stats-horizontal">
-                    <span>팔로워 {character.followers_count || 0}</span>
-                    <span>좋아요 {character.likes_count || 0}</span>
-                    <span>댓글 {character.comments_count || 0}</span>
-                  </div>
+                </div>
+                <div className="menu-container">
+                  <button
+                    className="menu-button"
+                    onClick={() => handleDropdownToggle(character.char_idx)}
+                  >
+                    …
+                  </button>
+                  {dropdownOpen === character.char_idx && (
+                    <div className="dropdown-menu">
+                      <button
+                        onClick={() => handleEditCharacter(character.char_idx)}
+                      >
+                        캐릭터 수정
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleDeleteCharacter(character.char_idx)
+                        }
+                      >
+                        캐릭터 삭제
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
