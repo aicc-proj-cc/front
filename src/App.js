@@ -22,6 +22,7 @@ import TTSPage from './components/TTSPage';
 import './App.css';
 import Signin from './components/main/Signin';
 import Mypage from './components/main/Mypage';
+import GganbuPage from './components/GganbuPage';
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
                     <Route path="/search" element={<Search />} />
                     <Route path="/rank" element={<Rank />} />
                     <Route path="/wordcloud" element={<Wordcloud />} />
+                    <Route path="/Gganbu" element={<GganbuPage />} />
                   </Routes>
                 </>
               }
