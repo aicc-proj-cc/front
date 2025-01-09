@@ -15,7 +15,7 @@ function TestPage() {
     // API에서 캐릭터 목록 가져오기
     const fetchCharacterOptions = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/voices/');
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/api/voices/`);
         const options = response.data.map((voice) => ({
           name: voice.voice_speaker, // 캐릭터 이름
           value: voice.voice_speaker, // 모델 스피커 이름
@@ -43,7 +43,7 @@ function TestPage() {
 
     try {
       const response = await axios.post(
-        'http://localhost:8000/generate-tts/',
+        `${process.env.REACT_APP_SERVER_DOMAIN}/generate-tts/`,
         {
           text: text,
           speaker: speaker, // 선택한 캐릭터 값 사용

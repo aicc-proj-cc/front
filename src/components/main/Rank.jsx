@@ -8,7 +8,7 @@ function Rank() {
     const fetchCharacters = async () => {
       try {
         const response = await axios.get(
-          'http://127.0.0.1:8000/api/characters'
+          `${process.env.REACT_APP_SERVER_DOMAIN}/api/characters`
         );
         setCharacters(response.data);
       } catch (error) {

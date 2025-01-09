@@ -27,7 +27,7 @@ function ChatPage() {
     }
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/chat-room/user/${user_idx}`
+        `${process.env.REACT_APP_SERVER_DOMAIN}/api/chat-room/user/${user_idx}`
       );
       setChatRooms(response.data);
     } catch (error) {

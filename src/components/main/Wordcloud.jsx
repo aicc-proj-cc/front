@@ -22,7 +22,7 @@ const Wordcloud = () => {
 
         // FastAPI 서버에서 워드클라우드 이미지 가져오기
         const response = await fetch(
-          `http://localhost:8000/api/user-wordcloud/${userIdx}`,
+          `${process.env.REACT_APP_SERVER_DOMAIN}/api/user-wordcloud/${userIdx}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // 인증 헤더에 토큰 추가

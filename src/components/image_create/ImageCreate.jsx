@@ -55,7 +55,7 @@ const ImageCreate = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8000/generate-image/',
+        `${process.env.REACT_APP_SERVER_DOMAIN}/generate-image/`,
         {
           prompt: fullPrompt,
           negative_prompt: excludedPrompt,

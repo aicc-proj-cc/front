@@ -19,7 +19,7 @@ const CharacterModal = ({ character, onClose }) => {
     const checkFollowStatus = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/friends/check/${user_idx}/${character.char_idx}`
+          `${process.env.REACT_APP_SERVER_DOMAIN}/api/friends/check/${user_idx}/${character.char_idx}`
         );
         setIsFollowing(response.data.is_following);
       } catch (error) {
@@ -35,10 +35,10 @@ const CharacterModal = ({ character, onClose }) => {
     try {
       if (isFollowing) {
         await axios.delete(
-          `http://localhost:8000/api/friends/unfollow/${user_idx}/${character.char_idx}`
+          `${process.env.REACT_APP_SERVER_DOMAIN}/api/friends/unfollow/${user_idx}/${character.char_idx}`
         );
       } else {
-        await axios.post('http://localhost:8000/api/friends/follow', {
+        await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/friends/follow`, {
           user_idx: user_idx,
           char_idx: character.char_idx,
         });
@@ -55,7 +55,7 @@ const CharacterModal = ({ character, onClose }) => {
   const handleStartChat = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:8000/api/chat-room/',
+        `${process.env.REACT_APP_SERVER_DOMAIN}/api/chat-room/`,
         {
           user_idx: user_idx,
           character_id: character.char_idx,

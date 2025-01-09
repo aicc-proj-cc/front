@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const BASE_URL = 'http://127.0.0.1:8000';
-
 const User = ({ onLoginSuccess }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(
     !!localStorage.getItem('authToken') // 초기 상태를 localStorage와 동기화
@@ -22,12 +20,12 @@ const User = ({ onLoginSuccess }) => {
     }
     try {
       setIsLoading(true);
-      const { data: tokenData } = await axios.get(`${BASE_URL}/verify-token`, {
+      const { data: tokenData } = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/verify-token`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       const { data: userInfo } = await axios.get(
-        `${BASE_URL}/users/${tokenData.user_idx}`,
+        `${process.env.REACT_APP_SERVER_DOMAIN}/users/${tokenData.user_idx}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -57,7 +55,7 @@ const User = ({ onLoginSuccess }) => {
   const handleLogin = async (userId, password) => {
     try {
       setIsLoading(true);
-      const response = await axios.post(`${BASE_URL}/signin`, {
+      const response = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/signin`, {
         user_id: userId,
         password,
       });
@@ -67,14 +65,14 @@ const User = ({ onLoginSuccess }) => {
       setMessage('로그인 성공!');
       setIsLoggedIn(true);
 
-      const { data: tokenData } = await axios.get(`${BASE_URL}/verify-token`, {
+      const { data: tokenData } = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/verify-token`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       console.log(tokenData);
 
       const { data: userInfo } = await axios.get(
-        `${BASE_URL}/users/${tokenData.user_idx}`,
+        `${process.env.REACT_APP_SERVER_DOMAIN}/users/${tokenData.user_idx}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 

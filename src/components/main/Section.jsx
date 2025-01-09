@@ -125,9 +125,9 @@ const Section = () => {
       try {
         const [charactersResponse, tagsResponse, fieldsResponse] =
           await Promise.all([
-            axios.get('http://localhost:8000/api/characters/'),
-            axios.get('http://localhost:8000/api/tags'),
-            axios.get('http://localhost:8000/api/fields'),
+            axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/`),
+            axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/api/tags`),
+            axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/api/fields`),
           ]);
 
         // console.log('Fetched Characters:', charactersResponse.data); // 캐릭터 데이터 로그

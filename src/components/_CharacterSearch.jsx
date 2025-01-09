@@ -23,7 +23,7 @@ const CharacterSearch = () => {
     }
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/characters/search?query=${query}`
+        `${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/search?query=${query}`
       );
       setCharacters(response.data); // 검색 결과 설정
       setResultsCount(response.data.length); // 결과 건수 설정

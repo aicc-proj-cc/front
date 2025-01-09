@@ -17,7 +17,7 @@ const Search = () => {
 
       try {
         const response = await axios.get(
-          'http://localhost:8000/api/characters/'
+          `${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/`
         );
         const filteredResults = response.data.filter(
           (character) =>

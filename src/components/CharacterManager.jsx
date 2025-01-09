@@ -48,8 +48,6 @@ const CharacterManager = ({ setCurrentView }) => {
   // 캐릭터 목록 관리
   const [characters, setCharacters] = useState([]);
 
-  const BASE_URL = 'http://localhost:8000';
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -61,7 +59,7 @@ const CharacterManager = ({ setCurrentView }) => {
           return;
         }
 
-        const response = await axios.get(`${BASE_URL}/verify-token`, {
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/verify-token`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -81,7 +79,7 @@ const CharacterManager = ({ setCurrentView }) => {
 
   const fetchFields = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/fields/');
+      const response = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/api/fields/`);
       setFields(response.data); // API 응답 설정
     } catch (error) {
       console.error('필드 목록 불러오기 오류:', error);
@@ -159,7 +157,7 @@ const CharacterManager = ({ setCurrentView }) => {
   const fetchCharacters = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:8000/api/characters/',
+        `${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/`,
         { withCredentials: true }
       );
       setCharacters(response.data);
@@ -232,7 +230,7 @@ const CharacterManager = ({ setCurrentView }) => {
   const generateTTS = async (text) => {
     try {
       const response = await axios.post(
-        'http://localhost:8000/generate-tts/',
+        `${process.env.REACT_APP_SERVER_DOMAIN}/generate-tts/`,
         {
           text: text,
           speaker: selectedVoice.voice_speaker,
@@ -310,7 +308,7 @@ const CharacterManager = ({ setCurrentView }) => {
     formData.append('character_data', JSON.stringify(characterData));
 
     try {
-      await axios.post('http://localhost:8000/api/characters/', formData, {
+      await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -330,7 +328,7 @@ const CharacterManager = ({ setCurrentView }) => {
   // 캐릭터 삭제
   const deleteCharacter = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/api/characters/${id}`);
+      await axios.delete(`${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/${id}`);
       fetchCharacters();
     } catch (error) {
       console.error('캐릭터 삭제 오류:', error);
@@ -342,7 +340,7 @@ const CharacterManager = ({ setCurrentView }) => {
     fetchCharacters();
     const fetchVoices = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/voices/');
+        const response = await axios.get('${process.env.REACT_APP_SERVER_DOMAIN}/api/voices/');
         setVoices(response.data);
         if (response.data.length > 0) {
           setSelectedVoice(response.data[0].voice_idx);

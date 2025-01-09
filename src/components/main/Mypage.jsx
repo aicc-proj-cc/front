@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const BASE_URL = 'http://127.0.0.1:8000';
-
 const Mypage = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [message, setMessage] = useState('');
@@ -25,7 +23,7 @@ const Mypage = () => {
         console.log('토큰 확인:', token);
 
         const { data: tokenData } = await axios.get(
-          `${BASE_URL}/verify-token`,
+          `${process.env.REACT_APP_SERVER_DOMAIN}/verify-token`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -34,7 +32,7 @@ const Mypage = () => {
         console.log('토큰 데이터:', tokenData);
 
         const { data: userInfo } = await axios.get(
-          `${BASE_URL}/users/${tokenData.user_idx}`,
+          `${process.env.REACT_APP_SERVER_DOMAIN}/users/${tokenData.user_idx}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 

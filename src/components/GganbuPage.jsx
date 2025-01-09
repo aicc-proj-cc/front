@@ -13,7 +13,7 @@ const GganbuPage = () => {
       try {
         const token = localStorage.getItem('authToken');
         const verifyResponse = await axios.get(
-          'http://localhost:8000/verify-token',
+          `${process.env.REACT_APP_SERVER_DOMAIN}/verify-token`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -23,7 +23,7 @@ const GganbuPage = () => {
 
         const userId = verifyResponse.data.user_idx;
         const response = await axios.get(
-          `http://localhost:8000/api/characters/user/${userId}`,
+          `${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/user/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

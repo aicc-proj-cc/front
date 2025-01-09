@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 
-const BASE_URL = 'http://127.0.0.1:8000';
-
 const Signin = () => {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +14,7 @@ const Signin = () => {
       setMessage('');
 
       // 로그인 요청
-      const response = await axios.post(`${BASE_URL}/signin`, {
+      const response = await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/signin`, {
         user_id: userId,
         password,
       });
@@ -27,7 +25,7 @@ const Signin = () => {
       setIsLoggedIn(true); // 로그인 상태 업데이트
 
       // 토큰 검증 요청
-      const tokenResponse = await axios.get(`${BASE_URL}/verify-token`, {
+      const tokenResponse = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/verify-token`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -38,7 +36,7 @@ const Signin = () => {
       }
 
       const userInfoResponse = await axios.get(
-        `${BASE_URL}/users/${user_idx}`,
+        `${process.env.REACT_APP_SERVER_DOMAIN}/users/${user_idx}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 

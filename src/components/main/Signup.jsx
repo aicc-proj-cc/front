@@ -13,7 +13,7 @@ const Signup = () => {
     try {
       // 회원가입 요청
       const signupResponse = await axios.post(
-        'http://127.0.0.1:8000/signup',
+        `${process.env.REACT_APP_SERVER_DOMAIN}/signup`,
         {
           nickname,
           user_id: userId,
@@ -31,7 +31,7 @@ const Signup = () => {
         const formData = new FormData();
         formData.append('file', profileimg);
         await axios.post(
-          `http://127.0.0.1:8000/upload-profile-img/${userId}/`,
+          `${process.env.REACT_APP_SERVER_DOMAIN}/upload-profile-img/${userId}/`,
           formData,
           {
             headers: {
