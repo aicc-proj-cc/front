@@ -115,21 +115,28 @@ const GganbuPage = () => {
                 <div className="menu-container">
                   <button
                     className="menu-button"
-                    onClick={() => handleDropdownToggle(character.char_idx)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDropdownToggle(character.char_idx);
+                    }}
                   >
                     …
                   </button>
                   {dropdownOpen === character.char_idx && (
                     <div className="dropdown-menu">
                       <button
-                        onClick={() => handleEditCharacter(character.char_idx)}
+                        onClick={(e) => {
+                          e.stopPropagation(); // 이벤트 전파 방지
+                          handleEditCharacter(character.char_idx);
+                        }}
                       >
                         캐릭터 수정
                       </button>
                       <button
-                        onClick={() =>
-                          handleDeleteCharacter(character.char_idx)
-                        }
+                        onClick={(e) => {
+                          e.stopPropagation(); // 이벤트 전파 방지
+                          handleDeleteCharacter(character.char_idx);
+                        }}
                       >
                         캐릭터 삭제
                       </button>
