@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Mypage = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -68,13 +68,13 @@ const Mypage = () => {
 
   return (
     <div className="min-h-screen bg-primary flex items-center justify-center">
-      <div className="w-full max-w-lg bg-sub rounded-lg shadow-md p-6">
+      <div className="w-full max-w-lg bg-sub rounded-lg shadow-md p-6 ">
         <h1 className="text-2xl font-bold text-white mb-4 text-center">
           마이페이지
         </h1>
         {userInfo ? (
           <div className="space-y-4">
-            <div className="flex items-center">
+            <div className="flex flex-col items-center gap-4">
               {userInfo.profile_picture ? (
                 <img
                   src={userInfo.profile_picture}
@@ -89,6 +89,19 @@ const Mypage = () => {
               <p className="text-white text-lg w-full flex justify-center">
                 <span className="font-semibold">이름:</span> {userInfo.nickname}
               </p>
+              <div className="mypage_info flex gap-2">
+                {' '}
+                <Link to="/Rank">
+                  <button className=" rounded-md p-2 bg-button hover:bg-hover">
+                    Rank
+                  </button>
+                </Link>
+                <Link to="/Wordcloud">
+                  <button className=" rounded-md p-2 bg-button hover:bg-hover">
+                    Wordcloud
+                  </button>
+                </Link>
+              </div>
             </div>
           </div>
         ) : (
