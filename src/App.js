@@ -23,6 +23,7 @@ import './App.css';
 import Signin from './components/main/Signin';
 import Mypage from './components/main/Mypage';
 import GganbuPage from './components/GganbuPage';
+import FollowPage from './components/FollowPage';
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
                     <Route path="/rank" element={<Rank />} />
                     <Route path="/wordcloud" element={<Wordcloud />} />
                     <Route path="/Gganbu" element={<GganbuPage />} />
+                    <Route path="/FollowPage" element={<FollowPage />} />
                   </Routes>
                 </>
               }
