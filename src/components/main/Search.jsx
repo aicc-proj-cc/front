@@ -39,6 +39,7 @@ const Search = () => {
     fetchResults();
   }, [query]);
 
+  console.log("results", results);
   return (
     <div className="min-h-screen bg-primary p-6">
       <div className="max-w-7xl mx-auto">
