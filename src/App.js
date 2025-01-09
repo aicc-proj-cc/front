@@ -7,6 +7,7 @@ import HomePage from './components/main/HomePage';
 import Signup from './components/main/Signup';
 import User from './components/main/User';
 import Search from './components/main/Search';
+import FieldSearch from './components/main/FieldSearch';
 import Rank from './components/main/Rank';
 import Wordcloud from './components/main/Wordcloud';
 
@@ -56,6 +57,7 @@ function App() {
                     <Route path="/mypage" element={<Mypage />} />
                     <Route path="/signin" element={<Signin />} />
                     <Route path="/search" element={<Search />} />
+                    <Route path="/fieldSearch" element={<FieldSearch />} />
                     <Route path="/rank" element={<Rank />} />
                     <Route path="/wordcloud" element={<Wordcloud />} />
                     <Route path="/Gganbu" element={<GganbuPage />} />
