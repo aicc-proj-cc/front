@@ -1,18 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 const Wordcloud = () => {
-  const [imageUrl, setImageUrl] = useState(null);
+  const [imageSrc, setImageSrc] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    // JWT 토큰에서 user_idx 추출
-    const fetchWordcloud = async () => {
-      try {
-        const token = localStorage.getItem('token'); // 토큰을 로컬 스토리지에서 가져옴
-        if (!token) {
-          throw new Error('No token found');
+  const fetchWordcloud = async () => {
+    const token = localStorage.getItem('authToken'); // 토큰 가져오기
+    const userIdx = localStorage.getItem('user_idx');
+    if (!userIdx) {
+      alert('로그인이 필요합니다.');
+      window.location.href = '/signin';
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/user-wordcloud/${userIdx}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          responseType: 'blob', // 이미지 데이터를 blob 형식으로 받기
         }
+      );
 
+<<<<<<< HEAD
         // 토큰 디코딩
         const decodedToken = jwtDecode(token);
         const userIdx = decodedToken.user_idx; // 토큰에서 user_idx 추출
@@ -41,17 +57,42 @@ const Wordcloud = () => {
 
     fetchWordcloud();
   }, []);
+=======
+      const imageURL = URL.createObjectURL(response.data);
+      setImageSrc(imageURL);
+    } catch (err) {
+      console.error(err);
+      setError('워드클라우드를 생성하는 중 오류가 발생했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+>>>>>>> 486d6de8fca9260ea6fc8fdaf7a1a30ef7fda904
 
   return (
-    <div className="wordcloud-container h-full flex flex-col items-center justify-center">
-      {imageUrl ? (
-        <img
-          src={imageUrl}
-          alt="Wordcloud"
-          style={{ width: '50%', height: 'auto' }}
-        />
-      ) : (
-        <p>워드클라우드 이미지를 불러오는 중...</p>
+    <div className="wordcloud-container">
+      <h1>Wordcloud 생성</h1>
+      <button
+        onClick={fetchWordcloud}
+        disabled={loading}
+        className="w-full text-center"
+      >
+        {loading ? '생성 중...' : '워드클라우드 가져오기'}
+      </button>
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      {imageSrc && (
+        <div className="w-full flex justify-center">
+          <div className="w-full flex justify-center">
+            {' '}
+            <img
+              src={imageSrc}
+              alt="User Wordcloud"
+              style={{ maxWidth: '100%' }}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

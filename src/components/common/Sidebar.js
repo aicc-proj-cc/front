@@ -17,6 +17,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const [nickname, setNickname] = useState('로그인 필요');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   const checkLoginStatus = () => {
     const token = localStorage.getItem('authToken');
@@ -67,6 +68,14 @@ const Sidebar = () => {
     }
   };
 
+  const handleMouseEnter = () => {
+    setIsDropdownVisible(true); // 마우스가 올려졌을 때 드롭다운 표시
+  };
+
+  const handleMouseLeave = () => {
+    setIsDropdownVisible(false); // 마우스가 떠났을 때 드롭다운 닫기
+  };
+
   return (
     <div className="side-container">
       <div className="side-wrapper">
@@ -96,9 +105,29 @@ const Sidebar = () => {
               <div>Chat</div>
             </div>
 
-            <div className="side-Gganbu" onClick={() => navigate('/Gganbu')}>
+            <div
+              className="side-Gganbu"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
               <Friends className="friends" />
-              <div>Gganbu</div>
+              <div>GGanbu</div>
+              {isDropdownVisible && (
+                <div className="gganbu-dropdown">
+                  <div
+                    className="dropdown-item"
+                    onClick={() => navigate('/Gganbu')}
+                  >
+                    만든 캐릭터
+                  </div>
+                  <div
+                    className="dropdown-item"
+                    onClick={() => navigate('/FollowPage')}
+                  >
+                    팔로잉 캐릭터
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

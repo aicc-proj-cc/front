@@ -160,8 +160,8 @@ const Section = () => {
       );
     }
 
-    // console.log('Field Filters:', fieldFilters); // [3] 필드 필터 값
-    // console.log('Filtered Characters (Field):', filtered); // [4] 필터링된 캐릭터 리스트
+    filtered.sort((a, b) => b.follower_count - a.follower_count);
+
     return filtered.slice(0, fieldLimit);
   }, [allCharacters, fieldFilters, fieldLimit]);
 
@@ -173,6 +173,7 @@ const Section = () => {
           char.tags && char.tags.some((tag) => tagFilters.includes(tag.tag_idx))
       );
     }
+
     return filtered.slice(0, tagLimit);
   }, [allCharacters, tagFilters, tagLimit]);
 

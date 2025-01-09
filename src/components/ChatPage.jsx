@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 import ChatRoom from './ChatRoom'; // 채팅창 UI 컴포넌트
 import axios from 'axios';
 import logo from '../assets/logo.png'; // 로고 이미지 import
@@ -21,9 +21,9 @@ function ChatPage() {
   // 채팅방 목록 가져오기
   const fetchRooms = async () => {
     if (!user_idx) {
-      toast.error('로그인이 필요합니다')
-      navigate('/signin')
-      return
+      toast.error('로그인이 필요합니다');
+      navigate('/signin');
+      return;
     }
     try {
       const response = await axios.get(
@@ -32,6 +32,28 @@ function ChatPage() {
       setChatRooms(response.data);
     } catch (error) {
       console.error('채팅방 목록 불러오기 오류:', error);
+    }
+  };
+
+  const handleDeleteRoom = async (roomId) => {
+    if (
+      !window.confirm(
+        '삭제된 대화는 다시 복구될 수 없어요.\n정말 삭제하시겠어요?'
+      )
+    ) {
+      return; // 취소 시 삭제 중단
+    }
+
+    try {
+      // 삭제 API 호출
+      await axios.delete(`http://localhost:8000/api/chat-room/${roomId}`);
+      toast.success('채팅방이 삭제되었습니다.');
+
+      // 삭제 후 채팅방 목록 갱신
+      fetchRooms();
+    } catch (error) {
+      console.error('채팅방 삭제 오류:', error);
+      toast.error('채팅방 삭제 중 오류가 발생했습니다.');
     }
   };
 
@@ -82,6 +104,13 @@ function ChatPage() {
                 <div className="chat-item-content">
                   <div className="character-name">{room.character_name}</div>
                 </div>
+                <i
+                  className="delete-icon fas fa-trash"
+                  onClick={(e) => {
+                    e.stopPropagation(); // 부모 클릭 이벤트 막기
+                    handleDeleteRoom(room.room_id);
+                  }}
+                />
               </div>
             ))}
           </div>

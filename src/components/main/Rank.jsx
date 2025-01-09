@@ -1,101 +1,90 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { UserIcon } from '@heroicons/react/outline'; // Heroicons 사용자 아이콘 import
 
-function Rank() {
+const BASE_URL = 'http://127.0.0.1:8000';
+
+const Rank = () => {
+  const [message, setMessage] = useState('');
   const [characters, setCharacters] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const fetchCharacters = async () => {
+    const fetchData = async () => {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        setMessage('로그인이 필요합니다.');
+        setIsLoggedIn(false);
+        return;
+      }
+
       try {
+<<<<<<< HEAD
         const response = await axios.get(
           `${process.env.REACT_APP_SERVER_DOMAIN}/api/characters`
+=======
+        const verifyResponse = await axios.get(`${BASE_URL}/verify-token`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const { user_idx } = verifyResponse.data;
+
+        if (!user_idx) {
+          throw new Error('유효한 사용자 정보를 찾을 수 없습니다.');
+        }
+
+        setIsLoggedIn(true);
+        const charactersResponse = await axios.get(
+          `${BASE_URL}/api/characters/user/${user_idx}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+>>>>>>> 486d6de8fca9260ea6fc8fdaf7a1a30ef7fda904
         );
-        setCharacters(response.data);
+
+        setCharacters(charactersResponse.data);
       } catch (error) {
-        console.error('데이터를 가져오는데 실패했습니다:', error);
+        console.error('데이터를 가져오는 중 오류 발생:', error);
+        setMessage('데이터를 가져오는 중 오류가 발생했습니다.');
+        setIsLoggedIn(false);
       }
     };
 
-    fetchCharacters();
+    fetchData();
   }, []);
 
-  // Follow 값 기준으로 정렬
-  const sortedCharacters = [...characters].sort((a, b) => b.follow - a.follow);
-  const topThree = sortedCharacters.slice(0, 3);
+  if (!isLoggedIn) {
+    return <div className="text-center text-red-500 font-bold">{message}</div>;
+  }
 
   return (
-    <div className="flex-1 bg-primary p-6 text-white">
-      <h1 className="text-2xl font-bold mb-6">이달의 깐부 캐릭터</h1>
-      <div className="bg-sub p-6 rounded flex flex-wrap justify-evenly">
-        {characters.map((character) => (
-          <div key={character.char_idx} className="mb-4">
-            <div className="bg-gray-700 w-60 h-60 flex items-center justify-center rounded">
-              <img
-                src={`${character.image}`}
-                alt={character.char_name}
-                style={{ width: '300px', height: '200px' }}
-              />
-            </div>
-            <label className="block text-sm mb-1">{character.char_name}</label>
-            <label className="block text-sm mb-1">
-              Follow: {character.follow}
-            </label>
-          </div>
-        ))}
-      </div>
-
-      <h1 className="text-2xl font-bold mb-6 text-center mt-6">
-        이달의 깐부 랭크
-      </h1>
-      <div className="bg-sub p-6 rounded flex justify-center items-end gap-x-2">
-        {topThree.map((character, index) => (
-          <div
-            key={character.char_idx}
-            className={`flex flex-col items-center ${
-              index === 0 ? 'order-2' : index === 1 ? 'order-1' : 'order-3'
-            }`}
-          >
+    <div className="p-4">
+      <h2 className="text-2xl font-bold mb-4">사용자가 생성한 캐릭터 목록</h2>
+      {characters.length > 0 ? (
+        <div className="grid grid-cols-5 gap-4">
+          {characters.map((character) => (
             <div
-              className={`bg-gray-700  ${
-                index === 0
-                  ? 'w-72 h-72'
-                  : index === 1
-                  ? 'w-60 h-60'
-                  : 'w-48 h-48'
-              } flex items-center justify-center rounded-lg border-4 ${
-                index === 0
-                  ? 'border-yellow-400'
-                  : index === 1
-                  ? 'border-gray-400'
-                  : 'border-orange-400'
-              } relative`}
+              key={character.char_idx}
+              className="p-2 border rounded shadow text-center"
             >
-              <span
-                className={`absolute -top-3 ${
-                  index === 0
-                    ? 'bg-yellow-400'
-                    : index === 1
-                    ? 'bg-gray-400'
-                    : 'bg-orange-400'
-                } text-black text-xs font-bold px-2 py-1 rounded-full`}
-              >
-                {index === 0 ? '🥇1등' : index === 1 ? '🥈2등' : '🥉3등'}
-              </span>
-              <img
-                src={`${character.image}`}
-                alt={character.char_name}
-                style={{ width: '300px', height: '200px' }}
-              />
+              <h3 className="text-xl font-semibold">{character.char_name}</h3>
+              {character.character_image ? (
+                <img
+                  src={character.character_image}
+                  alt={character.char_name}
+                  className="w-24 h-24 object-cover mt-2 mx-auto"
+                />
+              ) : (
+                <div className="w-24 h-24 flex justify-center items-center bg-gray-200 mt-2 mx-auto rounded">
+                  <UserIcon className="w-16 h-16 text-gray-500" />
+                </div>
+              )}
             </div>
-            <label className="block text-sm mb-1">{character.char_name}</label>
-            <label className="text-sm text-gray-300">
-              Follow: {character.follow}
-            </label>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <p>생성된 캐릭터가 없습니다.</p>
+      )}
     </div>
   );
-}
+};
 
 export default Rank;

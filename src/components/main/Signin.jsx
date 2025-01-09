@@ -34,6 +34,8 @@ const Signin = () => {
       if (!user_idx) {
         throw new Error('유효한 사용자 ID를 찾을 수 없습니다.');
       }
+      // user_idx와 nickname을 localStorage에 저장
+      localStorage.setItem('user_idx', user_idx); // user_idx 저장
 
       const userInfoResponse = await axios.get(
         `${process.env.REACT_APP_SERVER_DOMAIN}/users/${user_idx}`,

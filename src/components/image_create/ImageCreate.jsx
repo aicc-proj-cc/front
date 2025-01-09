@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './ImageCreate.css';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 
 const ImageCreate = () => {
   // =======텍스트 프롬프트========
@@ -28,6 +30,9 @@ const ImageCreate = () => {
 
   const [generatedImage, setGeneratedImage] = useState(null); // 생성된 이미지
   const [loading, setLoading] = useState(false); // 로딩 상태
+
+  // 뒤오가기 버튼
+  const navigate = useNavigate();
 
   // =======전체 프롬프트 생성 함수=======
   const getFullPrompt = () => {
@@ -166,144 +171,179 @@ const ImageCreate = () => {
   };
 
   return (
-    <div className="imageCreate-container" style={{ padding: '20px' }}>
-      <h1>AI 이미지 생성</h1>
-      <textarea
-        placeholder="기본 프롬프트를 입력하세요..."
-        value={basePrompt}
-        onChange={(e) => setBasePrompt(e.target.value)}
-        rows="3"
-        cols="50"
-        style={{ fontSize: '16px', padding: '10px', marginBottom: '10px' }}
-      />
-      <br />
-      <textarea
-        placeholder="제외되는 프롬프트를 입력하세요..."
-        value={excludedPrompt}
-        onChange={(e) => setExcludedPrompt(e.target.value)}
-        rows="3"
-        cols="50"
-        style={{ fontSize: '16px', padding: '10px', marginBottom: '10px' }}
-      />
-      <br />
-
-      {/* 사용자 프롬프트 입력 */}
-      <textarea
-        placeholder="사용자가 작성한 프롬프트를 입력하세요..."
-        value={customPrompt}
-        onChange={(e) => setCustomPrompt(e.target.value)}
-        rows="3"
-        cols="50"
-      />
-      <br />
-
-      {/* 그림체 선택 */}
-      <label>그림체:</label>
-      <button onClick={() => handleStyleChange('cute')}>Cute</button>
-      <button onClick={() => handleStyleChange('powerful')}>Powerful</button>
-      <button onClick={() => handleStyleChange('retro')}>Retro</button>
-      <button onClick={() => handleStyleChange('cyberpunk')}>Cyberpunk</button>
-      <br />
-
-      {/* 배경 선택 */}
-      <div>
-        <strong>실외:</strong>
-        <button onClick={() => handleBackgroundChange('beach', 'outdoor')}>
-          Beach
+    <div className="imageCreate-container">
+      <div className="image-create-title">
+        <button onClick={() => navigate(-1)}>
+          <ArrowLeft size={24} />
         </button>
-        <button onClick={() => handleBackgroundChange('starrySky', 'outdoor')}>
-          Starry Sky
-        </button>
-        <button onClick={() => handleBackgroundChange('forest', 'outdoor')}>
-          Forest
-        </button>
-        <button onClick={() => handleBackgroundChange('castle', 'outdoor')}>
-          Castle
-        </button>
+        <h1>Custom Your Character</h1>
       </div>
-      <div>
-        <strong>실내:</strong>
-        <button onClick={() => handleBackgroundChange('classroom', 'indoor')}>
-          Classroom
-        </button>
-        <button
-          onClick={() => handleBackgroundChange('concertStage', 'indoor')}
-        >
-          Concert Stage
-        </button>
-        <button onClick={() => handleBackgroundChange('corridor', 'indoor')}>
-          Corridor
-        </button>
-        <button onClick={() => handleBackgroundChange('cafe', 'indoor')}>
-          Cafe
-        </button>
-      </div>
+      <br />
+      <div className="image-create-area">
+        <div className="image-create-left">
+          {/* 그림체 선택 */}
+          <div className="choose-image-style">
+            <h3>Style</h3>
+            <button onClick={() => handleStyleChange('cute')}>일본 만화</button>
+            <button onClick={() => handleStyleChange('powerful')}>
+              현실 주의
+            </button>
+            <button onClick={() => handleStyleChange('retro')}>
+              레트로 감성
+            </button>
+            <button onClick={() => handleStyleChange('cyberpunk')}>
+              사이버펑크
+            </button>
+            <br />
+          </div>
 
-      {/* 필터 스타일 선택 */}
-      <label>필터 스타일:</label>
-      <button onClick={() => handleFilterChange('natural')}>
-        Natural Daylight
-      </button>
-      <button onClick={() => handleFilterChange('neon')}>Neon Lighting</button>
-      <button onClick={() => handleFilterChange('cold')}>Cold Lighting</button>
-      <button onClick={() => handleFilterChange('rainbow')}>
-        Rainbow Light
-      </button>
-      <br />
+          {/* 배경 선택 */}
+          <div className="choose-bg-style">
+            <h3>Background</h3>
+            <div className="bg-outdoor">
+              <h4>Outdoor</h4>
+              <button
+                onClick={() => handleBackgroundChange('beach', 'outdoor')}
+              >
+                해변가
+              </button>
+              <button
+                onClick={() => handleBackgroundChange('starrySky', 'outdoor')}
+              >
+                푸른 하늘
+              </button>
+              <button
+                onClick={() => handleBackgroundChange('forest', 'outdoor')}
+              >
+                숲
+              </button>
+              <button
+                onClick={() => handleBackgroundChange('castle', 'outdoor')}
+              >
+                판타지 성
+              </button>
+            </div>
 
-      <label>
-        Dimensions:
-        <select
-          onChange={(e) => handleDimensionChange(e.target.value)} // 드롭다운에서 선택하면 handleDimensionChange 호출
-          style={{ marginLeft: '10px', padding: '5px' }}
-        >
-          <option value="square">정사각형 (512x512)</option>
-          <option value="portrait">세로형 (512x880)</option>
-          <option value="landscape">가로형 (880x512)</option>
-        </select>
-      </label>
-      <br />
-      <label>
-        Guidance Scale(프롬프트에 충실 단계):
-        <button onClick={() => handleGuidanceScale('low')}>Low(6.5)</button>
-        <button onClick={() => handleGuidanceScale('normal')}>
-          Normal(7.5)
-        </button>
-        <button onClick={() => handleGuidanceScale('high')}>High(8.5)</button>
-      </label>
-      <br />
-      <label>
-        Num Inference Steps(노이즈 제거 단계):
-        <div>
-          <button onClick={() => handleInferenceStepChange('low')}>
-            Low (30)
-          </button>
-          <button onClick={() => handleInferenceStepChange('normal')}>
-            Normal (50)
-          </button>
-          <button onClick={() => handleInferenceStepChange('high')}>
-            High (60)
+            <div className="bg-indoor">
+              <h4>Indor</h4>
+              <button
+                onClick={() => handleBackgroundChange('classroom', 'indoor')}
+              >
+                교실
+              </button>
+              <button
+                onClick={() => handleBackgroundChange('concertStage', 'indoor')}
+              >
+                콘서트 무대
+              </button>
+              <button
+                onClick={() => handleBackgroundChange('corridor', 'indoor')}
+              >
+                복도
+              </button>
+              <button onClick={() => handleBackgroundChange('cafe', 'indoor')}>
+                카페
+              </button>
+            </div>
+          </div>
+
+          <div className="choose-filter">
+            {/* 필터 스타일 선택 */}
+            <h3>Filter</h3>
+            <button onClick={() => handleFilterChange('natural')}>
+              Natural Daylight
+            </button>
+            <button onClick={() => handleFilterChange('neon')}>
+              Neon Lighting
+            </button>
+            <button onClick={() => handleFilterChange('cold')}>
+              Cold Lighting
+            </button>
+            <button onClick={() => handleFilterChange('rainbow')}>
+              Rainbow Light
+            </button>
+          </div>
+          <br />
+
+          <div className="choose-size">
+            <h3>Size</h3>
+
+            <select
+              onChange={(e) => handleDimensionChange(e.target.value)} // 드롭다운에서 선택하면 handleDimensionChange 호출
+              style={{ marginLeft: '10px', padding: '5px' }}
+            >
+              <option value="square">정사각형 (512x512)</option>
+              <option value="portrait">세로형 (512x880)</option>
+              <option value="landscape">가로형 (880x512)</option>
+            </select>
+          </div>
+          <br />
+          <div className="choose-guidance">
+            <h3>Guidance</h3>
+            <p className="c-dic">
+              프롬프트 충실 단계가 높을수록 소요되는 시간이 증가됩니다.
+            </p>
+            <button onClick={() => handleGuidanceScale('low')}>Low</button>
+            <button onClick={() => handleGuidanceScale('normal')}>
+              Normal
+            </button>
+            <button onClick={() => handleGuidanceScale('high')}>High</button>
+          </div>
+          <br />
+          <div className="chose-noise">
+            <h3>Noise</h3>
+            <p className="c-dic">
+              노이즈 제거 단계가 높을수록 소요되는 시간이 증가됩니다.
+            </p>
+            <div>
+              <button onClick={() => handleInferenceStepChange('low')}>
+                Low
+              </button>
+              <button onClick={() => handleInferenceStepChange('normal')}>
+                Normal
+              </button>
+              <button onClick={() => handleInferenceStepChange('high')}>
+                High
+              </button>
+            </div>
+          </div>
+        </div>
+        <br />
+
+        <div className="image-create-right">
+          {/* 사용자 프롬프트 입력 */}
+          <div className="user-prompts">
+            <h3>Promt</h3>
+
+            <textarea
+              className=""
+              placeholder="원하는 프롬프트를 입력해 나만의 캐릭터 이미지를 만들어보세요."
+              value={customPrompt}
+              onChange={(e) => setCustomPrompt(e.target.value)}
+              rows="3"
+              cols="50"
+            />
+          </div>
+
+          <button
+            onClick={handleGenerateImage}
+            disabled={loading}
+            style={{ marginTop: '10px' }}
+          >
+            {loading ? '생성 중...' : '이미지 생성'}
           </button>
         </div>
-      </label>
 
-      <br />
-      <button
-        onClick={handleGenerateImage}
-        disabled={loading}
-        style={{ marginTop: '10px' }}
-      >
-        {loading ? '생성 중...' : '이미지 생성'}
-      </button>
-      {generatedImage && (
-        <div style={{ marginTop: '20px' }}>
-          <img
-            src={generatedImage}
-            alt="생성된 이미지"
-            style={{ maxWidth: '100%', maxHeight: '400px' }}
-          />
-        </div>
-      )}
+        {generatedImage && (
+          <div style={{ marginTop: '20px' }}>
+            <img
+              src={generatedImage}
+              alt="생성된 이미지"
+              style={{ maxWidth: '100%', maxHeight: '400px' }}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

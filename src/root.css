@@ -28,9 +28,7 @@
   
     /* Font weights */
     --font-weight-bold: 700;
-    --font-weight-medium: 500;
     --font-weight-regular: 400;
-    --font-weight-semibold: 600;
   
 
 
@@ -42,6 +40,8 @@
   --white-60: rgba(255, 255, 255, 0.6);/* white 60% */
   --white-30: rgba(255, 255, 255, 0.3);/* white 30% */
   --white-20: rgba(255, 255, 255, 0.2);/* white 20% */
+
+ 
 
   /* 버튼 색상 */
   --purple-1: #48319D;

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { FiVolume2 } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 import './CharacterManager.css';
 
 const CharacterManager = ({ setCurrentView }) => {
@@ -34,9 +34,9 @@ const CharacterManager = ({ setCurrentView }) => {
 
   // 호감도별 호칭 상태 관리
   const [nicknames, setNicknames] = useState({
-    30: 'ex) 당신',
-    70: 'ex) 친구',
-    100: 'ex) 나라야',
+    30: '',
+    70: '',
+    100: '',
   });
 
   // TTS 관련 상태 관리
@@ -48,7 +48,80 @@ const CharacterManager = ({ setCurrentView }) => {
   // 캐릭터 목록 관리
   const [characters, setCharacters] = useState([]);
 
+<<<<<<< HEAD
+=======
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editCharacterId, setEditCharacterId] = useState(null);
+  const location = useLocation(); // React Router의 useLocation 추가
+
+  const BASE_URL = 'http://localhost:8000';
+
+>>>>>>> 486d6de8fca9260ea6fc8fdaf7a1a30ef7fda904
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // URL에서 수정할 캐릭터 ID 확인
+    const searchParams = new URLSearchParams(location.search);
+    const editId = searchParams.get('edit');
+
+    if (editId) {
+      setIsEditMode(true);
+      setEditCharacterId(parseInt(editId));
+      fetchCharacterData(editId);
+    }
+  }, [location]);
+
+  const fetchCharacterData = async (charId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/characters/${charId}`
+      );
+      const data = response.data;
+
+      // 기존 데이터로 폼 채우기
+      setCharacterName(data.char_name);
+      setCharacterDescription(data.char_description);
+      setCharacterAppearance(data.character_appearance);
+      setCharacterPersonality(data.character_personality);
+      setCharacterBackground(data.character_background);
+      setCharacterSpeechStyle(data.character_speech_style);
+
+      // 예시 대화 처리 수정
+      if (data.example_dialogues && Array.isArray(data.example_dialogues)) {
+        // 문자열로 저장된 데이터를 파싱
+        const parsedDialogues = data.example_dialogues.map((dialogue) => {
+          if (typeof dialogue === 'string') {
+            return JSON.parse(dialogue);
+          }
+          return dialogue;
+        });
+        setExampleDialogues(parsedDialogues);
+      }
+
+      // 호칭 처리
+      if (data.nicknames) {
+        setNicknames(data.nicknames);
+      }
+
+      // 필드 처리
+      if (data.field_idx) {
+        setCharacterField(parseInt(data.field_idx));
+      }
+
+      // 이미지 미리보기 설정
+      if (data.character_image) {
+        setPreviewImage(data.character_image);
+      }
+
+      if (data.tags && data.tags.length > 0) {
+        setTagName(data.tags[0].tag_name);
+        setTagDescription(data.tags[0].tag_description);
+      }
+    } catch (error) {
+      console.error('캐릭터 데이터 로딩 실패:', error);
+      toast.error('캐릭터 데이터를 불러오는데 실패했습니다.');
+    }
+  };
 
   useEffect(() => {
     const verifyToken = async () => {
@@ -215,7 +288,7 @@ const CharacterManager = ({ setCurrentView }) => {
 
   // 탭 전환 처리
   const handleNext = () => {
-    if (!characterImage) {
+    if (!characterImage && !isEditMode && !previewImage) {
       toast.error('캐릭터 이미지를 업로드해주세요.');
       return;
     }
@@ -228,6 +301,11 @@ const CharacterManager = ({ setCurrentView }) => {
 
   // TTS 생성
   const generateTTS = async (text) => {
+    if (!selectedVoice) {
+      toast.error('캐릭터 음성을 선택해 주세요.');
+      return;
+    }
+
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_DOMAIN}/generate-tts/`,
@@ -271,12 +349,10 @@ const CharacterManager = ({ setCurrentView }) => {
 
   // 캐릭터 저장
   const saveCharacter = async () => {
-    if (!characterImage) {
+    if (!characterImage && !isEditMode) {
       toast.error('캐릭터 이미지를 업로드해주세요.');
       return;
     }
-
-    console.log('Current userIdx:', userIdx); // userIdx 확인
 
     if (!userIdx) {
       alert('로그인이 필요하거나 사용자 정보를 불러오지 못했습니다.');
@@ -304,24 +380,52 @@ const CharacterManager = ({ setCurrentView }) => {
 
     console.log('Sending character data:', characterData);
 
-    formData.append('character_image', characterImage);
+    if (characterImage) {
+      formData.append('character_image', characterImage);
+    }
     formData.append('character_data', JSON.stringify(characterData));
 
     try {
+<<<<<<< HEAD
       await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
         withCredentials: true,
       });
+=======
+      if (isEditMode) {
+        await axios.put(
+          `http://localhost:8000/api/characters/${editCharacterId}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            withCredentials: true,
+          }
+        );
+        toast.success('캐릭터 수정 완료!');
+      } else {
+        await axios.post('http://localhost:8000/api/characters/', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          withCredentials: true,
+        });
+        toast.success('캐릭터 생성 완료!');
+      }
+>>>>>>> 486d6de8fca9260ea6fc8fdaf7a1a30ef7fda904
       fetchCharacters();
-      toast.success('캐릭터 생성 완료!');
       setTagName(''); // 태그명 초기화
-      setTagDescription(''); // 태그 설명 초기화
-      navigate('/')
+      setTagDescription(''); // 태그 설정 초기화
+      navigate('/Gganbu');
     } catch (error) {
-      console.error('캐릭터 생성 오류:', error);
-      toast.error('캐릭터 생성 실패!');
+      console.error(
+        isEditMode ? '캐릭터 수정 오류:' : '캐릭터 생성 오류:',
+        error
+      );
+      toast.error(isEditMode ? '캐릭터 수정 실패!' : '캐릭터 생성 실패!');
     }
   };
 
@@ -340,11 +444,17 @@ const CharacterManager = ({ setCurrentView }) => {
     fetchCharacters();
     const fetchVoices = async () => {
       try {
+<<<<<<< HEAD
         const response = await axios.get('${process.env.REACT_APP_SERVER_DOMAIN}/api/voices/');
         setVoices(response.data);
         if (response.data.length > 0) {
           setSelectedVoice(response.data[0].voice_idx);
         }
+=======
+        const response = await axios.get('http://localhost:8000/api/voices/');
+        setVoices(response.data); // 음성 목록 설정
+        setSelectedVoice(''); // 기본값을 빈 문자열로 설정하여 "음성 선택" 옵션이 표시되도록 함
+>>>>>>> 486d6de8fca9260ea6fc8fdaf7a1a30ef7fda904
       } catch (error) {
         console.error('voice 목록 불러오기 오류:', error);
       }
@@ -362,7 +472,9 @@ const CharacterManager = ({ setCurrentView }) => {
         <button onClick={() => navigate(-1)} className="create-back-button">
           <ArrowLeft size={24} />
         </button>
-        <span className="page-title">캐릭터 만들기</span>
+        <span className="page-title">
+          {isEditMode ? '캐릭터 수정하기' : '캐릭터 만들기'}
+        </span>
       </div>
       <div className="character-container">
         {/* 좌측 섹션 */}
@@ -438,9 +550,15 @@ const CharacterManager = ({ setCurrentView }) => {
                       >
                         이미지 추가
                       </button>
-                      <button
+                      {/* <button
                         className="image-generate-btn"
                         onClick={() => setCurrentView('ai-test')}
+                      >
+                        이미지 생성
+                      </button> */}
+                      <button
+                        className="image-generate-btn"
+                        onClick={() => navigate('/generate-image')}
                       >
                         이미지 생성
                       </button>
@@ -589,36 +707,10 @@ const CharacterManager = ({ setCurrentView }) => {
 
               <div className="buttons-row">
                 <button onClick={handleBack}>이전</button>
-                <button onClick={saveCharacter}>생성 완료</button>
+                <button onClick={saveCharacter}>
+                  {isEditMode ? '수정 완료' : '생성 완료'}
+                </button>
               </div>
-
-              <h2>만든 캐릭터 목록</h2>
-              <table className="character-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>이름</th>
-                    <th>필드</th>
-                    <th>소개</th>
-                    <th>작업</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {characters.map((char) => (
-                    <tr key={char.char_idx}>
-                      <td>{char.char_idx}</td>
-                      <td>{char.char_name}</td>
-                      <td>{char.field_idx}</td>
-                      <td>{char.char_description}</td>
-                      <td>
-                        <button onClick={() => deleteCharacter(char.char_idx)}>
-                          삭제
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
             </div>
           )}
         </div>
@@ -643,12 +735,20 @@ const CharacterManager = ({ setCurrentView }) => {
                 <div className="preview-text-header">
                   <h3>{characterName || '캐릭터 이름'}</h3>
                   <select
-                    value={JSON.stringify(selectedVoice)}
-                    onChange={(e) =>
-                      setSelectedVoice(JSON.parse(e.target.value))
-                    }
+                    value={selectedVoice ? JSON.stringify(selectedVoice) : ''}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value) {
+                        setSelectedVoice(JSON.parse(value));
+                      } else {
+                        setSelectedVoice(''); // 음성 선택 해제
+                      }
+                    }}
                     className="tts-voice-choice"
                   >
+                    <option value="" disabled>
+                      음성 선택
+                    </option>
                     {voices.map((voice) => (
                       <option
                         key={voice.voice_idx}
@@ -689,11 +789,9 @@ const CharacterManager = ({ setCurrentView }) => {
                           '캐릭터 응답을 입력해주세요'}
                       </div>
                       <button
-                        className={`tts-button ${
-                          isPlayingAudio ? 'playing' : ''
-                        }`}
+                        className="tts-button"
                         onClick={() => generateTTS(dialogue.characterResponse)}
-                        disabled={!dialogue.characterResponse}
+                        disabled={!dialogue.characterResponse || !selectedVoice}
                       >
                         <FiVolume2 size={20} />
                       </button>
