@@ -11,6 +11,7 @@ const CharacterModal = ({ character, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userName, setUserName] = useState('');
   const [userIntroduction, setUserIntroduction] = useState('');
+  const [followerCount, setFollowerCount] = useState(0);
   const user_idx = getUserIdxFromToken(); // 로그인한 사용자값으로 설정
 
   console.log('캐릭터 데이터:', character);
@@ -27,7 +28,19 @@ const CharacterModal = ({ character, onClose }) => {
       }
     };
 
+    const fetchFollowerCount = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/characters/${character.char_idx}`
+        );
+        setFollowerCount(response.data.follower_count); // API에서 팔로워 수 설정
+      } catch (error) {
+        console.error('팔로워 수 가져오기 실패:', error);
+      }
+    };
+
     checkFollowStatus();
+    fetchFollowerCount();
   }, [character.char_idx]);
 
   const handleFollowToggle = async () => {
@@ -37,11 +50,13 @@ const CharacterModal = ({ character, onClose }) => {
         await axios.delete(
           `http://localhost:8000/api/friends/unfollow/${user_idx}/${character.char_idx}`
         );
+        setFollowerCount((prev) => prev - 1);
       } else {
         await axios.post('http://localhost:8000/api/friends/follow', {
           user_idx: user_idx,
           char_idx: character.char_idx,
         });
+        setFollowerCount((prev) => prev + 1);
       }
       setIsFollowing(!isFollowing);
     } catch (error) {
@@ -113,7 +128,10 @@ const CharacterModal = ({ character, onClose }) => {
           </div>
 
           <div className="character-modal__info">
-            <h2 className="character-modal__name">{character.char_name}</h2>
+            <div className="name-follower-container">
+              <h2 className="character-modal__name">{character.char_name}</h2>
+              <span className="follower-count">팔로우: {followerCount}명</span>
+            </div>
 
             {character.tags && character.tags.length > 0 && (
               <div className="character-modal__tags">
