@@ -24,13 +24,11 @@ import Signin from './components/main/Signin';
 import Mypage from './components/main/Mypage';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   return (
     <BrowserRouter>
       <div className="app-main-frame">
         <div className="app-main-sidebar">
-          <Sidebar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+          <Sidebar />
         </div>
         <div className="app-main-content">
           {/* 특정 페이지에서는 Upperbar를 숨김 */}
@@ -39,10 +37,7 @@ function App() {
               path="/CharacterManager"
               element={<CharacterManager setCurrentView={() => {}} />}
             />
-            <Route
-              path="/signin"
-              element={<Signin setIsLoggedIn={setIsLoggedIn} />}
-            />
+            <Route path="/signin" element={<Signin />} />
             <Route
               path="*"
               element={
@@ -60,16 +55,7 @@ function App() {
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/user" element={<User />} />
                     <Route path="/mypage" element={<Mypage />} />
-                    <Route
-                      path="/signin"
-                      element={
-                        <Signin
-                          onLoginSuccess={(nickname) =>
-                            console.log(`${nickname}님 로그인 성공`)
-                          }
-                        />
-                      }
-                    />
+                    <Route path="/signin" element={<Signin />} />
                     <Route path="/search" element={<Search />} />
                     <Route path="/rank" element={<Rank />} />
                     <Route path="/wordcloud" element={<Wordcloud />} />

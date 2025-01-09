@@ -48,14 +48,6 @@ const Sidebar = () => {
     };
   }, []);
 
-  const handleAccountClick = () => {
-    if (isLoggedIn) {
-      navigate('/mypage');
-    } else {
-      navigate('/signin');
-    }
-  };
-
   const handleLogout = async () => {
     try {
       // localStorage 비우기
@@ -113,21 +105,18 @@ const Sidebar = () => {
         </div>
 
         <div>
-          <div className="side-myInfo">
-            <img
-              src={account}
-              alt="account"
-              className="account-icon"
-              onClick={handleAccountClick}
-            />
-            <div className="nickname-text">
-              {isLoggedIn ? `${nickname} 님` : nickname}
-            </div>
-          </div>
           {isLoggedIn ? (
-            <div className="side-logout" onClick={handleLogout}>
-              <Logout className="logout" />
-              <div>Logout</div>
+            <div>
+              <div className="side-myInfo">
+                <Link to="/mypage">
+                  <img src={account} alt="account" className="account-icon" />
+                </Link>
+                <div className="nickname-text">{`${nickname} 님`}</div>
+              </div>
+              <div className="side-logout" onClick={handleLogout}>
+                <Logout className="logout" />
+                <div>Logout</div>
+              </div>
             </div>
           ) : (
             <div className="side-login">

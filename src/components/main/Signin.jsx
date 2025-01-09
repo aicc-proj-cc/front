@@ -4,9 +4,10 @@ import { useNavigate, Link } from 'react-router-dom';
 
 const BASE_URL = 'http://127.0.0.1:8000';
 
-const Signin = ({ onLoginSuccess, setIsLoggedIn }) => {
+const Signin = () => {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (userId, password) => {
@@ -47,7 +48,6 @@ const Signin = ({ onLoginSuccess, setIsLoggedIn }) => {
       // 로그인 성공 시 onLoginSuccess 호출 및 /mypage로 이동
       localStorage.setItem('userNickname', nickname);
 
-      onLoginSuccess(nickname);
       window.dispatchEvent(new Event('storage')); // localStorage 변경 이벤트 발생
       navigate('/');
     } catch (error) {
