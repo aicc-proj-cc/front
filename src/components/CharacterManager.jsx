@@ -3,6 +3,7 @@ import axios from 'axios';
 import { FiVolume2 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { toast } from "react-toastify";
 import './CharacterManager.css';
 
 const CharacterManager = ({ setCurrentView }) => {
@@ -185,7 +186,7 @@ const CharacterManager = ({ setCurrentView }) => {
   // 예시 대화 추가
   const addExampleDialogue = () => {
     if (exampleDialogues.length >= 3) {
-      alert('예시 대화는 최대 3개까지만 작성할 수 있습니다.');
+      toast.error('예시 대화는 최대 3개까지만 작성할 수 있습니다.');
       return;
     }
     setExampleDialogues([
@@ -217,7 +218,7 @@ const CharacterManager = ({ setCurrentView }) => {
   // 탭 전환 처리
   const handleNext = () => {
     if (!characterImage) {
-      alert('캐릭터 이미지를 업로드해주세요.');
+      toast.error('캐릭터 이미지를 업로드해주세요.');
       return;
     }
     if (activeTab === 'profile') setActiveTab('details');
@@ -273,7 +274,7 @@ const CharacterManager = ({ setCurrentView }) => {
   // 캐릭터 저장
   const saveCharacter = async () => {
     if (!characterImage) {
-      alert('캐릭터 이미지를 업로드해주세요.');
+      toast.error('캐릭터 이미지를 업로드해주세요.');
       return;
     }
 
@@ -316,13 +317,13 @@ const CharacterManager = ({ setCurrentView }) => {
         withCredentials: true,
       });
       fetchCharacters();
-      alert('캐릭터 생성 완료!');
+      toast.success('캐릭터 생성 완료!');
       setTagName(''); // 태그명 초기화
       setTagDescription(''); // 태그 설명 초기화
       navigate('/')
     } catch (error) {
       console.error('캐릭터 생성 오류:', error);
-      alert('캐릭터 생성 실패!');
+      toast.error('캐릭터 생성 실패!');
     }
   };
 

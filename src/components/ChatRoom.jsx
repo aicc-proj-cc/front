@@ -22,44 +22,48 @@ const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
       const response = await axios.get(
         `http://localhost:8000/api/chat/${roomId}`
       );
-      const logs = response.data.map((log) => ({content: log.log}));
+      const logs = response.data.map((log) => ({ content: log.log }));
 
       const parsedMessages = logs.flatMap((log) => {
         // log.content가 없는 경우 빈 배열 반환
         if (!log.content) {
-          console.warn("log.content가 비어 있습니다:", log);
+          console.warn('log.content가 비어 있습니다:', log);
           return [];
         }
-  
-        const lines = log.content.split("\n").filter((line) => line.trim() !== "");
-  
+
+        const lines = log.content
+          .split('\n')
+          .filter((line) => line.trim() !== '');
+
         // 첫 줄과 마지막 줄 제외
         const mainLines = lines.slice(1, -1);
-  
+
         // 메시지 데이터로 변환
-        return mainLines.map((line) => {
-          try {
-            const timestampMatch = line.match(/^\[(.*?)\]/); // 타임스탬프 추출
-            const senderMatch = line.match(/user:|chatbot:/); // 발신자 추출
-  
-            if (!timestampMatch || !senderMatch) return null; // 유효하지 않은 경우 건너뜀
-  
-            const timestamp = timestampMatch[1]; // 예: "2025-01-07 20:03:36"
-            const sender = line.includes("user:") ? "user" : "chatbot";
-            const content = line.split(": ").slice(1).join(": ").trim(); // 메시지 내용 추출
-  
-            return {
-              sender,
-              content,
-              timestamp,
-            };
-          } catch (parseError) {
-            console.error("메시지 파싱 중 오류:", line, parseError);
-            return null;
-          }
-        }).filter(Boolean); // null 값 제거
+        return mainLines
+          .map((line) => {
+            try {
+              const timestampMatch = line.match(/^\[(.*?)\]/); // 타임스탬프 추출
+              const senderMatch = line.match(/user:|chatbot:/); // 발신자 추출
+
+              if (!timestampMatch || !senderMatch) return null; // 유효하지 않은 경우 건너뜀
+
+              const timestamp = timestampMatch[1]; // 예: "2025-01-07 20:03:36"
+              const sender = line.includes('user:') ? 'user' : 'chatbot';
+              const content = line.split(': ').slice(1).join(': ').trim(); // 메시지 내용 추출
+
+              return {
+                sender,
+                content,
+                timestamp,
+              };
+            } catch (parseError) {
+              console.error('메시지 파싱 중 오류:', line, parseError);
+              return null;
+            }
+          })
+          .filter(Boolean); // null 값 제거
       });
-  
+
       setMessages(parsedMessages); // 상태 업데이트
     } catch (error) {
       console.error(
@@ -74,6 +78,7 @@ const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
       const response = await axios.get(
         `http://localhost:8000/api/chat-room-info/${roomId}`
       );
+      console.log('채팅방 정보:', response.data);
       setRoomInfo(response.data);
     } catch (error) {
       console.error(
@@ -88,7 +93,9 @@ const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
     if (!roomId) return;
 
     if (!wsRef.current) {
-      const websocket = new WebSocket(`ws://localhost:8001/ws/generate/?room_id=${roomId}`);
+      const websocket = new WebSocket(
+        `ws://localhost:8001/ws/generate/?room_id=${roomId}`
+      );
       wsRef.current = websocket;
 
       websocket.onopen = () => {
@@ -113,7 +120,7 @@ const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
 
       websocket.onclose = (event) => {
         console.log('WebSocket 연결 종료:', event.code, event.reason);
-        console.log(event.reason)
+        console.log(event.reason);
         wsRef.current = null;
       };
 
@@ -235,7 +242,6 @@ const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
           <p>'{roomName}' 와의 채팅방</p>
           {roomInfo ? (
             <div className="character-status">
-              <p>기분: {roomInfo.character_emotion || '알 수 없음'}</p>
               <p>호감도: {roomInfo.favorability}</p>
             </div>
           ) : (
@@ -264,9 +270,7 @@ const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
                 </div>
               )}
               <div className={`message ${isUser ? 'user' : 'bot'}`}>
-                {!isUser && (
-                  <img src={roomImg} alt="bot" className="avatar" />
-                )}
+                {!isUser && <img src={roomImg} alt="bot" className="avatar" />}
                 <div className="bubble-container">
                   <div className="bubble">{msg.content}</div>
                   <div className="timestamp-container">
