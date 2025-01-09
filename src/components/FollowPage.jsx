@@ -10,6 +10,8 @@ const FollowPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(null); // 드롭다운 상태 관리
+  const [userIdx, setUserIdx] = useState(null); // 로그인한 사용자 ID 저장
 
   useEffect(() => {
     const fetchFollowedCharacters = async () => {
@@ -20,9 +22,10 @@ const FollowPage = () => {
           navigate('/signin');
           return;
         }
-        const userIdx = JSON.parse(atob(token.split('.')[1])).user_idx;
+        const parsedToken = JSON.parse(atob(token.split('.')[1]));
+        setUserIdx(parsedToken.user_idx); // 로그인한 사용자 ID 저장
         const response = await axios.get(
-          `http://localhost:8000/api/friends/${userIdx}/characters`,
+          `http://localhost:8000/api/friends/${parsedToken.user_idx}/characters`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -49,6 +52,27 @@ const FollowPage = () => {
     setShowModal(false);
   };
 
+  const handleDropdownToggle = (charIdx) => {
+    setDropdownOpen(dropdownOpen === charIdx ? null : charIdx);
+  };
+
+  const handleEditCharacter = (charIdx) => {
+    navigate(`/CharacterManager?edit=${charIdx}`);
+  };
+
+  const handleDeleteCharacter = async (charIdx) => {
+    if (window.confirm('정말로 이 캐릭터를 삭제하시겠습니까?')) {
+      try {
+        await axios.delete(`http://localhost:8000/api/characters/${charIdx}`);
+        setFollowedCharacters((prev) =>
+          prev.filter((char) => char.char_idx !== charIdx)
+        );
+      } catch (error) {
+        console.error('캐릭터 삭제 실패:', error);
+      }
+    }
+  };
+
   return (
     <div className="follow-container">
       <div className="follow-content">
@@ -66,6 +90,9 @@ const FollowPage = () => {
                   className="follow-character-card-horizontal"
                   onClick={() => handleCharacterClick(character)}
                 >
+                  {console.log('userIdx:', userIdx)}
+                  {console.log('character_owner:', character.character_owner)}
+
                   <img
                     src={character.character_image || '/default-avatar.png'}
                     alt={character.char_name}
@@ -75,6 +102,40 @@ const FollowPage = () => {
                     <h3>{character.char_name}</h3>
                     <p>{character.char_description}</p>
                   </div>
+                  {/* 본인 캐릭터일 때만 메뉴 버튼 표시 */}
+                  {userIdx === character.character_owner && (
+                    <div className="menu-container">
+                      <button
+                        className="menu-button"
+                        onClick={(e) => {
+                          e.stopPropagation(); // 클릭 이벤트 전파 방지
+                          handleDropdownToggle(character.char_idx);
+                        }}
+                      >
+                        …
+                      </button>
+                      {dropdownOpen === character.char_idx && (
+                        <div className="dropdown-menu">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation(); // 클릭 이벤트 전파 방지
+                              handleEditCharacter(character.char_idx);
+                            }}
+                          >
+                            캐릭터 수정
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation(); // 클릭 이벤트 전파 방지
+                              handleDeleteCharacter(character.char_idx);
+                            }}
+                          >
+                            캐릭터 삭제
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

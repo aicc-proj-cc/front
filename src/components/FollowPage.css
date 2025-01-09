@@ -72,3 +72,49 @@
 .follow-character-info-horizontal p {
   cursor: default; /* 텍스트 부분에선 기본 커서 유지 */
 }
+
+.menu-container {
+  display: flex; /* 가로 정렬 */
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  align-items: center;
+  width: 100%;
+  position: absolute;
+  right: 20px;
+}
+
+.menu-button {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 7px;
+}
+
+.dropdown-menu {
+  display: flex; /* 가로로 버튼 배치 */
+  flex-direction: row;
+  background-color: #333;
+  border-radius: 8px;
+  padding: 5px;
+  gap: 10px;
+  position: absolute;
+  right: 0;
+  top: 40px;
+  z-index: 10;
+}
+
+.dropdown-menu button {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dropdown-menu button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
