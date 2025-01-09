@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 import './CharacterModal.css';
 
 const CharacterModal = ({ character, onClose }) => {
@@ -9,7 +10,7 @@ const CharacterModal = ({ character, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userName, setUserName] = useState('');
   const [userIntroduction, setUserIntroduction] = useState('');
-  const user_id = 1; // 임시 사용자 ID
+  const user_idx = 1; // 임시 사용자 ID
 
   console.log('캐릭터 데이터:', character);
 
@@ -17,7 +18,7 @@ const CharacterModal = ({ character, onClose }) => {
     const checkFollowStatus = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/friends/check/${user_id}/${character.char_idx}`
+          `http://localhost:8000/api/friends/check/${user_idx}/${character.char_idx}`
         );
         setIsFollowing(response.data.is_following);
       } catch (error) {
@@ -33,11 +34,11 @@ const CharacterModal = ({ character, onClose }) => {
     try {
       if (isFollowing) {
         await axios.delete(
-          `http://localhost:8000/api/friends/unfollow/${user_id}/${character.char_idx}`
+          `http://localhost:8000/api/friends/unfollow/${user_idx}/${character.char_idx}`
         );
       } else {
         await axios.post('http://localhost:8000/api/friends/follow', {
-          user_idx: user_id,
+          user_idx: user_idx,
           char_idx: character.char_idx,
         });
       }
@@ -55,13 +56,19 @@ const CharacterModal = ({ character, onClose }) => {
       const response = await axios.post(
         'http://localhost:8000/api/chat-room/',
         {
-          user_idx: user_id,
+          user_idx: user_idx,
           character_id: character.char_idx,
           user_unique_name: userName,
           user_introduction: userIntroduction,
         }
       );
+      const chat_exists = response.data.chat_exists
       const roomId = response.data.room_id
+      if (chat_exists) {
+        alert("이미 생성된 채팅방 입니다.")
+      } else {
+        toast.success("새로운 채티방이 생성되었습니다.")
+      }
       navigate(`/ChatPage/${roomId}`);
     } catch (error) {
       console.error('채팅방 생성 오류:', error);

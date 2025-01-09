@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 // MAIN
 import HomePage from './components/main/HomePage';
@@ -32,27 +33,52 @@ function App() {
           <Sidebar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         </div>
         <div className="app-main-content">
-          <Upperbar />
+          {/* 특정 페이지에서는 Upperbar를 숨김 */}
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/CharacterManager" element={<CharacterManager />} />
-            <Route path="/ChatPage" element={<ChatPage />} />
-            <Route path="/ChatPage/:chatRoomId" element={<ChatPage />} />
-            <Route path="/generate-image" element={<ImageCreate />} />
-            <Route path="/TTSPage" element={<TTSPage />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/user" element={<User />} />
-            <Route path="/mypage" element={<Mypage />} />
             <Route
               path="/signin"
               element={<Signin setIsLoggedIn={setIsLoggedIn} />}
+              path="/CharacterManager"
+              element={<CharacterManager setCurrentView={() => {}} />}
             />
-            <Route path="/search" element={<Search />} />
-            <Route path="/rank" element={<Rank />} />
-            <Route path="/wordcloud" element={<Wordcloud />} />
+            <Route
+              path="*"
+              element={
+                <>
+                  <Upperbar />
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/ChatPage" element={<ChatPage />} />
+                    <Route
+                      path="/ChatPage/:chatRoomId"
+                      element={<ChatPage />}
+                    />
+                    <Route path="/generate-image" element={<ImageCreate />} />
+                    <Route path="/TTSPage" element={<TTSPage />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route path="/user" element={<User />} />
+                    <Route path="/mypage" element={<Mypage />} />
+                    <Route
+                      path="/signin"
+                      element={
+                        <Signin
+                          onLoginSuccess={(nickname) =>
+                            console.log(`${nickname}님 로그인 성공`)
+                          }
+                        />
+                      }
+                    />
+                    <Route path="/search" element={<Search />} />
+                    <Route path="/rank" element={<Rank />} />
+                    <Route path="/wordcloud" element={<Wordcloud />} />
+                  </Routes>
+                </>
+              }
+            />
           </Routes>
         </div>
       </div>
+      <ToastContainer position="top-center" autoClose={1500} theme="light" />
     </BrowserRouter>
   );
 }

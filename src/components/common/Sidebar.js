@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Sidebar.css';
 
@@ -12,19 +12,60 @@ import { ReactComponent as Friends } from '../../assets/icons/friends.svg';
 import logo from '../../assets/logo.png';
 import account from '../../assets/icons/account.png';
 
-const Sidebar = ({ isLoggedIn, setIsLoggedIn }) => {
+const Sidebar = () => {
   const navigate = useNavigate();
+  const [nickname, setNickname] = useState('로그인 필요');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // 로그인 상태 초기화
+    // 초기 로그인 상태 확인
     const token = localStorage.getItem('authToken');
-    setIsLoggedIn(!!token);
-  }, [setIsLoggedIn]); // 컴포넌트가 마운트될 때 실행
+    const savedNickname = localStorage.getItem('userNickname');
+    if (token && savedNickname) {
+      setIsLoggedIn(true);
+      setNickname(savedNickname);
+    } else {
+      setIsLoggedIn(false);
+      setNickname('로그인 필요');
+    }
+
+    // localStorage 변경 감지
+    const handleStorageChange = () => {
+      const token = localStorage.getItem('authToken');
+      const savedNickname = localStorage.getItem('userNickname');
+      if (token && savedNickname) {
+        setIsLoggedIn(true);
+        setNickname(savedNickname);
+      } else {
+        setIsLoggedIn(false);
+        setNickname('로그인 필요');
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('loginStateChange', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('loginStateChange', handleStorageChange);
+    };
+  }, []);
+
+  const handleAccountClick = () => {
+    if (isLoggedIn) {
+      navigate('/mypage');
+    } else {
+      navigate('/signin');
+    }
+  };
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken'); // 토큰 삭제
-    setIsLoggedIn(false); // 상태 업데이트
-    navigate('/signin'); // 로그인 페이지로 이동
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userNickname');
+    setIsLoggedIn(false);
+    setNickname('로그인 필요');
+    window.dispatchEvent(new Event('loginStateChange'));
+    navigate('/');
   };
 
   return (
@@ -62,10 +103,15 @@ const Sidebar = ({ isLoggedIn, setIsLoggedIn }) => {
 
         <div>
           <div className="side-myInfo">
-            <img src={account} alt="account" />
-            <button className="rounded-md p-2">
-              <Link to="/mypage">마이페이지</Link>
-            </button>
+            <img
+              src={account}
+              alt="account"
+              className="account-icon"
+              onClick={handleAccountClick}
+            />
+            <div className="nickname-text">
+              {isLoggedIn ? `${nickname} 님` : nickname}
+            </div>
           </div>
           {isLoggedIn ? (
             <div className="side-logout" onClick={handleLogout}>

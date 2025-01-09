@@ -53,6 +53,16 @@ const Mypage = () => {
 
     fetchUser();
   }, [navigate]);
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userNickname'); // 닉네임 제거
+    setUserInfo(null);
+
+    // 로그아웃 상태 업데이트 이벤트
+    window.dispatchEvent(new Event('loginStateChange'));
+
+    navigate('/'); // / 경로로 리다이렉트
+  };
 
   if (isLoading) {
     return <div className="text-center text-white">Loading...</div>;

@@ -44,6 +44,12 @@ const Signin = ({ onLoginSuccess, setIsLoggedIn }) => {
       const { nickname } = userInfoResponse.data;
       console.log('사용자 정보:', nickname);
       navigate('/mypage');
+      // 로그인 성공 시 onLoginSuccess 호출 및 /mypage로 이동
+      localStorage.setItem('userNickname', nickname);
+
+      onLoginSuccess(nickname);
+      window.dispatchEvent(new Event('storage')); // localStorage 변경 이벤트 발생
+      navigate('/');
     } catch (error) {
       console.error('로그인 실패:', error);
       const errorMessage =
