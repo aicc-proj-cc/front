@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 import './CharacterModal.css';
 
 const CharacterModal = ({ character, onClose }) => {
@@ -66,7 +67,7 @@ const CharacterModal = ({ character, onClose }) => {
       if (chat_exists) {
         alert("이미 생성된 채팅방 입니다.")
       } else {
-        alert("새로운 채티방이 생성되었습니다.")
+        toast.success("새로운 채티방이 생성되었습니다.")
       }
       navigate(`/ChatPage/${roomId}`);
     } catch (error) {

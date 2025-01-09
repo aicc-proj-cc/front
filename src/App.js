@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { ToastContainer } from "react-toastify";
 
 // MAIN
 import HomePage from './components/main/HomePage';
@@ -73,6 +74,7 @@ function App() {
           </Routes>
         </div>
       </div>
+      <ToastContainer position="top-center" autoClose={1500} theme="light" />
     </BrowserRouter>
   );
 }
