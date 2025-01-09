@@ -74,7 +74,7 @@
 }
 
 .character-right h2 {
-  background-color: #0C1033;
+  background-color: #0c1033;
   margin: 0px -20px;
   padding: 20px 20px;
   margin-top: -20px;
@@ -230,39 +230,6 @@ hr {
   background-color: #357abd;
 }
 
-.character-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #3a3f58;
-  margin-top: 20px;
-  border-radius: 8px;
-}
-
-.character-table th,
-.character-table td {
-  padding: 10px;
-  border: 1px solid #4a4f68;
-  text-align: center;
-}
-
-.character-table th {
-  background-color: #4a4f68;
-  font-weight: bold;
-}
-
-.character-table td button {
-  background-color: #ff4b5c;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.character-table td button:hover {
-  background-color: #d43f4b;
-}
-
 .example-dialogue {
   display: flex;
   gap: 10px;
@@ -340,20 +307,20 @@ hr {
 }
 
 .image-content {
-  padding: 0;  /* padding 제거 */
+  padding: 0; /* padding 제거 */
   display: flex;
   flex-direction: column;
   gap: 50px;
   padding-top: 20px;
 }
 
-.image-buttons{
+.image-buttons {
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
 
-.image-buttons button{
+.image-buttons button {
   width: 45%;
   padding: 10px 15px;
   font-size: 12px;
@@ -388,7 +355,7 @@ hr {
 
 .chat-preview-section {
   padding: 20px;
-  height: calc(100% - 200px);  /* 상단 프리뷰 영역을 제외한 높이 */
+  height: calc(100% - 200px); /* 상단 프리뷰 영역을 제외한 높이 */
   overflow-y: auto;
   background-color: #2d2f42;
   border-radius: 8px;
@@ -413,7 +380,7 @@ hr {
   display: flex;
   gap: 8px;
   max-width: 70%;
-  margin: 2px 0;  /* 개별 메시지 상하 여백 추가 */
+  margin: 2px 0; /* 개별 메시지 상하 여백 추가 */
 }
 
 .user-message {
@@ -424,7 +391,7 @@ hr {
   display: flex;
   gap: 8px;
   max-width: 70%;
-  margin: 2px 0 30px 0;  /* 하단 여백 추가 */
+  margin: 2px 0 30px 0; /* 하단 여백 추가 */
   align-self: flex-start;
 }
 
@@ -457,7 +424,7 @@ hr {
 
 /* 빈 메시지일 때 스타일 */
 .message-content:empty::before {
-  content: "메시지를 입력해주세요";
+  content: '메시지를 입력해주세요';
   color: rgba(255, 255, 255, 0.5);
 }
 
@@ -520,7 +487,7 @@ hr {
   border: 2px solid #4a4f68;
   border-radius: 8px;
   background-color: #2d2f42;
-  color: rgba(255, 255, 255, 0.5);
+  color: white;
 }
 
 /* 필드 드롭다운 스타일 */
