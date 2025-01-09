@@ -40,6 +40,8 @@ function App() {
               element={<CharacterManager setCurrentView={() => {}} />}
             />
             <Route path="/signin" element={<Signin />} />
+            <Route path="/ChatPage" element={<ChatPage />} />
+            <Route path="/ChatPage/:chatRoomId" element={<ChatPage />} />
             <Route
               path="*"
               element={
@@ -47,11 +49,6 @@ function App() {
                   <Upperbar />
                   <Routes>
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/ChatPage" element={<ChatPage />} />
-                    <Route
-                      path="/ChatPage/:chatRoomId"
-                      element={<ChatPage />}
-                    />
                     <Route path="/generate-image" element={<ImageCreate />} />
                     <Route path="/TTSPage" element={<TTSPage />} />
                     <Route path="/signup" element={<Signup />} />
