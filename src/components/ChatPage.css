@@ -76,6 +76,7 @@ body {
 }
 
 .chat-item {
+  position: relative;
   display: flex;
   align-items: center;
   padding: 10px 15px;
@@ -84,7 +85,23 @@ body {
 }
 
 .chat-item:hover {
-  background-color: #7126E2; /* 마우스 호버 시 연한 보라색 */
+  background-color: #7126E2;
+}
+
+/* 쓰레기통 아이콘 스타일 */
+.delete-icon {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.chat-item:hover .delete-icon {
+  opacity: 1; /* 마우스를 올리면 아이콘이 나타남 */
 }
 
 .chat-item.selected {
