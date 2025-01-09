@@ -11,6 +11,9 @@ import backgroundImage3 from "../../assets/Modern/banner01_1.png";
 import school001 from "../../assets/School/school001.png";
 
 import wuxia001 from "../../assets/Wuxia/wuxia001.png";
+import wuxia002 from "../../assets/Wuxia/wuxia002.png";
+import wuxia003 from "../../assets/Wuxia/wuxia003.png";
+
 
 import modern001 from "../../assets/Modern/modern001.png";
 import modern002 from "../../assets/Modern/modern002.png";
@@ -32,7 +35,7 @@ const FiledSlider = () => {
       backgroundImage: backgroundImage1,
       gradientColor: "rgba(196, 33, 33, 0.5)", // 배너의 그라데이션 색상 지정
       characters: [
-        { name: "공명부", image: school001 },
+        { name: "최하영", image: school001 },
       ],
     },
     {
@@ -41,7 +44,10 @@ const FiledSlider = () => {
       backgroundImage: backgroundImage2,
       gradientColor: "rgba(196, 33, 33, 0.5)", // 다른 배너의 그라데이션 색상
       characters: [
-        { name: "탄지로", image: wuxia001 },
+        { name: "한채린", image: wuxia001 },
+        { name: "청명", image: wuxia002 },
+        { name: "강룡(고수)", image: wuxia003 },
+
       ],
     },
     {
