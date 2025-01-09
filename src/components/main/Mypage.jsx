@@ -53,7 +53,6 @@ const Mypage = () => {
 
     fetchUser();
   }, [navigate]);
-
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userNickname'); // 닉네임 제거
@@ -97,12 +96,6 @@ const Mypage = () => {
         ) : (
           <p className="text-white">사용자 정보를 불러올 수 없습니다.</p>
         )}
-        <button
-          onClick={handleLogout}
-          className="w-full bg-button hover:bg-hover text-white py-3 rounded-lg mt-6 font-bold"
-        >
-          로그아웃
-        </button>
       </div>
     </div>
   );
