@@ -4,6 +4,7 @@ import ChatRoom from './ChatRoom'; // 채팅창 UI 컴포넌트
 import axios from 'axios';
 import logo from '../assets/logo.png'; // 로고 이미지 import
 import './ChatPage.css';
+import { getUserIdxFromToken } from './main/utils/authUtils';
 
 function ChatPage() {
   const { chatRoomId } = useParams(); // URL에서 chatRoomId 가져오기
@@ -13,13 +14,13 @@ function ChatPage() {
   const [selectedRoomName, setSelectedRoomName] = useState(''); // 선택된 채팅방 이름
   const [selectedRoomImg, setSelectedRoomImg] = useState(''); // 선택된 채팅방 이미지
 
-  const user_id = 1; // 임시 사용자 ID
+  const user_idx = getUserIdxFromToken(); // 함수 호출
 
   // 채팅방 목록 가져오기
   const fetchRooms = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/chat-room/user/${user_id}`
+        `http://localhost:8000/api/chat-room/user/${user_idx}`
       );
       setChatRooms(response.data);
     } catch (error) {
@@ -29,7 +30,7 @@ function ChatPage() {
 
   useEffect(() => {
     fetchRooms();
-  }, []);
+  }, [user_idx]); // user_idx가 변경될 때마다 fetchRooms 호출
 
   useEffect(() => {
     if (chatRoomId) {
