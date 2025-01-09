@@ -54,12 +54,6 @@ const Mypage = () => {
     fetchUser();
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    setUserInfo(null);
-    navigate('/signin');
-  };
-
   if (isLoading) {
     return <div className="text-center text-white">Loading...</div>;
   }
@@ -92,12 +86,6 @@ const Mypage = () => {
         ) : (
           <p className="text-white">사용자 정보를 불러올 수 없습니다.</p>
         )}
-        <button
-          onClick={handleLogout}
-          className="w-full bg-button hover:bg-hover text-white py-3 rounded-lg mt-6 font-bold"
-        >
-          로그아웃
-        </button>
       </div>
     </div>
   );

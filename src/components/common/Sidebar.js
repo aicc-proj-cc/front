@@ -1,30 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // 페이지 이동을 위한 useNavigate 훅
+import React, { useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import './Sidebar.css';
 
-// svg 아이콘
+import { ReactComponent as Login } from '../../assets/icons/login.svg';
 import { ReactComponent as Logout } from '../../assets/icons/logout.svg';
 import { ReactComponent as Create } from '../../assets/icons/create.svg';
 import { ReactComponent as Explore } from '../../assets/icons/explore.svg';
 import { ReactComponent as Chat } from '../../assets/icons/chat.svg';
 import { ReactComponent as Friends } from '../../assets/icons/friends.svg';
 
-// 로고
 import logo from '../../assets/logo.png';
-
-// 임시 아이콘, 나중에 실제 사용자 프로필 사진으로 교체해야 함
 import account from '../../assets/icons/account.png';
 
-const Sidebar = () => {
-  const navigate = useNavigate(); // 페이지 이동을 위한 훅 사용
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+const Sidebar = ({ isLoggedIn, setIsLoggedIn }) => {
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // localStorage에서 authToken 확인
+    // 로그인 상태 초기화
     const token = localStorage.getItem('authToken');
-    setIsLoggedIn(!!token); // 토큰이 존재하면 true, 없으면 false
-  }, []);
+    setIsLoggedIn(!!token);
+  }, [setIsLoggedIn]); // 컴포넌트가 마운트될 때 실행
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken'); // 토큰 삭제
+    setIsLoggedIn(false); // 상태 업데이트
+    navigate('/signin'); // 로그인 페이지로 이동
+  };
 
   return (
     <div className="side-container">
@@ -34,7 +35,6 @@ const Sidebar = () => {
             <img src={logo} alt="logo" />
           </div>
           <div className="button-create-char">
-            {/* 캐릭터 생성 */}
             <div
               className="retangle"
               onClick={() => navigate('/CharacterManager')}
@@ -45,41 +45,43 @@ const Sidebar = () => {
           </div>
 
           <div className="side-tap">
-            {/* 캐릭터 조회 */}
             <div className="side-find" onClick={() => navigate('/')}>
               <Explore className="explore" />
               <div>Find</div>
             </div>
-
-            {/* 채팅 화면 */}
             <div className="side-chat" onClick={() => navigate('/ChatPage')}>
               <Chat className="chat" />
               <div>Chat</div>
             </div>
-
-            {/* 친구 리스트 */}
             <div className="side-Gganbu">
               <Friends className="friends" />
               <div>Gganbu</div>
             </div>
           </div>
         </div>
+
         <div>
           <div className="side-myInfo">
             <img src={account} alt="account" />
-
             <button className="rounded-md p-2">
-              {isLoggedIn ? (
-                <Link to="/mypage">내 닉네임</Link>
-              ) : (
-                <Link to="/signin">내 닉네임</Link>
-              )}
+              <Link to="/mypage">마이페이지</Link>
             </button>
           </div>
-          <div className="side-logout">
-            <Logout className="logout" />
-            <div>Logout</div>
-          </div>
+          {isLoggedIn ? (
+            <div className="side-logout" onClick={handleLogout}>
+              <Logout className="logout" />
+              <div>Logout</div>
+            </div>
+          ) : (
+            <div className="side-login">
+              <Login className="login" />
+              <div>
+                <Link to="/signin" className="flex justify-center">
+                  Login
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -13,21 +13,23 @@ import Wordcloud from './components/main/Wordcloud';
 import Sidebar from './components/common/Sidebar';
 import Upperbar from './components/common/Upperbar';
 
-import CharacterManager from './components/CharacterManager'; // 캐릭터 등록 페이지
-import ChatPage from './components/ChatPage'; // 채팅 페이지
-import ImageCreate from './components/image_create/ImageCreate'; // 이미지 생성 페이지
-import TTSPage from './components/TTSPage'; // TTS 테스트 페이지
+import CharacterManager from './components/CharacterManager';
+import ChatPage from './components/ChatPage';
+import ImageCreate from './components/image_create/ImageCreate';
+import TTSPage from './components/TTSPage';
 
 import './App.css';
 import Signin from './components/main/Signin';
 import Mypage from './components/main/Mypage';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   return (
     <BrowserRouter>
       <div className="app-main-frame">
         <div className="app-main-sidebar">
-          <Sidebar /> {/* 고정된 사이드바 */}
+          <Sidebar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         </div>
         <div className="app-main-content">
           <Upperbar />
@@ -43,13 +45,7 @@ function App() {
             <Route path="/mypage" element={<Mypage />} />
             <Route
               path="/signin"
-              element={
-                <Signin
-                  onLoginSuccess={(nickname) =>
-                    console.log(`${nickname}님 로그인 성공`)
-                  }
-                />
-              }
+              element={<Signin setIsLoggedIn={setIsLoggedIn} />}
             />
             <Route path="/search" element={<Search />} />
             <Route path="/rank" element={<Rank />} />

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const BASE_URL = 'http://127.0.0.1:8000';
 
-const Signin = ({ onLoginSuccess }) => {
+const Signin = ({ onLoginSuccess, setIsLoggedIn }) => {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -23,8 +23,7 @@ const Signin = ({ onLoginSuccess }) => {
       const { token } = response.data;
       localStorage.setItem('authToken', token);
       setMessage('로그인 성공!');
-
-      console.log('토큰 저장 완료:', token);
+      setIsLoggedIn(true); // 로그인 상태 업데이트
 
       // 토큰 검증 요청
       const tokenResponse = await axios.get(`${BASE_URL}/verify-token`, {
@@ -37,7 +36,6 @@ const Signin = ({ onLoginSuccess }) => {
         throw new Error('유효한 사용자 ID를 찾을 수 없습니다.');
       }
 
-      // 사용자 정보 가져오기
       const userInfoResponse = await axios.get(
         `${BASE_URL}/users/${user_idx}`,
         { headers: { Authorization: `Bearer ${token}` } }
@@ -45,10 +43,7 @@ const Signin = ({ onLoginSuccess }) => {
 
       const { nickname } = userInfoResponse.data;
       console.log('사용자 정보:', nickname);
-
-      // 로그인 성공 시 onLoginSuccess 호출 및 /mypage로 이동
-      onLoginSuccess(nickname);
-      navigate('/Mypage');
+      navigate('/mypage');
     } catch (error) {
       console.error('로그인 실패:', error);
       const errorMessage =
@@ -100,6 +95,12 @@ const Signin = ({ onLoginSuccess }) => {
           </button>
         </form>
         {message && <p className="mt-4 text-center text-white">{message}</p>}
+        <div className="mt-6 text-center text-white ">
+          아직 회원이 아닌신가요?{' '}
+          <Link to="/signup" className="text-blue-400 hover:underline">
+            회원가입
+          </Link>
+        </div>
       </div>
     </div>
   );

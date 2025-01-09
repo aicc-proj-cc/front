@@ -1,5 +1,5 @@
 .side-container {
-  position: fixed;                      /* 위치 고정 */
+  position: fixed; /* 위치 고정 */
   width: 200px;
   background-color: var(--side);
   height: 100vh;
@@ -30,8 +30,9 @@
 .side-logo:hover {
   cursor: pointer; /* 손가락 모양으로 변경 */
 }
-.side-logo img{width: 150px;}
-
+.side-logo img {
+  width: 150px;
+}
 
 /* ================캐릭터 생성================= */
 .button-create-char {
@@ -43,31 +44,33 @@
   cursor: pointer;
   margin-bottom: 20px;
   background: var(--gradient);
-    /* 그라데이션 배경 */
+  /* 그라데이션 배경 */
   border-radius: 36px;
   transition: all 0.3s ease;
 }
 
-.button-create-char .retangle{
-    display: flex;
-    width: 100%;
-    justify-content: space-around;
-    align-items: center;
-    font-size: var(--font-size-body-main);
-    padding: 5px;
-    cursor: pointer;
-    border-radius: 36px;
-    background-color: var(--side);
+.button-create-char .retangle {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+  font-size: var(--font-size-body-main);
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 36px;
+  background-color: var(--side);
 }
-.button-create-char .create{width: 25px;}
+.button-create-char .create {
+  width: 25px;
+}
 
 /* ------hover 상태------ */
-.button-create-char:hover{
+.button-create-char:hover {
   background: var(--gradient-hover);
-  box-shadow: 10px 5px 15px rgba(167,62,231, 0.3), 0px 0px 25px rgba(0,235,255, 0.3);
-    /* 추가 음영 효과 */
+  box-shadow: 10px 5px 15px rgba(167, 62, 231, 0.3),
+    0px 0px 25px rgba(0, 235, 255, 0.3);
+  /* 추가 음영 효과 */
 }
-
 
 /* ==============탭 메뉴================== */
 .side-tap {
@@ -117,17 +120,14 @@
 .side-chat:active,
 .side-Gganbu:active {
   background-color: var(--white-20);
-  color:var(--white);
+  color: var(--white);
 }
 
 .side-find:active .explore,
 .side-chat:active .chat,
 .side-Gganbu:active .friends {
-  fill:var(--white);
+  fill: var(--white);
 }
-
-
-
 
 /* ==========회원 프로필 및 로그아웃============ */
 .side-myInfo {
@@ -137,7 +137,6 @@
   margin-top: auto;
   padding: 10px;
 }
-
 
 .side-logout {
   color: var(--white-30);
@@ -152,7 +151,7 @@
   transition: all 0.3s ease;
 }
 
-.side-logout .logout{
+.side-logout .logout {
   fill: var(--white-30);
   transition: all 0.3s ease;
 }
@@ -163,12 +162,39 @@
   color: var(--white-60);
 }
 .side-logout:hover .logout {
-  fill:var(--white-60);
+  fill: var(--white-60);
   /* 아이콘 색상 변경 */
 }
 
+.side-login {
+  color: var(--white-30);
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid var(--white-20);
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
+.side-login .login {
+  fill: var(--white-30);
+  transition: all 0.3s ease;
+}
+
+/* -----Hover 상태----- */
+.side-login:hover {
+  background-color: var(--white-20);
+  color: var(--white-60);
+}
+.side-login:hover .login {
+  fill: var(--white-60);
+  /* 아이콘 색상 변경 */
+}
 
 /* =====================아이콘 크기==================== */
-.side-myInfo img{width: 35px;}
-
+.side-myInfo img {
+  width: 35px;
+}
