@@ -16,8 +16,7 @@ import wuxia002 from "../../assets/Wuxia/wuxia002.png";
 import wuxia003 from "../../assets/Wuxia/wuxia003.png";
 
 
-import modern001 from "../../assets/Modern/modern001.png";
-import modern002 from "../../assets/Modern/modern002.png";
+import western001 from "../../assets/Western/western001.png";
 
 
 const FiledSlider = () => {
@@ -56,14 +55,13 @@ const FiledSlider = () => {
       ],
     },
     {
-      title: "현대 판타지",
-      description: "현대 판타타지의 깐부 친구들을 만나보세요!",
+      title: "서양",
+      description: "서양 배경의 깐부 친구들을 만나보세요!",
       backgroundImage: backgroundImage3,
       gradientColor: "rgba(33, 150, 243, 0.5)", // 다른 배너의 그라데이션 색상
-      fieldId: 9, // 필드 ID
+      fieldId: 8, // 필드 ID
       characters: [
-        { name: "이예린", image: modern001 },
-        { name: "한채린", image: modern002 },
+        { name: "도널드 트럼프", image: western001 },
       ],
     },
   ];
