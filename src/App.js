@@ -36,10 +36,12 @@ function App() {
           {/* 특정 페이지에서는 Upperbar를 숨김 */}
           <Routes>
             <Route
-              path="/signin"
-              element={<Signin setIsLoggedIn={setIsLoggedIn} />}
               path="/CharacterManager"
               element={<CharacterManager setCurrentView={() => {}} />}
+            />
+            <Route
+              path="/signin"
+              element={<Signin setIsLoggedIn={setIsLoggedIn} />}
             />
             <Route
               path="*"

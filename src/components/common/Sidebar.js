@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Sidebar.css';
+import axios from 'axios';
 
 import { ReactComponent as Login } from '../../assets/icons/login.svg';
 import { ReactComponent as Logout } from '../../assets/icons/logout.svg';
@@ -17,8 +18,7 @@ const Sidebar = () => {
   const [nickname, setNickname] = useState('로그인 필요');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    // 초기 로그인 상태 확인
+  const checkLoginStatus = () => {
     const token = localStorage.getItem('authToken');
     const savedNickname = localStorage.getItem('userNickname');
     if (token && savedNickname) {
@@ -28,18 +28,15 @@ const Sidebar = () => {
       setIsLoggedIn(false);
       setNickname('로그인 필요');
     }
+  };
+
+  useEffect(() => {
+    // 컴포넌트 마운트 시 초기 상태 확인
+    checkLoginStatus();
 
     // localStorage 변경 감지
     const handleStorageChange = () => {
-      const token = localStorage.getItem('authToken');
-      const savedNickname = localStorage.getItem('userNickname');
-      if (token && savedNickname) {
-        setIsLoggedIn(true);
-        setNickname(savedNickname);
-      } else {
-        setIsLoggedIn(false);
-        setNickname('로그인 필요');
-      }
+      checkLoginStatus();
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -59,13 +56,23 @@ const Sidebar = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userNickname');
-    setIsLoggedIn(false);
-    setNickname('로그인 필요');
-    window.dispatchEvent(new Event('loginStateChange'));
-    navigate('/');
+  const handleLogout = async () => {
+    try {
+      // localStorage 비우기
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userNickname');
+
+      // 상태 즉시 업데이트
+      setIsLoggedIn(false);
+      setNickname('로그인 필요');
+
+      // 커스텀 이벤트 발생
+      window.dispatchEvent(new Event('loginStateChange'));
+
+      navigate('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   return (
@@ -90,10 +97,14 @@ const Sidebar = () => {
               <Explore className="explore" />
               <div>Find</div>
             </div>
+
+            {/* 채팅 화면 */}
             <div className="side-chat" onClick={() => navigate('/ChatPage')}>
               <Chat className="chat" />
               <div>Chat</div>
             </div>
+
+            {/* 친구 리스트 */}
             <div className="side-Gganbu">
               <Friends className="friends" />
               <div>Gganbu</div>
