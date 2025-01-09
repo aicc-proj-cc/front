@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { UserIcon } from '@heroicons/react/outline'; // Heroicons 사용자 아이콘 import
 
+const BASE_URL = 'http://127.0.0.1:8000';
+
 const Rank = () => {
   const [message, setMessage] = useState('');
   const [characters, setCharacters] = useState([]);
@@ -17,9 +19,12 @@ const Rank = () => {
       }
 
       try {
-        const verifyResponse = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/verify-token`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const verifyResponse = await axios.get(
+          `${process.env.REACT_APP_SERVER_DOMAIN}/verify-token`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         const { user_idx } = verifyResponse.data;
 
@@ -32,7 +37,6 @@ const Rank = () => {
           `${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/user/${user_idx}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
-
         setCharacters(charactersResponse.data);
       } catch (error) {
         console.error('데이터를 가져오는 중 오류 발생:', error);
