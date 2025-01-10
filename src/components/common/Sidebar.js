@@ -135,11 +135,11 @@ const Sidebar = () => {
         <div>
           {isLoggedIn ? (
             <div>
-              <div className="side-myInfo">
+              <div className="side-myInfo flex gap-2">
                 <Link to="/mypage">
                   <img src={account} alt="account" className="account-icon" />
                 </Link>
-                <div className="nickname-text">{`${nickname} 님`}</div>
+                <div className="nickname-text text-sm">{`${nickname} 님`}</div>
               </div>
               <div className="side-logout" onClick={handleLogout}>
                 <Logout className="logout" />
@@ -148,12 +148,10 @@ const Sidebar = () => {
             </div>
           ) : (
             <div className="side-login">
-              <Login className="login" />
-              <div>
-                <Link to="/signin" className="flex justify-center">
-                  Login
-                </Link>
-              </div>
+              <Link to="/signin" className="flex justify-between w-full">
+                <Login className="login" />
+                <div>Login</div>
+              </Link>
             </div>
           )}
         </div>
