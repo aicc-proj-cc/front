@@ -1,68 +1,8 @@
-import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import './ChatRoom.css';
 import userProfile from '../assets/user.png';
 import { FiVolume2 } from 'react-icons/fi'; // 사운드 아이콘
-
-const ChatMessages = React.memo(({ messages, roomImg, playTTS }) => {
-  const messagesEndRef = useRef(null);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  return (
-    <div className="chatroom-chat-messages">
-      {messages.map((msg, idx) => {
-        const isUser = msg.sender === 'user';
-        const currentDate = new Date(msg.timestamp).toLocaleDateString();
-        const previousDate =
-          idx > 0
-            ? new Date(messages[idx - 1].timestamp).toLocaleDateString()
-            : null;
-
-        const shouldShowDate = currentDate !== previousDate;
-
-        return (
-          <React.Fragment key={idx}>
-            {shouldShowDate && (
-              <div className="date-separator">
-                <div className="line"></div>
-                <span className="date">{currentDate}</span>
-                <div className="line"></div>
-              </div>
-            )}
-            <div className={`message ${isUser ? 'user' : 'bot'}`}>
-              {!isUser && <img src={roomImg} alt="bot" className="avatar" />}
-              <div className="bubble-container">
-                <div className="bubble">{msg.content}</div>
-                <div className="timestamp-container">
-                  <div className="timestamp">
-                    {new Date(msg.timestamp).toLocaleTimeString([], {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </div>
-                  {!isUser && (
-                    <FiVolume2
-                      className="sound-icon"
-                      onClick={() => playTTS(msg.content)}
-                      title="TTS 재생"
-                    />
-                  )}
-                </div>
-              </div>
-              {isUser && (
-                <img src={userProfile} alt="user" className="avatar" />
-              )}
-            </div>
-          </React.Fragment>
-        );
-      })}
-      <div ref={messagesEndRef} />
-    </div>
-  );
-});
 
 const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
   const [messages, setMessages] = useState([]);
@@ -70,12 +10,12 @@ const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
   const [roomInfo, setRoomInfo] = useState(null);
   const [isTyping, setIsTyping] = useState(false); // 챗봇이 타이핑 중인지 확인하는 상태
   const [ws, setWs] = useState(null);
-  // const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef(null);
   const wsRef = useRef(null); // WebSocket 객체를 유지하는 ref
 
-  // const scrollToBottom = () => {
-  //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  // };
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const fetchMessages = async () => {
     try {
@@ -138,7 +78,7 @@ const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_DOMAIN}/api/chat-room-info/${roomId}`
       );
-      // console.log('채팅방 정보:', response.data);
+      console.log('채팅방 정보:', response.data);
       setRoomInfo(response.data);
     } catch (error) {
       console.error(
@@ -154,7 +94,7 @@ const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
 
     if (!wsRef.current) {
       const websocket = new WebSocket(
-        `${process.env.REACT_APP_WS_SERVER_DOMAIN}/ws/generate/?room_id=${roomId}`
+        `ws://localhost:8001/ws/generate/?room_id=${roomId}`
       );
       wsRef.current = websocket;
 
@@ -180,6 +120,7 @@ const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
 
       websocket.onclose = (event) => {
         console.log('WebSocket 연결 종료:', event.code, event.reason);
+        console.log(event.reason);
         wsRef.current = null;
       };
 
@@ -196,7 +137,7 @@ const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
     };
   }, [roomId]); // roomId가 변경될 때만 새 WebSocket 초기화
 
-  const sendMessage = useCallback ( async (e) => {
+  const sendMessage = async (e) => {
     e.preventDefault();
     if (!input.trim() || !roomInfo || !ws) return;
 
@@ -237,7 +178,7 @@ const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
             (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
           )
         );
-        // await fetchRoomInfo();
+        await fetchRoomInfo();
       }
     } catch (error) {
       console.error(
@@ -249,9 +190,9 @@ const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
       // 챗봇이 응답을 완료하면 타이핑 상태를 false로 변경
       setIsTyping(false);
     }
-  }, [input, roomInfo, roomId])
+  };
 
-  const playTTS = useCallback(async (text) => {
+  const playTTS = async (text) => {
     if (!roomInfo) return;
 
     try {
@@ -261,28 +202,28 @@ const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
         {
           text: text,
           speaker: roomInfo.voice_speaker,
-          language: "KO", // 언어 고정
+          language: 'KO', // 언어 고정
           speed: 1.0, // 속도 설정 (roomInfo에서 가져오거나 고정값)
         },
         {
-          responseType: "arraybuffer",
+          responseType: 'arraybuffer',
         }
       );
 
       // 반환된 데이터로 오디오 재생
-      const audioBlob = new Blob([response.data], { type: "audio/wav" });
+      const audioBlob = new Blob([response.data], { type: 'audio/wav' });
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
       audio.play();
     } catch (error) {
-      console.error("TTS 호출 오류:", error.response?.data || error.message);
-      alert("TTS 요청 중 오류가 발생했습니다.");
+      console.error('TTS 호출 오류:', error.response?.data || error.message);
+      alert('TTS 요청 중 오류가 발생했습니다.');
     }
-  }, [roomInfo]);
+  };
 
-  // useEffect(() => {
-  //   scrollToBottom();
-  // }, [messages]);
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   useEffect(() => {
     if (roomId) {
@@ -308,24 +249,70 @@ const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
           )}
         </div>
       </div>
+      <div className="chatroom-chat-messages">
+        {messages.map((msg, idx) => {
+          const isUser = msg.sender === 'user';
+          const currentDate = new Date(msg.timestamp).toLocaleDateString();
+          const previousDate =
+            idx > 0
+              ? new Date(messages[idx - 1].timestamp).toLocaleDateString()
+              : null;
 
-      <ChatMessages messages={messages} roomImg={roomImg} playTTS={playTTS} />
+          const shouldShowDate = currentDate !== previousDate;
 
-      {isTyping && (
-        <div className="message bot">
-          <div className="bubble-container">
-            <div className="bubble">
-              {roomInfo && roomInfo.character_name && (
-                <div className="typing-dots">
-                  <span>.</span>
-                  <span>.</span>
-                  <span>.</span>
+          return (
+            <React.Fragment key={idx}>
+              {shouldShowDate && (
+                <div className="date-separator">
+                  <div className="line"></div>
+                  <span className="date">{currentDate}</span>
+                  <div className="line"></div>
                 </div>
               )}
+              <div className={`message ${isUser ? 'user' : 'bot'}`}>
+                {!isUser && <img src={roomImg} alt="bot" className="avatar" />}
+                <div className="bubble-container">
+                  <div className="bubble">{msg.content}</div>
+                  <div className="timestamp-container">
+                    <div className="timestamp">
+                      {new Date(msg.timestamp).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </div>
+                    {!isUser && (
+                      <FiVolume2
+                        className="sound-icon"
+                        onClick={() => playTTS(msg.content)}
+                        title="TTS 재생"
+                      />
+                    )}
+                  </div>
+                </div>
+                {isUser && (
+                  <img src={userProfile} alt="user" className="avatar" />
+                )}
+              </div>
+            </React.Fragment>
+          );
+        })}
+        {isTyping && (
+          <div className="message bot">
+            <div className="bubble-container">
+              <div className="bubble">
+                {roomInfo && roomInfo.character_name && (
+                  <div className="typing-dots">
+                    <span>.</span>
+                    <span>.</span>
+                    <span>.</span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+        <div ref={messagesEndRef} />
+      </div>
 
       <form className="chat-input" onSubmit={sendMessage}>
         <input
