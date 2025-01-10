@@ -58,7 +58,7 @@ const Wordcloud = () => {
         className={`w-1/6 text-center py-2 px-4 rounded-lg font-semibold text-white ${
           loading
             ? 'bg-gray-400 cursor-not-allowed'
-            : 'bg-blue-500 hover:bg-blue-600 active:bg-blue-700 shadow-md hover:shadow-lg transition duration-300'
+            : 'bg-button hover:bg-hover  shadow-md hover:shadow-lg transition duration-300'
         }`}
       >
         {loading ? '생성 중...' : 'Wordcloud 생성'}
