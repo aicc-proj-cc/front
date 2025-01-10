@@ -50,7 +50,7 @@ function SectionField({
     <div className="section">
       <h1 className="section-title">{title}</h1>
       <div className="categories">
-        {categories.map((category, index) => (
+        {Array.isArray(categories) && categories.map((category, index) => (
           <button
             key={`${category[keyType]}-${index}`} // keyType에 따라 key 지정
             className={`category-btn ${
@@ -266,8 +266,8 @@ const Section = () => {
         <SectionField
           key={index}
           title={section.title}
-          categories={section.categories}
-          cards={section.cards}
+          categories={section.categories || []}
+          cards={section.cards || []}
           onCategoryClick={section.onCategoryClick}
           selectedCategories={section.selectedCategories}
           onCardClick={section.onCardClick}

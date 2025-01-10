@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
 const ImageCreate = () => {
+  // 카테고리별 상태 관리
+
   // =======텍스트 프롬프트========
   const [basePrompt, setBasePrompt] = useState(
     'face focus, masterpiece, best quality, upper body, close-up, looking at viewer, one person, detailed hair, high-quality hair,detailed eyes,lively eyes, Natural transition between the white of the eye and the iris'
@@ -33,6 +35,23 @@ const ImageCreate = () => {
 
   // 뒤오가기 버튼
   const navigate = useNavigate();
+
+  // 카테고리별 상태 관리
+  const [selectedOptions, setSelectedOptions] = useState({
+    style: '',
+    background: '',
+    filter: '',
+    guidance: '',
+    noise: '',
+  });
+
+  // 선택된 옵션 업데이트
+  const handleOptionChange = (category, option) => {
+    setSelectedOptions((prev) => ({
+      ...prev,
+      [category]: prev[category] === option ? '' : option,
+    }));
+  };
 
   // =======전체 프롬프트 생성 함수=======
   const getFullPrompt = () => {
@@ -176,7 +195,7 @@ const ImageCreate = () => {
         <button onClick={() => navigate(-1)}>
           <ArrowLeft size={24} />
         </button>
-        <h1>Custom Your Character</h1>
+        <h1>Custom Your Character Image</h1>
       </div>
       <br />
       <div className="image-create-area">
@@ -184,16 +203,17 @@ const ImageCreate = () => {
           {/* 그림체 선택 */}
           <div className="choose-image-style">
             <h3>Style</h3>
-            <button onClick={() => handleStyleChange('cute')}>일본 만화</button>
-            <button onClick={() => handleStyleChange('powerful')}>
-              현실 주의
-            </button>
-            <button onClick={() => handleStyleChange('retro')}>
-              레트로 감성
-            </button>
-            <button onClick={() => handleStyleChange('cyberpunk')}>
-              사이버펑크
-            </button>
+            {['일본 애미풍', '실사풍', '레트로 감성', '사이버펑크'].map(
+              (style) => (
+                <button
+                  key={style}
+                  className={selectedOptions.style === style ? 'active' : ''}
+                  onClick={() => handleOptionChange('style', style)}
+                >
+                  {style}
+                </button>
+              )
+            )}
             <br />
           </div>
 
@@ -202,72 +222,57 @@ const ImageCreate = () => {
             <h3>Background</h3>
             <div className="bg-outdoor">
               <h4>Outdoor</h4>
-              <button
-                onClick={() => handleBackgroundChange('beach', 'outdoor')}
-              >
-                해변가
-              </button>
-              <button
-                onClick={() => handleBackgroundChange('starrySky', 'outdoor')}
-              >
-                푸른 하늘
-              </button>
-              <button
-                onClick={() => handleBackgroundChange('forest', 'outdoor')}
-              >
-                숲
-              </button>
-              <button
-                onClick={() => handleBackgroundChange('castle', 'outdoor')}
-              >
-                판타지 성
-              </button>
+              {['해변가', '푸른 하늘', '숲', '판타지 성'].map((background) => (
+                <button
+                  key={background}
+                  className={
+                    selectedOptions.background === background ? 'active' : ''
+                  }
+                  onClick={() => handleOptionChange('background', background)}
+                >
+                  {background}
+                </button>
+              ))}
             </div>
 
             <div className="bg-indoor">
               <h4>Indor</h4>
-              <button
-                onClick={() => handleBackgroundChange('classroom', 'indoor')}
-              >
-                교실
-              </button>
-              <button
-                onClick={() => handleBackgroundChange('concertStage', 'indoor')}
-              >
-                콘서트 무대
-              </button>
-              <button
-                onClick={() => handleBackgroundChange('corridor', 'indoor')}
-              >
-                복도
-              </button>
-              <button onClick={() => handleBackgroundChange('cafe', 'indoor')}>
-                카페
-              </button>
+              {['교실', '무대', '복도', '카페'].map((background) => (
+                <button
+                  key={background}
+                  className={
+                    selectedOptions.background === background ? 'active' : ''
+                  }
+                  onClick={() => handleOptionChange('background', background)}
+                >
+                  {background}
+                </button>
+              ))}
             </div>
           </div>
 
           <div className="choose-filter">
             {/* 필터 스타일 선택 */}
             <h3>Filter</h3>
-            <button onClick={() => handleFilterChange('natural')}>
-              Natural Daylight
-            </button>
-            <button onClick={() => handleFilterChange('neon')}>
-              Neon Lighting
-            </button>
-            <button onClick={() => handleFilterChange('cold')}>
-              Cold Lighting
-            </button>
-            <button onClick={() => handleFilterChange('rainbow')}>
-              Rainbow Light
-            </button>
+            {[
+              'Natural Daylight',
+              'Neon Lighting',
+              'Cold Lighting',
+              'Rainbow Lighting',
+            ].map((filter) => (
+              <button
+                key={filter}
+                className={selectedOptions.filter === filter ? 'active' : ''}
+                onClick={() => handleOptionChange('filter', filter)}
+              >
+                {filter}
+              </button>
+            ))}
           </div>
           <br />
 
           <div className="choose-size">
             <h3>Size</h3>
-
             <select
               onChange={(e) => handleDimensionChange(e.target.value)} // 드롭다운에서 선택하면 handleDimensionChange 호출
               style={{ marginLeft: '10px', padding: '5px' }}
@@ -283,11 +288,17 @@ const ImageCreate = () => {
             <p className="c-dic">
               프롬프트 충실 단계가 높을수록 소요되는 시간이 증가됩니다.
             </p>
-            <button onClick={() => handleGuidanceScale('low')}>Low</button>
-            <button onClick={() => handleGuidanceScale('normal')}>
-              Normal
-            </button>
-            <button onClick={() => handleGuidanceScale('high')}>High</button>
+            {['low', 'normal', 'high'].map((guidance) => (
+              <button
+                key={guidance}
+                className={
+                  selectedOptions.guidance === guidance ? 'active' : ''
+                }
+                onClick={() => handleOptionChange('guidance', guidance)}
+              >
+                {guidance}
+              </button>
+            ))}
           </div>
           <br />
           <div className="chose-noise">
@@ -295,17 +306,15 @@ const ImageCreate = () => {
             <p className="c-dic">
               노이즈 제거 단계가 높을수록 소요되는 시간이 증가됩니다.
             </p>
-            <div>
-              <button onClick={() => handleInferenceStepChange('low')}>
-                Low
+            {['low', 'normal', 'high'].map((noise) => (
+              <button
+                key={noise}
+                className={selectedOptions.noise === noise ? 'active' : ''}
+                onClick={() => handleOptionChange('noise', noise)}
+              >
+                {noise}
               </button>
-              <button onClick={() => handleInferenceStepChange('normal')}>
-                Normal
-              </button>
-              <button onClick={() => handleInferenceStepChange('high')}>
-                High
-              </button>
-            </div>
+            ))}
           </div>
         </div>
         <br />
@@ -332,17 +341,20 @@ const ImageCreate = () => {
           >
             {loading ? '생성 중...' : '이미지 생성'}
           </button>
-        </div>
 
-        {generatedImage && (
-          <div style={{ marginTop: '20px' }}>
-            <img
-              src={generatedImage}
-              alt="생성된 이미지"
-              style={{ maxWidth: '100%', maxHeight: '400px' }}
-            />
+          <div className="create-finished-area">
+            <p>Generated Image:</p>
+            {generatedImage && (
+              <div className="finished-image" style={{ marginTop: '20px' }}>
+                <img
+                  src={generatedImage}
+                  alt="생성된 이미지"
+                  style={{ maxWidth: '100%', maxHeight: '400px' }}
+                />
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

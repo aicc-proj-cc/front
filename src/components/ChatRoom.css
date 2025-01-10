@@ -39,18 +39,18 @@
 }
 
 .chatroom-chat-messages::-webkit-scrollbar-thumb {
-  background: #7126E2; /* 스크롤바 손잡이 색상 */
+  background: #7126e2; /* 스크롤바 손잡이 색상 */
   border-radius: 4px; /* 스크롤바 모서리 둥글게 */
 }
 
 .chatroom-chat-messages::-webkit-scrollbar-thumb:hover {
-  background: #8322FF; /* 호버 시 색상 */
+  background: #8322ff; /* 호버 시 색상 */
 }
 
 /* 스크롤바 기본 스타일 제거 (다른 브라우저) */
 .chatroom-chat-messages {
   scrollbar-width: thin; /* Firefox에서 얇은 스크롤바 */
-  scrollbar-color: #7126E2 #3a3f54; /* Firefox 스크롤바 색상 */
+  scrollbar-color: #7126e2 #3a3f54; /* Firefox 스크롤바 색상 */
 }
 
 .message {
@@ -179,7 +179,7 @@
   font-size: 24px;
   cursor: pointer;
   padding: 0 15px 0 0;
-  margin-left: 10px;
+  margin-left: 20px;
   margin-bottom: 23px;
   border-right: 1px solid #4a4f68;
 }
