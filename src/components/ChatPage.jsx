@@ -46,7 +46,7 @@ function ChatPage() {
 
     try {
       // 삭제 API 호출
-      await axios.delete(`http://localhost:8000/api/chat-room/${roomId}`);
+      await axios.delete(`${process.env.REACT_APP_SERVER_DOMAIN}/api/chat-room/${roomId}`);
       toast.success('채팅방이 삭제되었습니다.');
 
       // 삭제 후 채팅방 목록 갱신

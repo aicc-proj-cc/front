@@ -25,7 +25,7 @@ const FollowPage = () => {
         const parsedToken = JSON.parse(atob(token.split('.')[1]));
         setUserIdx(parsedToken.user_idx); // 로그인한 사용자 ID 저장
         const response = await axios.get(
-          `http://localhost:8000/api/friends/${parsedToken.user_idx}/characters`,
+          `${process.env.REACT_APP_SERVER_DOMAIN}/api/friends/${parsedToken.user_idx}/characters`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -63,7 +63,7 @@ const FollowPage = () => {
   const handleDeleteCharacter = async (charIdx) => {
     if (window.confirm('정말로 이 캐릭터를 삭제하시겠습니까?')) {
       try {
-        await axios.delete(`http://localhost:8000/api/characters/${charIdx}`);
+        await axios.delete(`${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/${charIdx}`);
         setFollowedCharacters((prev) =>
           prev.filter((char) => char.char_idx !== charIdx)
         );
