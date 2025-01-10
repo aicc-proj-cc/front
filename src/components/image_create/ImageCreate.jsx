@@ -4,68 +4,99 @@ import './ImageCreate.css';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
+// 프롬프트 데이터를 가져옴
+import {
+  STYLE_PROMPTS,
+  BACKGROUND_PROMPTS,
+  FILTER_PROMPTS,
+  BASE_PROMPT,
+  EXCLUDED_PROMPT,
+} from '../../promts/ImagePrompts';
+
 const ImageCreate = () => {
-  // 카테고리별 상태 관리
+  // 상태 관리=====
+  const [basePrompt] = useState(BASE_PROMPT); // 기본 프롬프트
+  const [excludedPrompt] = useState(EXCLUDED_PROMPT); // 제외된 프롬프트
+  const [customPrompt, setCustomPrompt] = useState(''); // 사용자 정의 프롬프트
 
-  // =======텍스트 프롬프트========
-  const [basePrompt, setBasePrompt] = useState(
-    'face focus, masterpiece, best quality, upper body, close-up, looking at viewer, one person, detailed hair, high-quality hair,detailed eyes,lively eyes, Natural transition between the white of the eye and the iris'
-  ); // 기본 프롬프트
-  const [excludedPrompt, setExcludedPrompt] = useState(
-    'lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry'
-  ); // 제외된 프롬프트
-  const [customPrompt, setCustomPrompt] = useState(''); // 사용자가 작성한 프롬프트
-
-  // ======선택한 그림체, 배경, 필터 스타일을 저장========
   const [stylePrompt, setStylePrompt] = useState(''); // 그림체
   const [backgroundPrompt, setBackgroundPrompt] = useState(''); // 배경
   const [filterPrompt, setFilterPrompt] = useState(''); // 필터 스타일
-
-  // ======선택한 프롬프트 충실도, 노이즈, 이미지 크기 단계 저장=======
-  const [guidanceScale, setGuidanceScale] = useState(7.5); // 프롬프트 충실도 단계 상태 초기화
-  const [numInferenceSteps, setNumInferenceSteps] = useState(50); // 노이즈 단계 상태 초기화
-  const [dimensions, setDimensions] = useState({ width: 512, height: 512 }); // width와 height 상태 초기화
+  const [generatedImage, setGeneratedImage] = useState(null); // 생성된 이미지
+  const [loading, setLoading] = useState(false); // 로딩 상태
+  const navigate = useNavigate(); // 뒤오가기 버튼
 
   // 배경 실내/실외 선택 처리 값
   const [indoorSelected, setIndoorSelected] = useState(''); // 실내 선택된 값
   const [outdoorSelected, setOutdoorSelected] = useState(''); // 실외 선택된 값
-
-  const [generatedImage, setGeneratedImage] = useState(null); // 생성된 이미지
-  const [loading, setLoading] = useState(false); // 로딩 상태
-
-  // 뒤오가기 버튼
-  const navigate = useNavigate();
 
   // 카테고리별 상태 관리
   const [selectedOptions, setSelectedOptions] = useState({
     style: '',
     background: '',
     filter: '',
-    guidance: '',
-    noise: '',
   });
 
-  // 선택된 옵션 업데이트
+  // 새 상태 변수 정의
+  const [dimensions, setDimensions] = useState({ width: 512, height: 512 }); // Default dimensions
+  const [guidanceScale, setGuidanceScale] = useState(7.5); // Default guidance scale
+  const [numInferenceSteps, setNumInferenceSteps] = useState(50); // Default number of inference steps
+
+  // ======= 옵션 변경 함수 =======
   const handleOptionChange = (category, option) => {
-    setSelectedOptions((prev) => ({
-      ...prev,
-      [category]: prev[category] === option ? '' : option,
-    }));
+    const promptData = {
+      style: STYLE_PROMPTS,
+      background: BACKGROUND_PROMPTS,
+      filter: FILTER_PROMPTS,
+    };
+
+    // 이전 선택 항목이 있을 경우 초기화
+    if (category === 'style') {
+      setStylePrompt((prev) =>
+        prev === promptData[category][option]
+          ? ''
+          : promptData[category][option]
+      );
+    } else if (category === 'background') {
+      setBackgroundPrompt((prev) =>
+        prev === promptData[category][option]
+          ? ''
+          : promptData[category][option]
+      );
+    } else if (category === 'filter') {
+      setFilterPrompt((prev) =>
+        prev === promptData[category][option]
+          ? ''
+          : promptData[category][option]
+      );
+    }
+
+    // 선택된 옵션 상태 갱신
+    setSelectedOptions((prev) => {
+      const updatedOptions = {
+        ...prev,
+        [category]: prev[category] === option ? '' : option,
+      };
+      return updatedOptions;
+    });
   };
 
-  // =======전체 프롬프트 생성 함수=======
+  // ======= 전체 프롬프트 생성 함수 =======
   const getFullPrompt = () => {
-    console.log('-------------');
-    console.log('기본 적용 프롬프트:', basePrompt);
-    console.log('이미지 스타일:', stylePrompt);
-    console.log('배경 선택:', backgroundPrompt);
-    console.log('필터 선택:', filterPrompt);
-    console.log('사용자 입력 프롬프트:', customPrompt);
-
-    const fullPrompt = `${basePrompt}, ${stylePrompt}, ${backgroundPrompt}, ${filterPrompt}, ${customPrompt}`;
-    return fullPrompt;
+    const prompts = [
+      basePrompt,
+      stylePrompt,
+      backgroundPrompt,
+      filterPrompt,
+      customPrompt,
+    ]
+      .filter(Boolean)
+      .join(', ');
+    console.log(`전체 프롬프트:`, prompts);
+    return prompts;
   };
 
+  // 이미지 생성 함수
   const handleGenerateImage = async () => {
     const fullPrompt = getFullPrompt();
 
@@ -77,19 +108,22 @@ const ImageCreate = () => {
     setLoading(true);
     setGeneratedImage(null);
 
+    console.log('Sending request with full prompt:', fullPrompt);
+
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_DOMAIN}/generate-image/`,
         {
           prompt: fullPrompt,
           negative_prompt: excludedPrompt,
-          width: dimensions.width, // dimensions 사용
-          height: dimensions.height, // dimensions 사용
+          width: dimensions.width,
+          height: dimensions.height,
           guidance_scale: parseFloat(guidanceScale),
           num_inference_steps: parseInt(numInferenceSteps, 10),
         }
       );
 
+      console.log('전달한 메시지:', response.data);
       setGeneratedImage(`data:image/png;base64,${response.data.image}`);
     } catch (error) {
       console.error('이미지 생성 오류:', error);
@@ -108,6 +142,7 @@ const ImageCreate = () => {
       portrait: { width: 512, height: 880 }, // 세로형
       landscape: { width: 880, height: 512 }, // 가로형
     };
+    console.log(`Dimension selected: ${value}`, options[value]);
     setDimensions(options[value]);
   };
 
@@ -119,6 +154,7 @@ const ImageCreate = () => {
       retro: 'retro',
       cyberpunk: 'cyberpunk',
     };
+    console.log(`Style selected: ${style}`, styles[style]);
     setStylePrompt(styles[style]);
   };
 
@@ -141,7 +177,8 @@ const ImageCreate = () => {
       setIndoorSelected(''); // 실내 선택 초기화
     }
 
-    setBackgroundPrompt(backgrounds[background]); // 선택된 배경 프롬프트 저장
+    console.log(`Background selected: ${background}`, backgrounds[background]);
+    setBackgroundPrompt(backgrounds[background]);
     if (category === 'indoor') {
       setIndoorSelected(background); // 실내 선택된 값 업데이트
     } else {
@@ -157,36 +194,29 @@ const ImageCreate = () => {
       cold: 'cold lighting',
       rainbow: 'rainbow light',
     };
+    console.log(`Filter selected: ${filter}`, filters[filter]);
     setFilterPrompt(filters[filter]);
   };
 
   // Num Inference Steps(노이즈 제거 단계)
   const handleInferenceStepChange = (value) => {
     const options = {
-      // 단계가 낮으면 선 처리가 조금 더 투박한 느낌
       low: 30, // Low 단계
       normal: 50, // Normal 단계
       high: 60, // High 단계
     };
-    setNumInferenceSteps(options[value]); // 선택한 값으로 numInferenceSteps 업데이트
-
-    console.log(
-      `선택된 노이즈 제거 단계: ${value}, 설정된 값: ${options[value]}`
-    );
+    console.log(`Noise step selected: ${value}`, options[value]);
+    setNumInferenceSteps(options[value]);
   };
 
   const handleGuidanceScale = (value) => {
-    // 단계가 낮을수록 조금 오묘한 이미지가 생성 됨(모호 필터한 것 처럼)
-    // 단계가 높으면 조금 더 샤프한 이미지가 생성 됨
     const options = {
       low: 6.5,
       normal: 7.5,
       high: 8.5,
     };
+    console.log(`Guidance scale selected: ${value}`, options[value]);
     setGuidanceScale(options[value]);
-    console.log(
-      `선택된 프롬프트 충실도 단계: ${value}, 설정된 값: ${options[value]}`
-    );
   };
 
   return (
@@ -286,7 +316,7 @@ const ImageCreate = () => {
           <div className="choose-guidance">
             <h3>Guidance</h3>
             <p className="c-dic">
-              프롬프트 충실 단계가 높을수록 소요되는 시간이 증가됩니다.
+              프롬프트 충실도 단계가 높을수록 소요되는 시간이 증가됩니다.
             </p>
             {['low', 'normal', 'high'].map((guidance) => (
               <button
