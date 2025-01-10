@@ -21,4 +21,4 @@ COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 # Nginx 포트 노출
 EXPOSE 80
 # Nginx 실행
-ENTRYPOINT [ “nginx”, “-g”, “daemon off;” ]
+ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
