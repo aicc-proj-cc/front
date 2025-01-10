@@ -25,4 +25,4 @@ COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 # nginx 포트 설정
 EXPOSE 80
 # nginx 실행 할 때 기능 중지
-ENTRYPOINT [ “nginx”,“-g”,“daemon off;” ]
+ENTRYPOINT [ "nginx","-g","daemon off;" ]
