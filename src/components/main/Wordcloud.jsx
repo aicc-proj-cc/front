@@ -39,18 +39,8 @@ const Wordcloud = () => {
   };
 
   return (
-    <div className="wordcloud-container">
-      <h1>Wordcloud 생성</h1>
-      <button
-        onClick={fetchWordcloud}
-        disabled={loading}
-        className="w-full text-center"
-      >
-        {loading ? '생성 중...' : '워드클라우드 가져오기'}
-      </button>
-
+    <div className="wordcloud-container w-full h-screen flex flex-col justify-center items-center gap-y-10 mb-40">
       {error && <p style={{ color: 'red' }}>{error}</p>}
-
       {imageSrc && (
         <div className="w-full flex justify-center">
           <div className="w-full flex justify-center">
@@ -62,6 +52,17 @@ const Wordcloud = () => {
           </div>
         </div>
       )}
+      <button
+        onClick={fetchWordcloud}
+        disabled={loading}
+        className={`w-1/6 text-center py-2 px-4 rounded-lg font-semibold text-white ${
+          loading
+            ? 'bg-gray-400 cursor-not-allowed'
+            : 'bg-blue-500 hover:bg-blue-600 active:bg-blue-700 shadow-md hover:shadow-lg transition duration-300'
+        }`}
+      >
+        {loading ? '생성 중...' : 'Wordcloud 생성'}
+      </button>
     </div>
   );
 };
