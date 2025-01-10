@@ -94,7 +94,7 @@ const ChatRoom = ({ roomId, roomName, roomImg, onLeaveRoom }) => {
 
     if (!wsRef.current) {
       const websocket = new WebSocket(
-        `ws://localhost:8001/ws/generate/?room_id=${roomId}`
+        `${process.env.REACT_APP_WS_SERVER_DOMAIN}/ws/generate/?room_id=${roomId}`
       );
       wsRef.current = websocket;
 
