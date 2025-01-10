@@ -127,12 +127,15 @@ const CharacterManager = ({ setCurrentView }) => {
           return;
         }
 
-        const response = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/verify-token`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          `${process.env.REACT_APP_SERVER_DOMAIN}/verify-token`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true,
+          }
+        );
 
         if (response.data && response.data.user_idx) {
           setUserIdx(response.data.user_idx);
@@ -147,7 +150,9 @@ const CharacterManager = ({ setCurrentView }) => {
 
   const fetchFields = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/api/fields/`);
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_DOMAIN}/api/fields/`
+      );
       setFields(response.data); // API 응답 설정
     } catch (error) {
       console.error('필드 목록 불러오기 오류:', error);
@@ -207,6 +212,11 @@ const CharacterManager = ({ setCurrentView }) => {
       speechStyle:
         '이예린의 말투는 그녀의 성격과 상황에 따라 다채롭게 변할 수 있습니다. 전반적으로 조심스럽고 긴장된 어조를 사용하지만, 내면의 갈등이나 감정을 드러낼 때는 부드럽고 솔직한 면모를 보여줍니다.',
       exampleDialogues: [
+        {
+          userMessage: '배가 고파서 힘들어.',
+          characterResponse:
+            '나도 식량 부족으로 고생하고 있어. 하지만 우리가 함께라면 어떻게든 방법을 찾을 수 있을 거야. 근처에 약탈되지 않은 상점이나 창고를 찾아보는 건 어때?',
+        },
         {
           userMessage: '이곳에 계속 있을 수 있을까..?',
           characterResponse:
@@ -394,12 +404,16 @@ const CharacterManager = ({ setCurrentView }) => {
         );
         toast.success('캐릭터 수정 완료!');
       } else {
-        await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          withCredentials: true,
-        });
+        await axios.post(
+          `${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            withCredentials: true,
+          }
+        );
         toast.success('캐릭터 생성 완료!');
       }
       fetchCharacters();
@@ -418,7 +432,9 @@ const CharacterManager = ({ setCurrentView }) => {
   // 캐릭터 삭제
   const deleteCharacter = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/${id}`);
+      await axios.delete(
+        `${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/${id}`
+      );
       fetchCharacters();
     } catch (error) {
       console.error('캐릭터 삭제 오류:', error);
@@ -430,7 +446,9 @@ const CharacterManager = ({ setCurrentView }) => {
     fetchCharacters();
     const fetchVoices = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/api/voices/`);
+        const response = await axios.get(
+          `${process.env.REACT_APP_SERVER_DOMAIN}/api/voices/`
+        );
         setVoices(response.data); // 음성 목록 설정
         setSelectedVoice(''); // 기본값을 빈 문자열로 설정하여 "음성 선택" 옵션이 표시되도록 함
       } catch (error) {
