@@ -76,6 +76,8 @@ const GganbuPage = () => {
     setShowModal(false); // 모달 숨김
   };
 
+  console.log(characters)
+
   return (
     <div className="gganbu-container">
       <div className="gganbu-content">

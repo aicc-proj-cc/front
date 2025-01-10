@@ -47,7 +47,7 @@
   overflow-y: visible; /* 세로 스크롤은 허용 */
   scroll-behavior: smooth;
   position: relative;
-  padding: 10px 0;
+  padding: 20px 10px;
   flex-wrap: nowrap; /* 줄바꿈 방지 */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
