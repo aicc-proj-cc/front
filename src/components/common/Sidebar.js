@@ -15,9 +15,11 @@ import account from '../../assets/icons/account.png';
 
 const Sidebar = () => {
   const navigate = useNavigate();
+
   const [nickname, setNickname] = useState('로그인 필요');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState('/'); // 현재 활성화된 탭 경로 상태
 
   const checkLoginStatus = () => {
     const token = localStorage.getItem('authToken');
@@ -75,54 +77,76 @@ const Sidebar = () => {
   const handleMouseLeave = () => {
     setIsDropdownVisible(false); // 마우스가 떠났을 때 드롭다운 닫기
   };
+  const handleTabClick = (tabPath) => {
+    setActiveTab(tabPath); // 현재 활성화된 탭 업데이트
+    navigate(tabPath); // 해당 경로로 이동
+  };
 
   return (
     <div className="side-container">
       <div className="side-wrapper">
         <div>
-          <div className="side-logo" onClick={() => navigate('/')}>
+          <div className="side-logo" onClick={() => handleTabClick('/')}>
             <img src={logo} alt="logo" />
           </div>
-          <div className="button-create-char">
+
+          <div
+            className={`button-create-char ${
+              activeTab === '/CharacterManager' ? 'active' : ''
+            }`}
+          >
             <div
               className="retangle"
-              onClick={() => navigate('/CharacterManager')}
+              onClick={() => handleTabClick('/CharacterManager')}
             >
               <Create className="logout" />
               <div>Create</div>
             </div>
           </div>
 
+          {/* Tabs */}
           <div className="side-tap">
-            <div className="side-find" onClick={() => navigate('/')}>
-              <Explore className="explore" />
+            <div
+              className={`side-find ${activeTab === '/' ? 'active' : ''}`}
+              // 활성화된 상태에 따라 스타일 적용
+              onClick={() => handleTabClick('/')}
+            >
+              <Explore className="sidetap-icon" />
               <div>Find</div>
             </div>
 
             {/* 채팅 화면 */}
-            <div className="side-chat" onClick={() => navigate('/ChatPage')}>
-              <Chat className="chat" />
+            <div
+              className={`side-chat ${
+                activeTab === '/ChatPage' ? 'active' : ''
+              }`}
+              onClick={() => handleTabClick('/ChatPage')}
+            >
+              <Chat className="sidetap-icon " />
               <div>Chat</div>
             </div>
 
+            {/* 친구 리스트 */}
             <div
-              className="side-Gganbu"
+              className={`side-Gganbu ${
+                activeTab === '/Gganbu' ? 'active' : ''
+              }`}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              <Friends className="friends" />
+              <Friends className="sidetap-icon" />
               <div>GGanbu</div>
               {isDropdownVisible && (
                 <div className="gganbu-dropdown">
                   <div
                     className="dropdown-item"
-                    onClick={() => navigate('/Gganbu')}
+                    onClick={() => handleTabClick('/Gganbu')}
                   >
                     만든 캐릭터
                   </div>
                   <div
                     className="dropdown-item"
-                    onClick={() => navigate('/FollowPage')}
+                    onClick={() => handleTabClick('/FollowPage')}
                   >
                     팔로잉 캐릭터
                   </div>
@@ -131,7 +155,7 @@ const Sidebar = () => {
             </div>
           </div>
         </div>
-
+        {/* 로그인 정보 */}
         <div>
           {isLoggedIn ? (
             <div>

@@ -55,7 +55,7 @@
   justify-content: space-around;
   align-items: center;
   font-size: var(--font-size-body-main);
-  padding: 5px;
+  padding: 10px;
   cursor: pointer;
   border-radius: 36px;
   background-color: var(--side);
@@ -94,9 +94,7 @@
   transition: all 0.3s ease;
 }
 
-.side-find .explore,
-.side-chat .chat,
-.side-Gganbu .friends {
+.sidetap-icon {
   fill: var(--white-60);
   transition: all 0.3s ease;
 }
@@ -107,25 +105,21 @@
 .side-Gganbu:hover {
   background-color: var(--white-20);
   color: var(--white);
+
 }
 
-.side-find:hover .explore,
-.side-chat:hover .chat,
-.side-Gganbu:hover .friends {
+.side-find:hover .sidetap-icon,.side-chat:hover .sidetap-icon, .side-Gganbu:hover  .sidetap-icon {
   fill: var(--white);
 }
 
 /* ------활성화된 상태------ */
-.side-find:active,
-.side-chat:active,
-.side-Gganbu:active {
+
+.side-tap .active {
   background-color: var(--white-20);
   color: var(--white);
 }
 
-.side-find:active .explore,
-.side-chat:active .chat,
-.side-Gganbu:active .friends {
+.side-find.active .sidetap-icon, .side-chat.active .sidetap-icon,.side-Gganbu.active .sidetap-icon {
   fill: var(--white);
 }
 

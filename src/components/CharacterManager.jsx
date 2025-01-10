@@ -69,7 +69,7 @@ const CharacterManager = ({ setCurrentView }) => {
   const fetchCharacterData = async (charId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/characters/${charId}`
+        `${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/${charId}`
       );
       const data = response.data;
 

@@ -20,7 +20,7 @@ const FieldSearch = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/characters/field?fields=${fieldId}`
+          `${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/field?fields=${fieldId}`
         );
         setResults(response.data);
         if (response.data.length === 0) {
