@@ -96,13 +96,13 @@ const Mypage = () => {
                   </span>{' '}
                 </p>
                 <Link to="/Rank">
-                  <button className="flex w-full gap-x-2 rounded-md p-2 bg-var(--gradient-hover) hover:text-light text-lg ">
+                  <button className="flex w-full gap-x-2 rounded-md p-2 bg-var(--gradient-hover) hover:text-hover text-lg ">
                     <FaChartBar className="w-6 h-6" />
                     Rank
                   </button>
                 </Link>
                 <Link to="/Wordcloud">
-                  <button className="flex w-full gap-x-2 rounded-md p-2 bg-var(--gradient-hover) text-lg hover:text-light ">
+                  <button className="flex w-full gap-x-2 rounded-md p-2 bg-var(--gradient-hover) text-lg hover:text-hover ">
                     <BsChatLeftText className="w-6 h-6" />
                     Wordcloud
                   </button>
