@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { FaChartBar } from 'react-icons/fa';
+import { BsChatLeftText } from 'react-icons/bs';
 
 const Mypage = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -67,14 +69,14 @@ const Mypage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-primary flex items-center justify-center">
-      <div className="w-full max-w-lg bg-sub rounded-lg shadow-md p-6 ">
+    <div className="bg-primary flex justify-center mt-32 h-full">
+      <div className="w-full max-w-lg bg-side rounded-lg shadow-md p-6 h-1/2">
         <h1 className="text-2xl font-bold text-white mb-4 text-center">
           마이페이지
         </h1>
         {userInfo ? (
-          <div className="space-y-4">
-            <div className="flex flex-col items-center gap-4">
+          <div className="space-y-4 h-2/3">
+            <div className="flex items-center h-full justify-evenly gap-4 ">
               {userInfo.profile_picture ? (
                 <img
                   src={userInfo.profile_picture}
@@ -82,22 +84,26 @@ const Mypage = () => {
                   className="w-24 h-24 rounded-full object-cover"
                 />
               ) : (
-                <div className="w-24 h-24 rounded-full bg-gray-500 flex items-center justify-center text-white">
+                <div className="w-28 h-28 rounded-full bg-gray-500 flex items-center justify-center text-white">
                   사진 없음
                 </div>
               )}
-              <p className="text-white text-lg w-full flex justify-center">
-                <span className="font-semibold">이름:</span> {userInfo.nickname}
-              </p>
-              <div className="mypage_info flex gap-2">
-                {' '}
+
+              <div className="mypage_info flex flex-col gap-8">
+                <p className="text-white text-lg flex justify-center">
+                  <span className="font-semibold text-2xl">
+                    이름: {userInfo.nickname}
+                  </span>{' '}
+                </p>
                 <Link to="/Rank">
-                  <button className=" rounded-md p-2 bg-button hover:bg-hover">
+                  <button className="flex w-full gap-x-2 rounded-md p-2 bg-var(--gradient-hover) hover:text-light text-lg ">
+                    <FaChartBar className="w-6 h-6" />
                     Rank
                   </button>
                 </Link>
                 <Link to="/Wordcloud">
-                  <button className=" rounded-md p-2 bg-button hover:bg-hover">
+                  <button className="flex w-full gap-x-2 rounded-md p-2 bg-var(--gradient-hover) text-lg hover:text-light ">
+                    <BsChatLeftText className="w-6 h-6" />
                     Wordcloud
                   </button>
                 </Link>
