@@ -65,15 +65,6 @@
   margin: 5px;
 }
 
-.image-create-area button:hover,
-.image-create-area button:focus {
-  box-shadow: 6px 2px 10px rgba(167, 62, 231, 0.8),
-    0px 0px 25px rgba(0, 235, 255, 0.6);
-  background: linear-gradient(90deg, #A73EE7, #00EBFF); /* 그라데이션 추가 */
-  -webkit-background-clip: text; /* 텍스트에 배경 클립 적용 */
-  -webkit-text-fill-color: var(--white-20); /* 텍스트 색상 투명하게 설정 */
-}
-
 /* Section Titles */
 .imageCreate-container h3 {
   color: var(--white-60);
@@ -106,7 +97,7 @@ textarea {
 /* Generated Image Area */
 .generated-image-container {
   margin-top: 20px;
-  background: #2E2E2E;
+  background: #2e2e2e;
   padding: 10px;
   border-radius: 10px;
   display: flex;
@@ -137,3 +128,12 @@ option {
   color: black;
 }
 
+/* 활성화된 버튼(active) 상태 */
+.image-create-area button.active {
+  box-shadow: 6px 2px 10px rgba(167, 62, 231, 0.8),
+    0px 0px 25px rgba(0, 235, 255, 0.6);
+  background: linear-gradient(90deg, #a73ee7, #00ebff); /* 그라데이션 추가 */
+  -webkit-background-clip: text; /* 텍스트에 배경 클립 적용 */
+  -webkit-text-fill-color: var(--white-20); /* 텍스트 색상 투명하게 설정 */
+  transition: transform 0.2s ease-in-out;
+}
