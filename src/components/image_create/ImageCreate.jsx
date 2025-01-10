@@ -195,7 +195,7 @@ const ImageCreate = () => {
         <button onClick={() => navigate(-1)}>
           <ArrowLeft size={24} />
         </button>
-        <h1>Custom Your Character</h1>
+        <h1>Custom Your Character Image</h1>
       </div>
       <br />
       <div className="image-create-area">
