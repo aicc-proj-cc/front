@@ -31,7 +31,7 @@ const CharacterModal = ({ character, onClose }) => {
     const fetchFollowerCount = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/characters/${character.char_idx}`
+          `${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/${character.char_idx}`
         );
         setFollowerCount(response.data.follower_count); // API에서 팔로워 수 설정
       } catch (error) {

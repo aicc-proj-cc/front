@@ -56,7 +56,7 @@ const GganbuPage = () => {
   const handleDeleteCharacter = async (charIdx) => {
     if (window.confirm('정말로 이 캐릭터를 삭제하시겠습니까?')) {
       try {
-        await axios.delete(`http://localhost:8000/api/characters/${charIdx}`);
+        await axios.delete(`${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/${charIdx}`);
         setCharacters((prev) =>
           prev.filter((char) => char.char_idx !== charIdx)
         );
