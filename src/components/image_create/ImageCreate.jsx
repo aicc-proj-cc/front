@@ -273,7 +273,6 @@ const ImageCreate = () => {
 
           <div className="choose-size">
             <h3>Size</h3>
-
             <select
               onChange={(e) => handleDimensionChange(e.target.value)} // 드롭다운에서 선택하면 handleDimensionChange 호출
               style={{ marginLeft: '10px', padding: '5px' }}
@@ -342,17 +341,20 @@ const ImageCreate = () => {
           >
             {loading ? '생성 중...' : '이미지 생성'}
           </button>
-        </div>
 
-        {generatedImage && (
-          <div style={{ marginTop: '20px' }}>
-            <img
-              src={generatedImage}
-              alt="생성된 이미지"
-              style={{ maxWidth: '100%', maxHeight: '400px' }}
-            />
+          <div className="create-finished-area">
+            <p>Generated Image:</p>
+            {generatedImage && (
+              <div className="finished-image" style={{ marginTop: '20px' }}>
+                <img
+                  src={generatedImage}
+                  alt="생성된 이미지"
+                  style={{ maxWidth: '100%', maxHeight: '400px' }}
+                />
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
