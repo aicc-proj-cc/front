@@ -45,9 +45,6 @@ const CharacterManager = ({ setCurrentView }) => {
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [currentAudio, setCurrentAudio] = useState(null);
 
-  // 캐릭터 목록 관리
-  const [characters, setCharacters] = useState([]);
-
   const [isEditMode, setIsEditMode] = useState(false);
   const [editCharacterId, setEditCharacterId] = useState(null);
   const location = useLocation(); // React Router의 useLocation 추가
@@ -122,6 +119,7 @@ const CharacterManager = ({ setCurrentView }) => {
     const verifyToken = async () => {
       try {
         const token = localStorage.getItem('authToken');
+        console.log('token: ', token);
         if (!token) {
           console.error('No token found');
           return;
@@ -136,6 +134,7 @@ const CharacterManager = ({ setCurrentView }) => {
             withCredentials: true,
           }
         );
+        console.log('response: ', response);
 
         if (response.data && response.data.user_idx) {
           setUserIdx(response.data.user_idx);
@@ -229,19 +228,6 @@ const CharacterManager = ({ setCurrentView }) => {
         },
       ],
     },
-  };
-
-  // DB에서 캐릭터 목록 불러오기
-  const fetchCharacters = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/`,
-        { withCredentials: true }
-      );
-      setCharacters(response.data);
-    } catch (error) {
-      console.error('캐릭터 목록 불러오기 오류:', error);
-    }
   };
 
   // 예시 대화 입력 처리
@@ -416,7 +402,6 @@ const CharacterManager = ({ setCurrentView }) => {
         );
         toast.success('캐릭터 생성 완료!');
       }
-      fetchCharacters();
       setTagName(''); // 태그명 초기화
       setTagDescription(''); // 태그 설정 초기화
       navigate('/Gganbu');
@@ -429,21 +414,8 @@ const CharacterManager = ({ setCurrentView }) => {
     }
   };
 
-  // 캐릭터 삭제
-  const deleteCharacter = async (id) => {
-    try {
-      await axios.delete(
-        `${process.env.REACT_APP_SERVER_DOMAIN}/api/characters/${id}`
-      );
-      fetchCharacters();
-    } catch (error) {
-      console.error('캐릭터 삭제 오류:', error);
-    }
-  };
-
   // 컴포넌트 마운트 시 데이터 로드
   useEffect(() => {
-    fetchCharacters();
     const fetchVoices = async () => {
       try {
         const response = await axios.get(
@@ -456,10 +428,6 @@ const CharacterManager = ({ setCurrentView }) => {
       }
     };
     fetchVoices();
-  }, []);
-
-  useEffect(() => {
-    fetchCharacters();
   }, []);
 
   return (
