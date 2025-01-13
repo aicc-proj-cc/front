@@ -43,17 +43,13 @@ const Wordcloud = () => {
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {imageSrc && (
         <div className="w-full flex justify-center">
-          <img
-            src={imageSrc}
-            alt="User Wordcloud"
-            style={{
-              maxWidth: '90%', // 가로 크기 제한
-              maxHeight: '70vh', // 세로 크기 제한
-              objectFit: 'contain', // 이미지 비율 유지
-              border: '1px solid #ccc', // 경계선 추가
-              padding: '10px',
-            }}
-          />
+          <div className="w-full flex justify-center">
+            <img
+              src={imageSrc}
+              alt="User Wordcloud"
+              style={{ maxWidth: '100%' }}
+            />
+          </div>
         </div>
       )}
       <button
