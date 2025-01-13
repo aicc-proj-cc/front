@@ -233,7 +233,7 @@ const ImageCreate = () => {
           {/* 그림체 선택 */}
           <div className="choose-image-style">
             <h3>Style</h3>
-            {['일본 애미풍', '실사풍', '레트로 감성', '사이버펑크'].map(
+            {['일본 애니풍', '실사풍', '레트로 감성', '사이버펑크'].map(
               (style) => (
                 <button
                   key={style}
