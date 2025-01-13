@@ -52,10 +52,13 @@ const CharacterModal = ({ character, onClose }) => {
         );
         setFollowerCount((prev) => prev - 1);
       } else {
-        await axios.post(`${process.env.REACT_APP_SERVER_DOMAIN}/api/friends/follow`, {
-          user_idx: user_idx,
-          char_idx: character.char_idx,
-        });
+        await axios.post(
+          `${process.env.REACT_APP_SERVER_DOMAIN}/api/friends/follow`,
+          {
+            user_idx: user_idx,
+            char_idx: character.char_idx,
+          }
+        );
         setFollowerCount((prev) => prev + 1);
       }
       setIsFollowing(!isFollowing);
@@ -168,12 +171,21 @@ const CharacterModal = ({ character, onClose }) => {
           </div>
 
           <div className="character-modal__footer">
-            <button
-              className="character-modal__chat-btn"
-              onClick={handleStartChat}
-            >
-              대화하기
-            </button>
+            {user_idx ? (
+              <button
+                className="character-modal__chat-btn"
+                onClick={handleStartChat}
+              >
+                대화하기
+              </button>
+            ) : (
+              <button
+                className="character-modal__chat-btn"
+                onClick={() => navigate('/Signin')}
+              >
+                로그인 후 대화하기
+              </button>
+            )}
           </div>
         </div>
       </div>
